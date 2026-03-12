@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ånnki design studio & store — more than furniture</title>
+<style>
+/* ========================================
+   ANNKI STUDIO — REDESIGNED PROTOTYPE
+   Design System & Variables
+   ======================================== */
+
+:root {
+  /* Brand Colors — preserved from original */
+  --primary-100: #425a5e;
+  --primary-200: #2d3d40;
+  --primary-300: #3f4040;
+  --secondary-100: #ffffff;
+  --secondary-200: #f5f5f0;
+  --secondary-300: #e3e4eb;
+  --tertiary-100: #f48d60;
+  --tertiary-200: #f47c48;
+  --tertiary-300: #f3713c;
+
+  /* Extended palette — new */
+  --cream: #faf8f5;
+  --warm-gray: #9a9590;
+  --light-border: #e8e5e0;
+  --text-primary: #2d3d40;
+  --text-secondary: #6b7073;
+  --text-muted: #9a9d9f;
+
+  /* Typography */
+  --font-primary: 'Helvetica Neue', Helvetica, Arial, -apple-system, sans-serif;
+  --font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* Spacing scale */
+  --sp-xs: 0.25rem;
+  --sp-sm: 0.5rem;
+  --sp-md: 1rem;
+  --sp-lg: 1.5rem;
+  --sp-xl: 2.5rem;
+  --sp-2xl: 4rem;
+  --sp-3xl: 6rem;
+  --sp-4xl: 8rem;
+
+  /* Transitions */
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --duration: 0.3s;
+}
+
+/* ========================================
+   Reset & Base
+   ======================================== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-primary);
+  color: var(--text-primary);
+  background: var(--secondary-100);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; font-family: inherit; }
+ul { list-style: none; }
+
+/* ========================================
+   Typography
+   ======================================== */
+
+.h1 { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; line-height: 1.15; letter-spacing: -0.03em; }
+.h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 300; line-height: 1.2; letter-spacing: -0.02em; }
+.h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 400; line-height: 1.3; letter-spacing: -0.01em; }
+.body-lg { font-size: 1.125rem; line-height: 1.7; }
+.body-sm { font-size: 0.875rem; line-height: 1.6; }
+.caption { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; }
+
+/* ========================================
+   Layout
+   ======================================== */
+
+.container { max-width: 1440px; margin: 0 auto; padding: 0 var(--sp-lg); }
+.container-narrow { max-width: 900px; margin: 0 auto; padding: 0 var(--sp-lg); }
+.grid { display: grid; gap: var(--sp-lg); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ========================================
+   HEADER — Enhanced
+   ======================================== */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--light-border);
+  padding: var(--sp-md) 0;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--sp-lg);
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--primary-200);
+}
+
+.logo span { font-weight: 500; }
+
+.nav { display: flex; gap: var(--sp-xl); align-items: center; }
+.nav a {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  transition: color var(--duration) var(--ease);
+  position: relative;
+}
+.nav a:hover { color: var(--text-primary); }
+.nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--tertiary-300);
+  transition: width var(--duration) var(--ease);
+}
+.nav a:hover::after { width: 100%; }
+
+.nav-cta {
+  background: var(--text-primary);
+  color: white !important;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  transition: background var(--duration) var(--ease);
+}
+.nav-cta:hover { background: var(--tertiary-300); }
+.nav-cta::after { display: none !important; }
+
+/* ========================================
+   HERO — New section
+   ======================================== */
+
+.hero {
+  background: var(--cream);
+  padding: var(--sp-4xl) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--sp-lg);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3xl);
+  align-items: center;
+}
+
+.hero-text { max-width: 540px; }
+
+.hero-tagline {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--tertiary-300);
+  margin-bottom: var(--sp-lg);
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 200;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--primary-200);
+  margin-bottom: var(--sp-xl);
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--tertiary-300);
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: var(--sp-xl);
+  max-width: 420px;
+}
+
+.hero-actions { display: flex; gap: var(--sp-md); align-items: center; }
+
+.btn-primary {
+  background: var(--primary-200);
+  color: white;
+  padding: 0.875rem 2rem;
+  border: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: all var(--duration) var(--ease);
+}
+.btn-primary:hover { background: var(--tertiary-300); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  padding: 0.875rem 2rem;
+  border: 1px solid var(--light-border);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: all var(--duration) var(--ease);
+}
+.btn-secondary:hover { border-color: var(--tertiary-300); color: var(--tertiary-300); }
+
+.hero-image {
+  aspect-ratio: 4/5;
+  background: var(--secondary-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-image-placeholder {
+  text-align: center;
+  padding: var(--sp-xl);
+}
+
+.hero-image-placeholder .label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: var(--sp-sm);
+  color: var(--warm-gray);
+}
+
+@media (max-width: 768px) {
+  .hero-content { grid-template-columns: 1fr; gap: var(--sp-xl); }
+  .hero { padding: var(--sp-2xl) 0; }
+}
+
+/* ========================================
+   TRUST BAR — New (прозрачность + гарантия)
+   ======================================== */
+
+.trust-bar {
+  background: var(--primary-200);
+  color: white;
+  padding: var(--sp-lg) 0;
+}
+
+.trust-items {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-3xl);
+  flex-wrap: wrap;
+}
+
+.trust-item {
+  text-align: center;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.trust-item strong {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 0.25rem;
+}
+
+/* ========================================
+   PHILOSOPHY — New section (storytelling)
+   ======================================== */
+
+.philosophy {
+  padding: var(--sp-4xl) 0;
+  background: white;
+}
+
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3xl);
+  align-items: center;
+}
+
+.philosophy-text { max-width: 480px; }
+
+.section-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--tertiary-300);
+  margin-bottom: var(--sp-lg);
+}
+
+.philosophy-quote {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--primary-200);
+  margin-bottom: var(--sp-xl);
+  font-style: italic;
+}
+
+.philosophy-body {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   PRICE TRANSPARENCY — New (Takt-inspired)
+   ======================================== */
+
+.transparency {
+  padding: var(--sp-3xl) 0;
+  background: var(--cream);
+}
+
+.transparency-card {
+  background: white;
+  padding: var(--sp-2xl);
+  max-width: 600px;
+  margin: var(--sp-xl) auto 0;
+}
+
+.price-breakdown { margin-top: var(--sp-lg); }
+
+.price-bar {
+  display: flex;
+  height: 40px;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: var(--sp-md);
+}
+
+.price-bar-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: white;
+}
+
+.price-bar-materials { background: var(--primary-200); flex: 42; }
+.price-bar-production { background: var(--primary-100); flex: 28; }
+.price-bar-logistics { background: var(--warm-gray); flex: 15; }
+.price-bar-brand { background: var(--tertiary-300); flex: 15; }
+
+.price-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-sm);
+}
+
+.price-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   CATALOG — Enhanced
+   ======================================== */
+
+.catalog {
+  padding: var(--sp-3xl) 0;
+}
+
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--sp-xl);
+  flex-wrap: wrap;
+  gap: var(--sp-md);
+}
+
+.catalog-filters {
+  display: flex;
+  gap: var(--sp-sm);
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--light-border);
+  padding: 0.5rem 1.25rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  transition: all var(--duration) var(--ease);
+}
+.filter-btn:hover, .filter-btn.active {
+  border-color: var(--primary-200);
+  color: var(--primary-200);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--sp-lg);
+}
+
+/* ========================================
+   PRODUCT CARD — Enhanced
+   ======================================== */
+
+.product-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image {
+  aspect-ratio: 4/5;
+  background: var(--secondary-200);
+  margin-bottom: var(--sp-md);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration) var(--ease);
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.01);
+}
+
+.product-badge {
+  position: absolute;
+  top: var(--sp-md);
+  left: var(--sp-md);
+  background: var(--tertiary-300);
+  color: white;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.75rem;
+}
+
+.product-badge-new { background: var(--primary-200); }
+.product-badge-limited { background: #c4a77d; }
+
+.product-image-placeholder {
+  font-size: 0.75rem;
+  color: var(--warm-gray);
+  text-align: center;
+  padding: var(--sp-md);
+}
+
+.product-dims {
+  font-size: 0.65rem;
+  color: var(--warm-gray);
+  font-family: 'SF Mono', monospace;
+  margin-top: var(--sp-xs);
+}
+
+.product-info { padding: 0 var(--sp-xs); }
+
+.product-name {
+  font-size: 0.95rem;
+  font-weight: 400;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.product-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.product-price {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.product-price-old {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+
+.product-materials {
+  display: flex;
+  gap: 6px;
+  margin-top: var(--sp-sm);
+}
+
+.material-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--light-border);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.material-dot:hover { transform: scale(1.2); }
+
+/* ========================================
+   PRODUCT STORY — New (per-product storytelling)
+   ======================================== */
+
+.product-story {
+  padding: var(--sp-4xl) 0;
+  background: var(--cream);
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--sp-3xl);
+  align-items: center;
+}
+
+.story-image {
+  aspect-ratio: 3/4;
+  background: var(--secondary-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--warm-gray);
+  font-size: 0.85rem;
+}
+
+.story-content { max-width: 440px; }
+
+.story-name {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--sp-sm);
+}
+
+.story-origin {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--tertiary-300);
+  margin-bottom: var(--sp-xl);
+}
+
+.story-text {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--text-secondary);
+  margin-bottom: var(--sp-xl);
+}
+
+.story-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-md);
+  padding-top: var(--sp-lg);
+  border-top: 1px solid var(--light-border);
+}
+
+.spec-item {}
+.spec-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.25rem; }
+.spec-value { font-size: 0.95rem; color: var(--text-primary); }
+
+/* ========================================
+   CONFIGURATOR — New section
+   ======================================== */
+
+.configurator {
+  padding: var(--sp-3xl) 0;
+  background: white;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--sp-2xl);
+  align-items: start;
+}
+
+.config-preview {
+  aspect-ratio: 4/3;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--warm-gray);
+  position: relative;
+}
+
+.config-ar-badge {
+  position: absolute;
+  bottom: var(--sp-md);
+  right: var(--sp-md);
+  background: rgba(0,0,0,0.7);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.4rem 0.8rem;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.config-options { padding-top: var(--sp-md); }
+
+.config-section { margin-bottom: var(--sp-xl); }
+.config-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-md);
+}
+
+.fabric-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.fabric-swatch {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+.fabric-swatch:hover { transform: scale(1.05); }
+.fabric-swatch.active { border-color: var(--primary-200); }
+.fabric-swatch-label {
+  font-size: 0.6rem;
+  text-align: center;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+
+.size-options { display: flex; gap: var(--sp-sm); }
+.size-btn {
+  padding: 0.6rem 1.5rem;
+  border: 1px solid var(--light-border);
+  background: transparent;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.size-btn:hover, .size-btn.active {
+  border-color: var(--primary-200);
+  color: var(--primary-200);
+}
+
+.config-price {
+  padding-top: var(--sp-lg);
+  border-top: 1px solid var(--light-border);
+  margin-top: var(--sp-xl);
+}
+
+.config-total {
+  font-size: 1.75rem;
+  font-weight: 300;
+  margin-bottom: var(--sp-sm);
+}
+
+.config-installment {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-lg);
+}
+
+/* ========================================
+   NEW PRODUCTS — Concepts
+   ======================================== */
+
+.new-products {
+  padding: var(--sp-3xl) 0;
+  background: var(--primary-200);
+  color: white;
+}
+
+.new-products .section-label { color: var(--tertiary-100); }
+.new-products .h2 { color: white; }
+
+.new-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--sp-lg);
+  margin-top: var(--sp-xl);
+}
+
+.new-product-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: var(--sp-lg);
+  transition: all var(--duration) var(--ease);
+}
+.new-product-card:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.new-product-icon {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: rgba(255,255,255,0.05);
+  margin-bottom: var(--sp-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+}
+
+.new-product-name {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 0.25rem;
+}
+
+.new-product-type {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--tertiary-100);
+  margin-bottom: var(--sp-md);
+}
+
+.new-product-desc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: var(--sp-md);
+}
+
+.new-product-price {
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.new-product-dims {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: var(--sp-sm);
+  font-family: 'SF Mono', monospace;
+}
+
+/* ========================================
+   COMPARISON — New (annki vs Europe)
+   ======================================== */
+
+.comparison {
+  padding: var(--sp-3xl) 0;
+  background: white;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--sp-xl);
+  font-size: 0.85rem;
+}
+
+.comparison-table th {
+  text-align: left;
+  font-weight: 400;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: var(--sp-md) var(--sp-md);
+  border-bottom: 2px solid var(--primary-200);
+}
+
+.comparison-table td {
+  padding: var(--sp-md) var(--sp-md);
+  border-bottom: 1px solid var(--light-border);
+  color: var(--text-secondary);
+}
+
+.comparison-table tr.annki-row {
+  background: var(--cream);
+  font-weight: 500;
+}
+
+.comparison-table tr.annki-row td {
+  color: var(--primary-200);
+  border-bottom-color: var(--tertiary-300);
+}
+
+.comparison-savings {
+  color: var(--tertiary-300);
+  font-weight: 500;
+}
+
+/* ========================================
+   DESIGNERS PROGRAM — New
+   ======================================== */
+
+.designers {
+  padding: var(--sp-3xl) 0;
+  background: var(--cream);
+}
+
+.designers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sp-lg);
+  margin-top: var(--sp-xl);
+}
+
+.designer-card {
+  background: white;
+  padding: var(--sp-xl);
+  border: 1px solid var(--light-border);
+}
+
+.designer-card-number {
+  font-size: 2rem;
+  font-weight: 200;
+  color: var(--tertiary-300);
+  margin-bottom: var(--sp-md);
+}
+
+.designer-card-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: var(--sp-sm);
+}
+
+.designer-card-text {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   GUARANTEE — New
+   ======================================== */
+
+.guarantee {
+  padding: var(--sp-3xl) 0;
+  background: white;
+  text-align: center;
+}
+
+.guarantee-number {
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 100;
+  color: var(--primary-200);
+  line-height: 1;
+}
+
+.guarantee-text {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-top: var(--sp-md);
+}
+
+.guarantee-details {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-3xl);
+  margin-top: var(--sp-xl);
+  flex-wrap: wrap;
+}
+
+.guarantee-detail {
+  text-align: center;
+}
+
+.guarantee-detail-value {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--primary-200);
+}
+
+.guarantee-detail-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.25rem;
+}
+
+/* ========================================
+   UGC / COMMUNITY — New (#annkihome)
+   ======================================== */
+
+.community {
+  padding: var(--sp-3xl) 0;
+  background: var(--cream);
+}
+
+.ugc-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin-top: var(--sp-xl);
+}
+
+.ugc-item {
+  aspect-ratio: 1;
+  background: var(--secondary-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--warm-gray);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.ugc-item:hover { opacity: 0.8; }
+
+@media (max-width: 768px) {
+  .ugc-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ========================================
+   FOOTER — Enhanced
+   ======================================== */
+
+.footer {
+  background: var(--primary-200);
+  color: white;
+  padding: var(--sp-3xl) 0 var(--sp-lg);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: var(--sp-2xl);
+  margin-bottom: var(--sp-3xl);
+}
+
+.footer-brand-desc {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.6);
+  margin-top: var(--sp-md);
+  max-width: 320px;
+}
+
+.footer-heading {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: var(--sp-lg);
+}
+
+.footer-links a {
+  display: block;
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: var(--sp-sm);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--tertiary-100); }
+
+.footer-bottom {
+  padding-top: var(--sp-lg);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-md);
+}
+
+.footer-copy {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+}
+
+.footer-slogan {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3);
+}
+
+@media (max-width: 768px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-xl); }
+}
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+
+.text-center { text-align: center; }
+.mb-xs { margin-bottom: var(--sp-xs); }
+.mb-sm { margin-bottom: var(--sp-sm); }
+.mb-md { margin-bottom: var(--sp-md); }
+.mb-lg { margin-bottom: var(--sp-lg); }
+.mb-xl { margin-bottom: var(--sp-xl); }
+.mt-lg { margin-top: var(--sp-lg); }
+.mt-xl { margin-top: var(--sp-xl); }
+
+</style>
+</head>
+<body>
+
+<!-- ==========================================
+     HEADER
+     ========================================== -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo"><span>ånnki</span> design studio & store</a>
+    <nav class="nav">
+      <a href="#catalog">Каталог</a>
+      <a href="#story">Философия</a>
+      <a href="#designers">Дизайнерам</a>
+      <a href="#contacts">Контакты</a>
+      <a href="#" class="nav-cta">Задать вопрос</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ==========================================
+     HERO
+     ========================================== -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-tagline">Swedish heritage — Made in Russia</div>
+      <h1 class="hero-title">Мебель как<br><em>скрытая роскошь</em></h1>
+      <p class="hero-description">
+        Создаём индивидуальные объекты для интерьера. Ценность — в деталях:
+        эргономике, материалах, конструкции. Не во внешнем эффекте.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary">Смотреть каталог</button>
+        <button class="btn-secondary">Наша история</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-image-placeholder">
+        <div style="font-size: 3rem; opacity: 0.3;">&#9670;</div>
+        <div class="label">Hero image: диван Plus<br>в интерьере, мягкий свет,<br>скандинавский минимализм<br><br>Рекомендуемый размер: 1200×1500px</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     TRUST BAR — Гарантия + прозрачность
+     ========================================== -->
+<section class="trust-bar">
+  <div class="container">
+    <div class="trust-items">
+      <div class="trust-item">
+        <strong>3 года</strong>
+        гарантия на каркас
+      </div>
+      <div class="trust-item">
+        <strong>30–45 дней</strong>
+        изготовление
+      </div>
+      <div class="trust-item">
+        <strong>200+</strong>
+        вариантов обивки
+      </div>
+      <div class="trust-item">
+        <strong>0%</strong>
+        рассрочка
+      </div>
+      <div class="trust-item">
+        <strong>с 2017</strong>
+        производство в России
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     CATALOG — Enhanced with filters
+     ========================================== -->
+<section class="catalog" id="catalog">
+  <div class="container">
+    <div class="catalog-header">
+      <h2 class="h2">Каталог</h2>
+      <div class="catalog-filters">
+        <button class="filter-btn active">Всё</button>
+        <button class="filter-btn">Диваны</button>
+        <button class="filter-btn">Кресла</button>
+        <button class="filter-btn">Кровати</button>
+        <button class="filter-btn">Стулья</button>
+        <button class="filter-btn">Столы</button>
+        <button class="filter-btn">Пуфы и скамьи</button>
+        <button class="filter-btn">Аксессуары</button>
+        <button class="filter-btn" style="border-color: var(--tertiary-300); color: var(--tertiary-300);">В наличии</button>
+      </div>
+    </div>
+
+    <div class="product-grid">
+
+      <!-- Existing Products -->
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">диван plus<div class="product-dims">Ш 230 × Г 100 × В 80 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">диван plus</div>
+          <div class="product-subtitle">модульный, раскладной</div>
+          <div class="product-price">270 000 ₽</div>
+          <div class="product-materials">
+            <div class="material-dot" style="background: #d4c5b0;" title="бежевый лён"></div>
+            <div class="material-dot" style="background: #8a8a7c;" title="шалфей"></div>
+            <div class="material-dot" style="background: #c4a882;" title="карамель"></div>
+            <div class="material-dot" style="background: #3f4040;" title="графит"></div>
+            <div class="material-dot" style="background: #ddd; font-size:8px; text-align:center; line-height:16px;" title="+12">+12</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">диван hero<div class="product-dims">Ш 250 × Г 110 × В 85 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">диван hero</div>
+          <div class="product-subtitle">прямой, глубокая посадка</div>
+          <div class="product-price">300 000 ₽</div>
+          <div class="product-materials">
+            <div class="material-dot" style="background: #d4c5b0;"></div>
+            <div class="material-dot" style="background: #6b7e6e;"></div>
+            <div class="material-dot" style="background: #3f4040;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW PRODUCT: Compact sofa -->
+      <div class="product-card">
+        <div class="product-image" style="background: #eae7e0;">
+          <span class="product-badge product-badge-new">новинка</span>
+          <div class="product-image-placeholder">диван ease<div class="product-dims">Ш 190 × Г 90 × В 78 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">диван ease</div>
+          <div class="product-subtitle">компактный, для малых пространств</div>
+          <div class="product-price">165 000 ₽</div>
+          <div class="product-materials">
+            <div class="material-dot" style="background: #d4c5b0;"></div>
+            <div class="material-dot" style="background: #c4a882;"></div>
+            <div class="material-dot" style="background: #8a8a7c;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">кресло steve<div class="product-dims">Ш 65 × Г 72 × В 76 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">кресло steve</div>
+          <div class="product-subtitle">названо в честь Стива Джобса</div>
+          <div class="product-price">57 500 ₽</div>
+          <div class="product-materials">
+            <div class="material-dot" style="background: #d4c5b0;"></div>
+            <div class="material-dot" style="background: #b5c4bc;"></div>
+            <div class="material-dot" style="background: #3f4040;"></div>
+            <div class="material-dot" style="background: #ddd; font-size:8px; text-align:center; line-height:16px;">+8</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">кресло bono<div class="product-dims">Ш 78 × Г 82 × В 80 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">кресло bono</div>
+          <div class="product-subtitle">лаунж</div>
+          <div class="product-price">115 000 ₽</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">кровать basic<div class="product-dims">Ш 160 × Д 200 × В 35 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">кровать basic</div>
+          <div class="product-subtitle">минималистичный силуэт</div>
+          <div class="product-price">80 000 ₽</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">стул steve dinner<div class="product-dims">Ш 46 × Г 52 × В 82 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">стул steve dinner</div>
+          <div class="product-subtitle">обеденный</div>
+          <div class="product-price">35 000 ₽</div>
+        </div>
+      </div>
+
+      <!-- NEW PRODUCT: Entry chair -->
+      <div class="product-card">
+        <div class="product-image" style="background: #eae7e0;">
+          <span class="product-badge product-badge-new">новинка</span>
+          <div class="product-image-placeholder">стул alma<div class="product-dims">Ш 44 × Г 50 × В 80 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">стул alma</div>
+          <div class="product-subtitle">обеденный, entry-line</div>
+          <div class="product-price">19 500 ₽</div>
+        </div>
+      </div>
+
+      <!-- NEW PRODUCT: Bar stool -->
+      <div class="product-card">
+        <div class="product-image" style="background: #eae7e0;">
+          <span class="product-badge product-badge-new">новинка</span>
+          <div class="product-image-placeholder">стул steve bar<div class="product-dims">Ш 42 × Г 45 × В 102 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">стул steve bar</div>
+          <div class="product-subtitle">барный, семейство steve</div>
+          <div class="product-price">42 000 ₽</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">стол bill<div class="product-dims">Ш 160 × Г 80 × В 75 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">стол bill</div>
+          <div class="product-subtitle">обеденный</div>
+          <div class="product-price">110 000 ₽</div>
+        </div>
+      </div>
+
+      <!-- NEW PRODUCT: Coffee table -->
+      <div class="product-card">
+        <div class="product-image" style="background: #eae7e0;">
+          <span class="product-badge product-badge-new">новинка</span>
+          <div class="product-image-placeholder">столик bill mini<div class="product-dims">Ш 80 × Г 50 × В 40 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">столик bill mini</div>
+          <div class="product-subtitle">журнальный</div>
+          <div class="product-price">42 000 ₽</div>
+        </div>
+      </div>
+
+      <!-- NEW PRODUCT: Console -->
+      <div class="product-card">
+        <div class="product-image" style="background: #eae7e0;">
+          <span class="product-badge product-badge-new">новинка</span>
+          <div class="product-image-placeholder">консоль line<div class="product-dims">Ш 120 × Г 35 × В 85 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">консоль line</div>
+          <div class="product-subtitle">прихожая / ТВ-зона</div>
+          <div class="product-price">68 000 ₽</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">скамья clover classic<div class="product-dims">Ш 120 × Г 36 × В 45 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">скамья clover classic</div>
+          <div class="product-subtitle">экспонат Третьяковской галереи</div>
+          <div class="product-price">40 000 ₽</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-image-placeholder">пуф runda s<div class="product-dims">&#8960; 45 × В 42 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">пуф runda s</div>
+          <div class="product-subtitle">компактный круглый</div>
+          <div class="product-price">25 000 ₽</div>
+        </div>
+      </div>
+
+      <!-- NEW PRODUCT: Accessories -->
+      <div class="product-card">
+        <div class="product-image" style="background: #eae7e0;">
+          <span class="product-badge product-badge-new">новинка</span>
+          <div class="product-image-placeholder">подушка hygge<div class="product-dims">50 × 50 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">подушка hygge</div>
+          <div class="product-subtitle">бельгийская шерсть</div>
+          <div class="product-price">6 500 ₽</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image" style="background: #eae7e0;">
+          <span class="product-badge product-badge-new">новинка</span>
+          <div class="product-image-placeholder">плед lagom<div class="product-dims">150 × 200 см</div></div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">плед lagom</div>
+          <div class="product-subtitle">меринос, Испания</div>
+          <div class="product-price">12 000 ₽</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     PRODUCT STORY — Steve
+     ========================================== -->
+<section class="product-story" id="story">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-image">
+        <div>Фото: кресло Steve в интерьере<br>Рекомендуемый размер: 900×1200px</div>
+      </div>
+      <div class="story-content">
+        <div class="section-label">История продукта</div>
+        <h2 class="story-name">steve</h2>
+        <div class="story-origin">назван в честь Стива Джобса — 2019</div>
+        <p class="story-text">
+          Минималистичное, но не простое. Базовое, но акцентное.
+          Как и чёрная водолазка Джобса — Steve убирает всё лишнее,
+          оставляя только суть. Кресло, которое отражает характер хозяина.
+        </p>
+        <p class="story-text">
+          С 2022 года Steve стал целым семейством: обеденный стул,
+          версия с подлокотниками (коллаборация с GATE31), барный стул.
+        </p>
+        <div class="story-specs">
+          <div class="spec-item">
+            <div class="spec-label">Каркас</div>
+            <div class="spec-value">Берёза, сталь</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Наполнение</div>
+            <div class="spec-value">ППУ 35 кг/м³</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Обивка</div>
+            <div class="spec-value">200+ тканей</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Вес</div>
+            <div class="spec-value">12 кг</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     CONFIGURATOR
+     ========================================== -->
+<section class="configurator">
+  <div class="container">
+    <div class="section-label">Конфигуратор</div>
+    <h2 class="h2 mb-xl">Соберите свой диван plus</h2>
+    <div class="config-grid">
+      <div class="config-preview">
+        <div>Визуализация дивана<br>обновляется при выборе ткани/размера<br><br>Рекомендация: 3D или статичные рендеры<br>для каждой комбинации</div>
+        <div class="config-ar-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Посмотреть в AR
+        </div>
+      </div>
+      <div class="config-options">
+        <div class="config-section">
+          <div class="config-section-title">Ткань обивки</div>
+          <div class="fabric-grid">
+            <div>
+              <div class="fabric-swatch active" style="background: #d4c5b0;"></div>
+              <div class="fabric-swatch-label">лён</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #8a8a7c;"></div>
+              <div class="fabric-swatch-label">шалфей</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #c4a882;"></div>
+              <div class="fabric-swatch-label">карамель</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #3f4040;"></div>
+              <div class="fabric-swatch-label">графит</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #b5c4bc;"></div>
+              <div class="fabric-swatch-label">мята</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #6b7e6e;"></div>
+              <div class="fabric-swatch-label">хвоя</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #a8856e;"></div>
+              <div class="fabric-swatch-label">терра</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #c9b8a8;"></div>
+              <div class="fabric-swatch-label">овёс</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #7a6a5e;"></div>
+              <div class="fabric-swatch-label">кофе</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #d1c0b0;"></div>
+              <div class="fabric-swatch-label">пудра</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #b0a090;"></div>
+              <div class="fabric-swatch-label">глина</div>
+            </div>
+            <div>
+              <div class="fabric-swatch" style="background: #e8e5e0;"></div>
+              <div class="fabric-swatch-label">снег</div>
+            </div>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--sp-sm);">
+            Бельгия, Испания, Турция — все ткани сертифицированы
+          </p>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-title">Размер</div>
+          <div class="size-options">
+            <button class="size-btn active">2-местный</button>
+            <button class="size-btn">2.5-местный</button>
+            <button class="size-btn">3-местный</button>
+            <button class="size-btn">угловой</button>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <div class="config-section-title">Опции</div>
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; cursor: pointer;">
+            <input type="checkbox"> Раскладной механизм (+15 000 ₽)
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); cursor: pointer;">
+            <input type="checkbox"> Съёмные чехлы (+8 000 ₽)
+          </label>
+        </div>
+
+        <div class="config-price">
+          <div class="config-total">270 000 ₽</div>
+          <div class="config-installment">или 22 500 ₽/мес. × 12 мес. — рассрочка 0%</div>
+          <button class="btn-primary" style="width: 100%;">Оформить заказ</button>
+          <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: var(--sp-sm); text-align: center;">
+            Доставка 30–45 дней. Гарантия 3 года.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     PRICE TRANSPARENCY (Takt-inspired)
+     ========================================== -->
+<section class="transparency">
+  <div class="container text-center">
+    <div class="section-label">Прозрачное ценообразование</div>
+    <h2 class="h2">Из чего складывается цена</h2>
+    <p class="body-lg" style="color: var(--text-secondary); max-width: 600px; margin: var(--sp-md) auto 0;">
+      Мы не скрываем структуру цены. Вы платите за материалы и мастерство — не за наценку посредников.
+    </p>
+    <div class="transparency-card">
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: var(--sp-sm);">Пример: кресло Steve, 57 500 ₽</p>
+      <div class="price-breakdown">
+        <div class="price-bar">
+          <div class="price-bar-segment price-bar-materials">42%</div>
+          <div class="price-bar-segment price-bar-production">28%</div>
+          <div class="price-bar-segment price-bar-logistics">15%</div>
+          <div class="price-bar-segment price-bar-brand">15%</div>
+        </div>
+        <div class="price-legend">
+          <div class="price-legend-item">
+            <div class="legend-dot" style="background: var(--primary-200);"></div>
+            Материалы — 24 150 ₽
+          </div>
+          <div class="price-legend-item">
+            <div class="legend-dot" style="background: var(--primary-100);"></div>
+            Производство — 16 100 ₽
+          </div>
+          <div class="price-legend-item">
+            <div class="legend-dot" style="background: var(--warm-gray);"></div>
+            Логистика — 8 625 ₽
+          </div>
+          <div class="price-legend-item">
+            <div class="legend-dot" style="background: var(--tertiary-300);"></div>
+            Бренд и развитие — 8 625 ₽
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     COMPARISON — annki vs Europe
+     ========================================== -->
+<section class="comparison">
+  <div class="container">
+    <div class="section-label">Почему ånnki</div>
+    <h2 class="h2">Скандинавский дизайн.<br>Без скандинавской наценки.</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Продукт</th>
+          <th>ånnki studio</th>
+          <th>HAY (Дания)</th>
+          <th>Muuto (Дания)</th>
+          <th>Bolia (Дания)</th>
+          <th>Ваша экономия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="annki-row">
+          <td>Диван 2.5-местный</td>
+          <td><strong>270 000 ₽</strong></td>
+          <td>440 000 ₽</td>
+          <td>380 000 ₽</td>
+          <td>720 000 ₽</td>
+          <td class="comparison-savings">до −62%</td>
+        </tr>
+        <tr>
+          <td>Кресло лаунж</td>
+          <td><strong>57 500 ₽</strong></td>
+          <td>215 000 ₽</td>
+          <td>150 000 ₽</td>
+          <td>200 000 ₽</td>
+          <td class="comparison-savings">до −73%</td>
+        </tr>
+        <tr>
+          <td>Стул обеденный</td>
+          <td><strong>35 000 ₽</strong></td>
+          <td>20 000 – 50 000 ₽</td>
+          <td>26 000 – 105 000 ₽</td>
+          <td>—</td>
+          <td class="comparison-savings">сопоставимо</td>
+        </tr>
+        <tr>
+          <td>Кровать</td>
+          <td><strong>80 000 ₽</strong></td>
+          <td>80 000 ₽</td>
+          <td>—</td>
+          <td>150 000 ₽</td>
+          <td class="comparison-savings">до −47%</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--sp-md);">
+      * Цены европейских брендов пересчитаны по курсу ~100 ₽/$. Данные актуальны на 2026 г.
+    </p>
+  </div>
+</section>
+
+<!-- ==========================================
+     NEW PRODUCTS — Concepts
+     ========================================== -->
+<section class="new-products">
+  <div class="container">
+    <div class="section-label">Скоро в каталоге</div>
+    <h2 class="h2">Новые продукты</h2>
+
+    <div class="new-product-grid">
+
+      <div class="new-product-card">
+        <div class="new-product-icon">RENDER: диван ease — компактный 2-местный</div>
+        <div class="new-product-name">диван ease</div>
+        <div class="new-product-type">Compact Sofa</div>
+        <div class="new-product-desc">Компактный диван для малых пространств. Закрывает ценовую дыру между креслами (115K) и флагманским Plus (270K).</div>
+        <div class="new-product-price">165 000 ₽</div>
+        <div class="new-product-dims">Ш 190 × Г 90 × В 78 см / ~35 кг</div>
+      </div>
+
+      <div class="new-product-card">
+        <div class="new-product-icon">RENDER: стул alma — entry обеденный</div>
+        <div class="new-product-name">стул alma</div>
+        <div class="new-product-type">Entry Dining Chair</div>
+        <div class="new-product-desc">Доступный обеденный стул. Конкурент Delo «Норм» (6 500 ₽) и Archpole «Минимализм» (10 800 ₽) в премиальном исполнении.</div>
+        <div class="new-product-price">19 500 ₽</div>
+        <div class="new-product-dims">Ш 44 × Г 50 × В 80 см / ~4 кг</div>
+      </div>
+
+      <div class="new-product-card">
+        <div class="new-product-icon">RENDER: стул steve bar — барный</div>
+        <div class="new-product-name">steve bar</div>
+        <div class="new-product-type">Bar Stool — Steve Family</div>
+        <div class="new-product-desc">Расширение семейства Steve. Барная высота, тот же минималистичный силуэт. По модели Normann Copenhagen Form.</div>
+        <div class="new-product-price">42 000 ₽</div>
+        <div class="new-product-dims">Ш 42 × Г 45 × В 102 см / ~6 кг</div>
+      </div>
+
+      <div class="new-product-card">
+        <div class="new-product-icon">RENDER: столик bill mini — журнальный</div>
+        <div class="new-product-name">bill mini</div>
+        <div class="new-product-type">Coffee Table — Bill Family</div>
+        <div class="new-product-desc">Журнальный стол из семейства Bill. Расширение ассортимента столов (сейчас только 1 модель).</div>
+        <div class="new-product-price">42 000 ₽</div>
+        <div class="new-product-dims">Ш 80 × Г 50 × В 40 см / ~15 кг</div>
+      </div>
+
+      <div class="new-product-card">
+        <div class="new-product-icon">RENDER: консоль line</div>
+        <div class="new-product-name">консоль line</div>
+        <div class="new-product-type">Console / TV Unit</div>
+        <div class="new-product-desc">Первый предмет корпусной мебели annki. Для прихожей или ТВ-зоны. Натуральный дуб + сталь.</div>
+        <div class="new-product-price">68 000 ₽</div>
+        <div class="new-product-dims">Ш 120 × Г 35 × В 85 см / ~22 кг</div>
+      </div>
+
+      <div class="new-product-card">
+        <div class="new-product-icon">RENDER: подушка hygge</div>
+        <div class="new-product-name">подушка hygge</div>
+        <div class="new-product-type">Entry Accessory</div>
+        <div class="new-product-desc">Декоративная подушка — точка входа в бренд. Бельгийская шерсть, натуральные красители. По модели HAY.</div>
+        <div class="new-product-price">6 500 ₽</div>
+        <div class="new-product-dims">50 × 50 см</div>
+      </div>
+
+      <div class="new-product-card">
+        <div class="new-product-icon">RENDER: плед lagom</div>
+        <div class="new-product-name">плед lagom</div>
+        <div class="new-product-type">Textile</div>
+        <div class="new-product-desc">Плед из испанского мериноса. Слово «lagom» — шведское «ровно столько, сколько нужно». Идеальная отсылка к шведским корням бренда.</div>
+        <div class="new-product-price">12 000 ₽</div>
+        <div class="new-product-dims">150 × 200 см</div>
+      </div>
+
+      <div class="new-product-card">
+        <div class="new-product-icon">RENDER: свеча skog</div>
+        <div class="new-product-name">свеча skog</div>
+        <div class="new-product-type">Entry Accessory</div>
+        <div class="new-product-desc">Ароматическая свеча. «Skog» — шведское «лес». Аромат сосны и мха. Керамический сосуд ручной работы.</div>
+        <div class="new-product-price">3 500 ₽</div>
+        <div class="new-product-dims">&#8960; 8 × В 10 см</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     GUARANTEE
+     ========================================== -->
+<section class="guarantee">
+  <div class="container">
+    <div class="section-label">Обещание качества</div>
+    <div class="guarantee-number">3 года</div>
+    <p class="guarantee-text">гарантия на каркас и конструкцию каждого изделия</p>
+    <div class="guarantee-details">
+      <div class="guarantee-detail">
+        <div class="guarantee-detail-value">30–45</div>
+        <div class="guarantee-detail-label">дней изготовление</div>
+      </div>
+      <div class="guarantee-detail">
+        <div class="guarantee-detail-value">ППУ 35+</div>
+        <div class="guarantee-detail-label">кг/м³ плотность</div>
+      </div>
+      <div class="guarantee-detail">
+        <div class="guarantee-detail-value">Oeko-Tex</div>
+        <div class="guarantee-detail-label">сертификация тканей</div>
+      </div>
+      <div class="guarantee-detail">
+        <div class="guarantee-detail-value">120 мм</div>
+        <div class="guarantee-detail-label">высота опор (для робота-пылесоса)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     DESIGNERS PROGRAM
+     ========================================== -->
+<section class="designers" id="designers">
+  <div class="container">
+    <div class="section-label">Программа для профессионалов</div>
+    <h2 class="h2 mb-lg">Дизайнерам и архитекторам</h2>
+    <p class="body-lg" style="color: var(--text-secondary); max-width: 600px; margin-bottom: var(--sp-xl);">
+      Специальные условия для дизайнеров интерьера, архитекторов и HoReCa-проектов.
+    </p>
+    <div class="designers-grid">
+      <div class="designer-card">
+        <div class="designer-card-number">01</div>
+        <div class="designer-card-title">Скидка 15–20%</div>
+        <div class="designer-card-text">На весь ассортимент для профессионалов с подтверждённым статусом дизайнера или архитектора.</div>
+      </div>
+      <div class="designer-card">
+        <div class="designer-card-number">02</div>
+        <div class="designer-card-title">3D-модели и CAD</div>
+        <div class="designer-card-text">Библиотека 3D-моделей для ваших проектов. Форматы: .3ds, .obj, .fbx. AR-модели для презентации клиентам.</div>
+      </div>
+      <div class="designer-card">
+        <div class="designer-card-number">03</div>
+        <div class="designer-card-title">Персональный менеджер</div>
+        <div class="designer-card-text">Выделенный менеджер для ваших проектов. Приоритетные сроки, образцы тканей, выезд на объект.</div>
+      </div>
+    </div>
+    <button class="btn-primary mt-xl">Подать заявку</button>
+  </div>
+</section>
+
+<!-- ==========================================
+     COMMUNITY / UGC (#annkihome)
+     ========================================== -->
+<section class="community">
+  <div class="container text-center">
+    <div class="section-label">#annkihome</div>
+    <h2 class="h2">ånnki в вашем интерьере</h2>
+    <p style="color: var(--text-secondary); margin-top: var(--sp-sm);">
+      Делитесь фото с хэштегом #annkihome — лучшие попадут на сайт
+    </p>
+    <div class="ugc-grid">
+      <div class="ugc-item">UGC фото 1</div>
+      <div class="ugc-item">UGC фото 2</div>
+      <div class="ugc-item">UGC фото 3</div>
+      <div class="ugc-item">UGC фото 4</div>
+      <div class="ugc-item">UGC фото 5</div>
+      <div class="ugc-item">UGC фото 6</div>
+      <div class="ugc-item">UGC фото 7</div>
+      <div class="ugc-item">UGC фото 8</div>
+      <div class="ugc-item">UGC фото 9</div>
+      <div class="ugc-item">UGC фото 10</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     PHILOSOPHY
+     ========================================== -->
+<section class="philosophy">
+  <div class="container">
+    <div class="philosophy-grid">
+      <div class="philosophy-text">
+        <div class="section-label">Философия</div>
+        <blockquote class="philosophy-quote">
+          «Диван — центр жизни дома.<br>
+          Кресло — отражение характера хозяина.»
+        </blockquote>
+        <p class="philosophy-body">
+          Мы выросли между Россией и Швецией. Там, где рациональность
+          встречает душевность. Где качественные материалы важнее показного
+          лоска. Где умеренность — это не ограничение, а осознанный выбор.
+        </p>
+        <p class="philosophy-body" style="margin-top: var(--sp-md);">
+          Каждый предмет ånnki — это наша формула скандинавского стиля,
+          пропущенная через российский характер. Скрытая роскошь,
+          которая раскрывается не глазами, а руками.
+        </p>
+        <p style="margin-top: var(--sp-lg);">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Анна Долгих, основатель и дизайнер</span>
+        </p>
+      </div>
+      <div class="story-image" style="aspect-ratio: 3/4;">
+        <div>Фото: Анна Долгих в мастерской<br>или производственный процесс<br><br>Рекомендуемый размер: 800×1066px</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     FOOTER — Enhanced
+     ========================================== -->
+<footer class="footer" id="contacts">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="color: white;"><span>ånnki</span> design studio & store</div>
+        <p class="footer-brand-desc">
+          Российский бренд авторской мебели со шведской историей.
+          Рациональность, качественные материалы, умеренность.
+          More than furniture.
+        </p>
+        <div style="margin-top: var(--sp-lg);">
+          <a href="tel:+79030863773" class="footer-links" style="display:inline; color: rgba(255,255,255,0.9); font-size: 1.1rem;">+7 903 086 37 73</a>
+          <br>
+          <a href="mailto:mail@annki.studio" style="color: rgba(255,255,255,0.6); font-size: 0.85rem;">mail@annki.studio</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-heading">Каталог</div>
+        <div class="footer-links">
+          <a href="#">Диваны</a>
+          <a href="#">Кресла</a>
+          <a href="#">Кровати</a>
+          <a href="#">Стулья</a>
+          <a href="#">Столы</a>
+          <a href="#">Пуфы и скамьи</a>
+          <a href="#">Аксессуары</a>
+          <a href="#">В наличии</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-heading">Компания</div>
+        <div class="footer-links">
+          <a href="#">Наша история</a>
+          <a href="#">Производство</a>
+          <a href="#">Программа для дизайнеров</a>
+          <a href="#">Коллаборации</a>
+          <a href="#">Пресса</a>
+          <a href="#">Контакты</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-heading">Покупателям</div>
+        <div class="footer-links">
+          <a href="#">Доставка и возврат</a>
+          <a href="#">Рассрочка 0%</a>
+          <a href="#">Гарантия 3 года</a>
+          <a href="#">Уход за мебелью</a>
+          <a href="#">Оферта</a>
+          <a href="#">Политика конфиденциальности</a>
+        </div>
+        <div style="margin-top: var(--sp-lg);">
+          <div class="footer-heading">Мы в соцсетях</div>
+          <div class="footer-links">
+            <a href="https://t.me/annkistudio">Telegram</a>
+            <a href="https://wa.me/79030863773">WhatsApp</a>
+            <a href="https://vk.com/annkistudio">ВКонтакте</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026. annki design studio & store</div>
+      <div class="footer-slogan">annki&reg; more than furniture</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
