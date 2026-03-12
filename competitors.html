@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANNKI STUDIO — Конкурентная матрица</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Page-specific styles ── */
+    .pricing-arch {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 2rem 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .pricing-arch-item {
+      flex: 1;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .pricing-arch-item::after {
+      content: '\25B6';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      z-index: 2;
+    }
+    .pricing-arch-item:last-child::after { display: none; }
+    .pricing-arch-item .tier-name {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+    .pricing-arch-item .tier-price {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .pricing-arch-item .tier-desc {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+    .arch-entry { background: #e0f0e8; color: #2e5e3e; }
+    .arch-value { background: #d4e8f0; color: #1a4a5c; }
+    .arch-core { background: var(--primary); color: var(--white); }
+    .arch-premium { background: var(--primary-dark); color: var(--white); }
+    .arch-collectible { background: #1a2628; color: var(--white); }
+
+    .competitor-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s;
+    }
+    .competitor-card:hover { box-shadow: var(--shadow-md); }
+    .competitor-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .competitor-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .competitor-meta {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+    .competitor-motto {
+      font-style: italic;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    .sku-badge {
+      background: var(--primary);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+    .price-item {
+      background: var(--cream);
+      padding: 0.6rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+    }
+    .price-item .price-cat {
+      font-weight: 600;
+      color: var(--primary-dark);
+      font-size: 12px;
+    }
+    .price-item .price-range {
+      color: var(--text);
+      margin-top: 2px;
+    }
+    .features-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .feature-chip {
+      background: var(--cream-dark);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .scenario-box {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .scenario-num {
+      background: var(--danger);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .char-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .char-list li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      border-bottom: 1px solid var(--cream-dark);
+      font-size: 14px;
+    }
+    .char-list li:last-child { border-bottom: none; }
+    .char-list li::before {
+      content: '\2713';
+      position: absolute;
+      left: 0;
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      .pricing-arch { flex-direction: column; }
+      .pricing-arch-item::after { display: none; }
+      .competitor-header { flex-direction: column; }
+      .scenario-box { flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="top-nav">
+    <a href="index.html" class="brand">ANNKI STUDIO</a>
+    <a href="index.html">Главная</a>
+    <a href="analysis.html">Бизнес-анализ</a>
+    <a href="competitors.html" class="active">Конкуренты</a>
+    <a href="benchmarks.html">Бенчмарки</a>
+    <a href="new-products.html">Новые продукты</a>
+  <a href="cost-analysis.html">Себестоимость</a>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="badge">Конкурентный анализ</div>
+    <h1>Ассортиментная матрица и конкурентный ценовой анализ</h1>
+    <p class="subtitle">Сравнение с 7 ключевыми конкурентами на российском рынке</p>
+  </section>
+
+  <!-- ── Content ── -->
+  <div class="container">
+
+    <!-- ── Table of Contents ── -->
+    <div class="toc">
+      <h3>Содержание</h3>
+      <ol>
+        <li><a href="#part1">Ассортиментная матрица annki</a></li>
+        <li><a href="#part2">Матрицы 7 конкурентов</a></li>
+        <li><a href="#part3">Сравнительная ценовая матрица</a></li>
+        <li><a href="#part4">Где annki проигрывает</a></li>
+        <li><a href="#part5">Ценовые рекомендации</a></li>
+        <li><a href="#part6">Дорожная карта</a></li>
+      </ol>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!--  PART I — ANNKI ASSORTMENT MATRIX                        -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="part1">
+      <h2 class="section-title"><span class="num">I</span> Ассортиментная матрица annki studio</h2>
+
+      <div class="kv-grid">
+        <div class="kv-item">
+          <div class="kv-label">Всего SKU</div>
+          <div class="kv-value">~18-20</div>
+        </div>
+        <div class="kv-item">
+          <div class="kv-label">Категории</div>
+          <div class="kv-value small">5 категорий</div>
+        </div>
+        <div class="kv-item">
+          <div class="kv-label">Ценовой диапазон</div>
+          <div class="kv-value small">25 000 &ndash; 300 000 &#8381;</div>
+        </div>
+        <div class="kv-item">
+          <div class="kv-label">Средний чек</div>
+          <div class="kv-value small">~100 000 &#8381;</div>
+        </div>
+      </div>
+
+      <!-- Мягкая мебель -->
+      <h3>Мягкая мебель</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Модель</th>
+              <th>Цена (&#8381;)</th>
+              <th>Тип</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight"><td><strong>Plus</strong></td><td>270 000</td><td>Модульный, раскладной</td></tr>
+            <tr class="cell-highlight"><td><strong>Hero</strong></td><td>300 000</td><td>Прямой</td></tr>
+            <tr><td><strong>Ray</strong></td><td class="cell-neutral">н/д</td><td>Новинка</td></tr>
+            <tr><td><strong>Steve</strong></td><td>55 000</td><td>Компактное кресло</td></tr>
+            <tr><td><strong>Bono</strong></td><td>115 000</td><td>Лаунж</td></tr>
+            <tr><td><strong>Ernest</strong></td><td>115 000</td><td>Лаунж</td></tr>
+            <tr><td><strong>Workaholic</strong></td><td>100 000</td><td>Рабочее</td></tr>
+            <tr><td><strong>Runda S</strong></td><td>25 000</td><td>Пуф круглый</td></tr>
+            <tr><td><strong>Runda L</strong></td><td>60 000</td><td>Пуф большой</td></tr>
+            <tr><td><strong>Oval</strong></td><td>60 000</td><td>Пуф овальный</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Столы -->
+      <h3>Столы</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Модель</th><th>Цена (&#8381;)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Bill</strong></td><td>110 000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Стулья -->
+      <h3>Стулья</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Модель</th><th>Цена (&#8381;)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Steve Dinner</strong></td><td>35 000</td></tr>
+            <tr><td><strong>Стул-гардероб</strong></td><td>50 000</td></tr>
+            <tr><td><strong>Steve++</strong></td><td>71 300</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Скамьи -->
+      <h3>Скамьи</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Модель</th><th>Цена (&#8381;)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Clover Classic / 2.0</strong></td><td>40 000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Кровати -->
+      <h3>Кровати</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Модель</th><th>Цена (&#8381;)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Basic</strong></td><td>80 000</td></tr>
+            <tr><td><strong>Cube</strong></td><td>95 000</td></tr>
+            <tr><td><strong>Sova</strong></td><td>110 000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Характеристики -->
+      <h3>Характеристики продукции</h3>
+      <ul class="char-list">
+        <li>Ткани из 5 стран</li>
+        <li>ППУ различной жёсткости</li>
+        <li>Опоры 120 мм</li>
+        <li>Рассрочка 0%</li>
+      </ul>
+
+      <div class="callout callout-danger" style="margin-top: 1.25rem;">
+        <strong>ВНИМАНИЕ:</strong> Гарантия и сроки производства НЕ указаны публично! Это критический недостаток коммуникации, который снижает доверие покупателей и ставит annki в проигрышную позицию по сравнению с конкурентами.
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!--  PART II — 7 COMPETITOR MATRICES                          -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="part2">
+      <h2 class="section-title"><span class="num">II</span> Матрицы 7 конкурентов</h2>
+
+      <!-- 1. DELO DESIGN -->
+      <div class="competitor-card">
+        <div class="competitor-header">
+          <div>
+            <div class="competitor-name">1. DELO DESIGN</div>
+            <div class="competitor-meta">Санкт-Петербург, основан в 2014</div>
+          </div>
+          <span class="sku-badge">~100 SKU</span>
+        </div>
+        <div class="competitor-motto">&laquo;Конструктивизм&raquo; &mdash; архбюро + мебель + одежда + кафе</div>
+        <div class="price-grid">
+          <div class="price-item"><div class="price-cat">Диваны</div><div class="price-range">92 000 &ndash; 252 500 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кресла</div><div class="price-range">~40 000 &ndash; 80 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Стулья</div><div class="price-range">6 500 &ndash; 18 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Столы</div><div class="price-range">15 000 &ndash; 80 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Аксессуары</div><div class="price-range">500 &ndash; 5 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Одежда</div><div class="price-range">3 000 &ndash; 15 000 &#8381;</div></div>
+        </div>
+        <div class="features-row">
+          <span class="feature-chip">Дуб</span>
+          <span class="feature-chip">Фанера берёзы</span>
+          <span class="feature-chip">Сталь</span>
+          <span class="feature-chip">Martindale 100K</span>
+        </div>
+      </div>
+
+      <!-- 2. SK DESIGN -->
+      <div class="competitor-card">
+        <div class="competitor-header">
+          <div>
+            <div class="competitor-name">2. SK DESIGN</div>
+            <div class="competitor-meta">Санкт-Петербург, основан в 2016</div>
+          </div>
+          <span class="sku-badge">200+ SKU</span>
+        </div>
+        <div class="competitor-motto">&laquo;Дизайнерская мебель в каждый дом&raquo;</div>
+        <div class="price-grid">
+          <div class="price-item"><div class="price-cat">Диваны прямые</div><div class="price-range">85 400 &ndash; 273 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Модульные</div><div class="price-range">241 800 &ndash; 254 500 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Диваны-кровати</div><div class="price-range">108 800 &ndash; 299 700 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кресла</div><div class="price-range">от 63 500 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Стулья</div><div class="price-range">от 24 900 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Столы</div><div class="price-range">от 53 500 &#8381;</div></div>
+        </div>
+        <div class="features-row">
+          <span class="feature-chip">6 типов механизмов</span>
+          <span class="feature-chip">Скидки до 30%</span>
+          <span class="feature-chip">4 города</span>
+        </div>
+      </div>
+
+      <!-- 3. DANTONE HOME -->
+      <div class="competitor-card">
+        <div class="competitor-header">
+          <div>
+            <div class="competitor-name">3. DANTONE HOME</div>
+            <div class="competitor-meta">Москва, основан в 2014</div>
+          </div>
+          <span class="sku-badge" style="background: var(--accent);">500+ SKU &mdash; самый широкий!</span>
+        </div>
+        <div class="competitor-motto">&laquo;Золотая середина&raquo;</div>
+        <div class="price-grid">
+          <div class="price-item"><div class="price-cat">Диваны</div><div class="price-range">22 200 &ndash; 266 900 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кресла</div><div class="price-range">37 900 &ndash; 123 300 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кровати</div><div class="price-range">50 000 &ndash; 200 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Столы</div><div class="price-range">20 000 &ndash; 150 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Стулья</div><div class="price-range">15 000 &ndash; 60 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Корпусная</div><div class="price-range">30 000 &ndash; 250 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Свет</div><div class="price-range">10 000 &ndash; 80 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Текстиль</div><div class="price-range">3 000 &ndash; 30 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Декор</div><div class="price-range">1 000 &ndash; 20 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Outdoor</div><div class="price-range">15 000 &ndash; 100 000 &#8381;</div></div>
+        </div>
+        <div class="features-row">
+          <span class="feature-chip">OZON</span>
+          <span class="feature-chip">The Furnish</span>
+          <span class="feature-chip">Скидки до 20%</span>
+        </div>
+      </div>
+
+      <!-- 4. YARATAM -->
+      <div class="competitor-card">
+        <div class="competitor-header">
+          <div>
+            <div class="competitor-name">4. YARATAM</div>
+            <div class="competitor-meta">Казань, основан в 2014</div>
+          </div>
+          <span class="sku-badge">~50+ SKU</span>
+        </div>
+        <div class="competitor-motto">Авторская мебель с татарской идентичностью</div>
+        <div class="price-grid">
+          <div class="price-item"><div class="price-cat">Диваны</div><div class="price-range">97 440 &ndash; 301 875 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кресла</div><div class="price-range">100 380 &ndash; 149 835 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Стулья</div><div class="price-range">14 228 &ndash; 120 960 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Барные</div><div class="price-range">23 520 &ndash; 171 150 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Столы обеденные</div><div class="price-range">149 730 &ndash; 444 570 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Журнальные столы</div><div class="price-range">20 790 &ndash; 47 250 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кровати</div><div class="price-range">71 400 &ndash; 420 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Корпусная</div><div class="price-range">42 840 &ndash; 674 835 &#8381;</div></div>
+        </div>
+        <div class="features-row">
+          <span class="feature-chip">Массив бука</span>
+          <span class="feature-chip">Гарантия 12 мес</span>
+          <span class="feature-chip">Срок службы 10 лет</span>
+        </div>
+      </div>
+
+      <!-- 5. ARCHPOLE -->
+      <div class="competitor-card">
+        <div class="competitor-header">
+          <div>
+            <div class="competitor-name">5. ARCHPOLE</div>
+            <div class="competitor-meta">Москва, основан в 2008</div>
+          </div>
+          <span class="sku-badge">500+ SKU</span>
+        </div>
+        <div class="competitor-motto">&laquo;Мебель на века&raquo;, фанера + сталь</div>
+        <div class="price-grid">
+          <div class="price-item"><div class="price-cat">Диваны</div><div class="price-range">56 800 &ndash; 390 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кресла</div><div class="price-range">34 200 &ndash; 136 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Пуфы</div><div class="price-range">14 000 &ndash; 96 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Стулья</div><div class="price-range">10 800 &ndash; 60 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Столы обеденные</div><div class="price-range">8 800 &ndash; 630 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Столы журнальные</div><div class="price-range">9 600 &ndash; 546 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кровати</div><div class="price-range">56 400 &ndash; 777 777 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Корпусная</div><div class="price-range">10 000 &ndash; 300 000+ &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Декор</div><div class="price-range">5 000 &ndash; 50 000 &#8381;</div></div>
+        </div>
+        <div class="features-row">
+          <span class="feature-chip">Trade-in 50%</span>
+          <span class="feature-chip">White Friday 35%</span>
+          <span class="feature-chip">Рассрочка Тинькофф</span>
+        </div>
+      </div>
+
+      <!-- 6. BOCA ROOM -->
+      <div class="competitor-card">
+        <div class="competitor-header">
+          <div>
+            <div class="competitor-name">6. BOCA ROOM</div>
+            <div class="competitor-meta">Санкт-Петербург, основан в 2018</div>
+          </div>
+          <span class="sku-badge">~30-50 SKU</span>
+        </div>
+        <div class="competitor-motto">&laquo;Хватит кормить Италию&raquo;, YouTube 1М+ подписчиков</div>
+        <div class="price-grid">
+          <div class="price-item"><div class="price-cat">Диваны</div><div class="price-range">186 200 &ndash; 1 947 600 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кровати</div><div class="price-range">196 700 &ndash; 299 500 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Пуфы</div><div class="price-range">32 600 &ndash; 81 000 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Перегородки</div><div class="price-range">366 300 &ndash; 419 700 &#8381;</div></div>
+        </div>
+        <div class="features-row">
+          <span class="feature-chip" style="background: var(--success); color: white;">5 лет гарантии!</span>
+          <span class="feature-chip">45 дней производство</span>
+          <span class="feature-chip">Oeko-Tex</span>
+          <span class="feature-chip">3 000 м&sup2; производства</span>
+        </div>
+      </div>
+
+      <!-- 7. UNIKA MØBLAR -->
+      <div class="competitor-card">
+        <div class="competitor-header">
+          <div>
+            <div class="competitor-name">7. UNIKA M&Oslash;BLAR</div>
+            <div class="competitor-meta">Москва, основан в 2015</div>
+          </div>
+          <span class="sku-badge">242+ SKU</span>
+        </div>
+        <div class="competitor-motto">Скандинавский минимализм, максимальная кастомизация</div>
+        <div class="price-grid">
+          <div class="price-item"><div class="price-cat">Диваны прямые</div><div class="price-range">313 200 &ndash; 572 200 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Модульные</div><div class="price-range">385 200 &ndash; 670 700 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кресла</div><div class="price-range">177 100 &ndash; 207 300 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Стулья</div><div class="price-range">38 400 &ndash; 105 300 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Барные</div><div class="price-range">48 300 &ndash; 64 100 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Столы обеденные</div><div class="price-range">71 300 &ndash; 905 500 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Журнальные столы</div><div class="price-range">57 400 &ndash; 191 900 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Кровати</div><div class="price-range">от 140 400 &#8381;</div></div>
+          <div class="price-item"><div class="price-cat">Комоды</div><div class="price-range">209 300 &ndash; 771 300 &#8381;</div></div>
+        </div>
+        <div class="features-row">
+          <span class="feature-chip">2 000+ вариантов тканей</span>
+          <span class="feature-chip">20-50 рабочих дней</span>
+          <span class="feature-chip">HoReCa</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!--  PART III — COMPARATIVE PRICE MATRIX                      -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="part3">
+      <h2 class="section-title"><span class="num">III</span> Сравнительная ценовая матрица</h2>
+
+      <!-- Диваны -->
+      <h3>Диваны (прямой, ткань)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Бренд</th>
+              <th>Диапазон (&#8381;)</th>
+              <th>Средняя (&#8381;)</th>
+              <th>vs annki</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight">
+              <td><strong>annki studio</strong></td>
+              <td class="cell-accent">270 000 &ndash; 300 000</td>
+              <td class="cell-accent">285 000</td>
+              <td class="cell-accent">baseline</td>
+            </tr>
+            <tr>
+              <td><strong>Delo Design</strong></td>
+              <td>92 000 &ndash; 252 000</td>
+              <td>160 000</td>
+              <td class="cell-positive">&minus;44%</td>
+            </tr>
+            <tr>
+              <td><strong>SK Design</strong></td>
+              <td>85 000 &ndash; 300 000</td>
+              <td>170 000</td>
+              <td class="cell-positive">&minus;40%</td>
+            </tr>
+            <tr>
+              <td><strong>Dantone Home</strong></td>
+              <td>22 000 &ndash; 267 000</td>
+              <td>130 000</td>
+              <td class="cell-positive">&minus;54%</td>
+            </tr>
+            <tr>
+              <td><strong>Archpole</strong></td>
+              <td>57 000 &ndash; 390 000</td>
+              <td>215 000</td>
+              <td class="cell-positive">&minus;25%</td>
+            </tr>
+            <tr>
+              <td><strong>Yaratam</strong></td>
+              <td>97 000 &ndash; 302 000</td>
+              <td>207 000</td>
+              <td class="cell-positive">&minus;27%</td>
+            </tr>
+            <tr>
+              <td><strong>Boca Room</strong></td>
+              <td>186 000 &ndash; 1 948 000</td>
+              <td>450 000</td>
+              <td class="cell-negative">+58%</td>
+            </tr>
+            <tr>
+              <td><strong>UNIKA M&Oslash;BLAR</strong></td>
+              <td>313 000 &ndash; 671 000</td>
+              <td>450 000</td>
+              <td class="cell-negative">+58%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Visual price bars -->
+      <h4>Визуализация средних цен (диваны)</h4>
+      <div class="price-bar-wrap">
+        <div class="price-bar-label"><span>Dantone Home</span><span class="cell-positive">130K &mdash; &minus;54%</span></div>
+        <div class="price-bar"><div class="price-bar-fill" style="width: 29%;"></div></div>
+      </div>
+      <div class="price-bar-wrap">
+        <div class="price-bar-label"><span>Delo Design</span><span class="cell-positive">160K &mdash; &minus;44%</span></div>
+        <div class="price-bar"><div class="price-bar-fill" style="width: 36%;"></div></div>
+      </div>
+      <div class="price-bar-wrap">
+        <div class="price-bar-label"><span>SK Design</span><span class="cell-positive">170K &mdash; &minus;40%</span></div>
+        <div class="price-bar"><div class="price-bar-fill" style="width: 38%;"></div></div>
+      </div>
+      <div class="price-bar-wrap">
+        <div class="price-bar-label"><span>Yaratam</span><span class="cell-positive">207K &mdash; &minus;27%</span></div>
+        <div class="price-bar"><div class="price-bar-fill" style="width: 46%;"></div></div>
+      </div>
+      <div class="price-bar-wrap">
+        <div class="price-bar-label"><span>Archpole</span><span class="cell-positive">215K &mdash; &minus;25%</span></div>
+        <div class="price-bar"><div class="price-bar-fill" style="width: 48%;"></div></div>
+      </div>
+      <div class="price-bar-wrap">
+        <div class="price-bar-label"><span><strong>annki studio</strong></span><span class="cell-accent"><strong>285K &mdash; baseline</strong></span></div>
+        <div class="price-bar"><div class="price-bar-fill accent" style="width: 63%;"></div></div>
+      </div>
+      <div class="price-bar-wrap">
+        <div class="price-bar-label"><span>Boca Room</span><span class="cell-negative">450K &mdash; +58%</span></div>
+        <div class="price-bar"><div class="price-bar-fill" style="width: 100%;"></div></div>
+      </div>
+      <div class="price-bar-wrap">
+        <div class="price-bar-label"><span>UNIKA M&Oslash;BLAR</span><span class="cell-negative">450K &mdash; +58%</span></div>
+        <div class="price-bar"><div class="price-bar-fill" style="width: 100%;"></div></div>
+      </div>
+
+      <!-- Кресла -->
+      <h3>Кресла</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Диапазон (&#8381;)</th><th>Позиция</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight">
+              <td><strong>annki studio</strong></td>
+              <td class="cell-accent">55 000 &ndash; 115 000</td>
+              <td><span class="tag tag-low">Конкурентная позиция</span></td>
+            </tr>
+            <tr><td>Delo Design</td><td>40 000 &ndash; 80 000</td><td class="cell-positive">Дешевле</td></tr>
+            <tr><td>Archpole</td><td>34 200 &ndash; 136 000</td><td class="cell-neutral">Сопоставимо</td></tr>
+            <tr><td>SK Design</td><td>от 63 500</td><td class="cell-neutral">Сопоставимо</td></tr>
+            <tr><td>Dantone Home</td><td>37 900 &ndash; 123 300</td><td class="cell-neutral">Сопоставимо</td></tr>
+            <tr><td>Yaratam</td><td>100 380 &ndash; 149 835</td><td class="cell-negative">Дороже</td></tr>
+            <tr><td>UNIKA M&Oslash;BLAR</td><td>177 100 &ndash; 207 300</td><td class="cell-negative">Значительно дороже</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Стулья -->
+      <h3>Стулья</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Диапазон (&#8381;)</th><th>Позиция</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight">
+              <td><strong>annki studio</strong></td>
+              <td class="cell-accent">35 000 &ndash; 71 300</td>
+              <td><span class="tag tag-critical">Дорого &mdash; зона проигрыша</span></td>
+            </tr>
+            <tr><td>Delo Design</td><td>6 500 &ndash; 18 000</td><td class="cell-positive">В 3-5 раз дешевле</td></tr>
+            <tr><td>Archpole</td><td>10 800 &ndash; 60 000</td><td class="cell-positive">Дешевле</td></tr>
+            <tr><td>Dantone Home</td><td>15 000 &ndash; 60 000</td><td class="cell-positive">Дешевле</td></tr>
+            <tr><td>Yaratam</td><td>14 228 &ndash; 120 960</td><td class="cell-neutral">Широкий диапазон</td></tr>
+            <tr><td>SK Design</td><td>от 24 900</td><td class="cell-positive">Дешевле</td></tr>
+            <tr><td>UNIKA M&Oslash;BLAR</td><td>38 400 &ndash; 105 300</td><td class="cell-negative">Сопоставимо / дороже</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Кровати -->
+      <h3>Кровати</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Диапазон (&#8381;)</th><th>Позиция</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight">
+              <td><strong>annki studio</strong></td>
+              <td class="cell-accent">80 000 &ndash; 110 000</td>
+              <td><span class="tag tag-low">Конкурентная позиция</span></td>
+            </tr>
+            <tr><td>Dantone Home</td><td>50 000 &ndash; 200 000</td><td class="cell-neutral">Широкий диапазон</td></tr>
+            <tr><td>Archpole</td><td>56 400 &ndash; 777 777</td><td class="cell-neutral">Широкий диапазон</td></tr>
+            <tr><td>Yaratam</td><td>71 400 &ndash; 420 000</td><td class="cell-neutral">Сопоставимо на входе</td></tr>
+            <tr><td>UNIKA M&Oslash;BLAR</td><td>от 140 400</td><td class="cell-negative">Дороже</td></tr>
+            <tr><td>Boca Room</td><td>196 700 &ndash; 299 500</td><td class="cell-negative">Значительно дороже</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Столы -->
+      <h3>Столы</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Диапазон (&#8381;)</th><th>Позиция</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight">
+              <td><strong>annki studio</strong></td>
+              <td class="cell-accent">110 000 (1 модель)</td>
+              <td><span class="tag tag-high">В рынке, но только 1 SKU</span></td>
+            </tr>
+            <tr><td>Delo Design</td><td>15 000 &ndash; 80 000</td><td class="cell-positive">Дешевле, шире</td></tr>
+            <tr><td>SK Design</td><td>от 53 500</td><td class="cell-positive">Дешевле</td></tr>
+            <tr><td>Dantone Home</td><td>20 000 &ndash; 150 000</td><td class="cell-positive">Шире диапазон</td></tr>
+            <tr><td>Archpole</td><td>8 800 &ndash; 630 000</td><td class="cell-neutral">Огромный диапазон</td></tr>
+            <tr><td>Yaratam</td><td>20 790 &ndash; 444 570</td><td class="cell-neutral">Широкий диапазон</td></tr>
+            <tr><td>UNIKA M&Oslash;BLAR</td><td>57 400 &ndash; 905 500</td><td class="cell-neutral">Широкий диапазон</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!--  PART IV — WHERE ANNKI LOSES                              -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="part4">
+      <h2 class="section-title"><span class="num">IV</span> Где annki проигрывает</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Параметр</th>
+              <th>Проблема</th>
+              <th>Серьёзность</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ширина ассортимента</strong></td>
+              <td>18-20 SKU vs 100-500+ у конкурентов</td>
+              <td><span class="tag tag-critical">Критично</span></td>
+            </tr>
+            <tr>
+              <td><strong>Ценовой вход</strong></td>
+              <td>Минимум 25 000 &#8381; (пуф) vs 500-6 500 &#8381; у конкурентов</td>
+              <td><span class="tag tag-critical">Критично</span></td>
+            </tr>
+            <tr>
+              <td><strong>Стулья</strong></td>
+              <td>Самые дорогие на рынке: от 35 000 &#8381;</td>
+              <td><span class="tag tag-high">Высокая</span></td>
+            </tr>
+            <tr>
+              <td><strong>Столы</strong></td>
+              <td>Всего 1 модель, нет выбора</td>
+              <td><span class="tag tag-high">Высокая</span></td>
+            </tr>
+            <tr>
+              <td><strong>Средний ценовой сегмент</strong></td>
+              <td>Нет диванов в диапазоне 100-250K</td>
+              <td><span class="tag tag-high">Высокая</span></td>
+            </tr>
+            <tr>
+              <td><strong>Корпусная мебель</strong></td>
+              <td>Полностью отсутствует</td>
+              <td><span class="tag tag-medium">Средняя</span></td>
+            </tr>
+            <tr>
+              <td><strong>Аксессуары / декор</strong></td>
+              <td>Нет entry-level продуктов для привлечения</td>
+              <td><span class="tag tag-medium">Средняя</span></td>
+            </tr>
+            <tr>
+              <td><strong>Гарантия</strong></td>
+              <td>Не указана (vs 12 мес &ndash; 5 лет у конкурентов)</td>
+              <td><span class="tag tag-critical">Критично</span></td>
+            </tr>
+            <tr>
+              <td><strong>Сроки производства</strong></td>
+              <td>Не указаны (vs 20-50 дней у конкурентов)</td>
+              <td><span class="tag tag-high">Высокая</span></td>
+            </tr>
+            <tr>
+              <td><strong>Маркетплейсы</strong></td>
+              <td>Нет присутствия (vs OZON, The Furnish у Dantone)</td>
+              <td><span class="tag tag-medium">Средняя</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>5 конкретных сценариев потери клиента</h3>
+
+      <div class="callout callout-danger" style="margin-bottom: 1rem;">
+        <div class="scenario-box">
+          <span class="scenario-num">1</span>
+          <div>
+            <strong>Покупатель хочет диван ~200 000 &#8381;</strong><br>
+            У annki нет ничего между пуфами (60K) и диваном Plus (270K). Покупатель уходит в SK Design, Delo Design или Archpole, где десятки вариантов в этом диапазоне.
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-danger" style="margin-bottom: 1rem;">
+        <div class="scenario-box">
+          <span class="scenario-num">2</span>
+          <div>
+            <strong>Покупатель хочет стул ~15 000 &ndash; 25 000 &#8381;</strong><br>
+            annki отсутствует в этом сегменте. Delo Design предлагает стулья от 6 500 &#8381;, Archpole от 10 800 &#8381;, Dantone от 15 000 &#8381;. Минимум annki &mdash; 35 000 &#8381;.
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-danger" style="margin-bottom: 1rem;">
+        <div class="scenario-box">
+          <span class="scenario-num">3</span>
+          <div>
+            <strong>Покупатель хочет стол до 80 000 &#8381;</strong><br>
+            У annki единственный стол Bill за 110 000 &#8381;. У Delo Design столы от 15 000, у Dantone от 20 000, у SK Design от 53 500. Покупатель даже не рассмотрит annki.
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-danger" style="margin-bottom: 1rem;">
+        <div class="scenario-box">
+          <span class="scenario-num">4</span>
+          <div>
+            <strong>Покупатель обставляет квартиру целиком</strong><br>
+            В annki невозможно купить полный комплект: нет корпусной мебели, нет света, нет текстиля, нет декора. Dantone Home, Archpole и UNIKA закрывают все потребности в одном месте.
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-danger">
+        <div class="scenario-box">
+          <span class="scenario-num">5</span>
+          <div>
+            <strong>Покупатель сравнивает обоснование цены</strong><br>
+            annki не публикует информацию о гарантии, сроках, сертификатах, тестах тканей. Конкуренты указывают Martindale 100K, Oeko-Tex, гарантию до 5 лет, срок службы 10 лет. Без этой информации премиальная цена annki выглядит необоснованной.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!--  PART V — PRICING RECOMMENDATIONS                         -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="part5">
+      <h2 class="section-title"><span class="num">V</span> Ценовые рекомендации</h2>
+
+      <h3>Новая ценовая архитектура</h3>
+      <p>Пятиуровневая система для полного покрытия рыночного спроса:</p>
+
+      <div class="pricing-arch">
+        <div class="pricing-arch-item arch-entry">
+          <div class="tier-name">Entry</div>
+          <div class="tier-price">5 &ndash; 25K</div>
+          <div class="tier-desc">Аксессуары, подушки, пуфы, свечи</div>
+        </div>
+        <div class="pricing-arch-item arch-value">
+          <div class="tier-name">Value</div>
+          <div class="tier-price">25 &ndash; 60K</div>
+          <div class="tier-desc">Стулья, скамьи, малые столы</div>
+        </div>
+        <div class="pricing-arch-item arch-core">
+          <div class="tier-name">Core</div>
+          <div class="tier-price">60 &ndash; 150K</div>
+          <div class="tier-desc">Кресла, кровати, столы</div>
+        </div>
+        <div class="pricing-arch-item arch-premium">
+          <div class="tier-name">Premium</div>
+          <div class="tier-price">150 &ndash; 350K</div>
+          <div class="tier-desc">Диваны, модульные системы</div>
+        </div>
+        <div class="pricing-arch-item arch-collectible">
+          <div class="tier-name">Collectible</div>
+          <div class="tier-price">350K+</div>
+          <div class="tier-desc">Лимитированные серии, коллаборации</div>
+        </div>
+      </div>
+
+      <h3>Конкретные ценовые рекомендации</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Категория</th>
+              <th>Текущий диапазон</th>
+              <th>Рекомендуемый диапазон</th>
+              <th>Действие</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Аксессуары / декор</strong></td>
+              <td class="cell-neutral">Отсутствуют</td>
+              <td class="cell-positive">5 000 &ndash; 25 000 &#8381;</td>
+              <td><span class="tag tag-critical">Создать</span></td>
+            </tr>
+            <tr>
+              <td><strong>Стулья entry</strong></td>
+              <td>35 000+</td>
+              <td class="cell-positive">15 000 &ndash; 25 000 &#8381;</td>
+              <td><span class="tag tag-critical">Создать</span></td>
+            </tr>
+            <tr>
+              <td><strong>Столы (расширение)</strong></td>
+              <td>110 000 (1 модель)</td>
+              <td class="cell-positive">40 000 &ndash; 150 000 &#8381;</td>
+              <td><span class="tag tag-high">Расширить</span></td>
+            </tr>
+            <tr>
+              <td><strong>Диваны средний сегмент</strong></td>
+              <td class="cell-neutral">Разрыв 60K&ndash;270K</td>
+              <td class="cell-positive">120 000 &ndash; 200 000 &#8381;</td>
+              <td><span class="tag tag-high">Создать</span></td>
+            </tr>
+            <tr>
+              <td><strong>Кровати</strong></td>
+              <td>80 000 &ndash; 110 000</td>
+              <td>80 000 &ndash; 200 000 &#8381;</td>
+              <td><span class="tag tag-medium">Расширить вверх</span></td>
+            </tr>
+            <tr>
+              <td><strong>Корпусная мебель</strong></td>
+              <td class="cell-neutral">Отсутствует</td>
+              <td class="cell-positive">50 000 &ndash; 250 000 &#8381;</td>
+              <td><span class="tag tag-medium">Создать</span></td>
+            </tr>
+            <tr>
+              <td><strong>Текстиль</strong></td>
+              <td class="cell-neutral">Отсутствует</td>
+              <td class="cell-positive">3 000 &ndash; 20 000 &#8381;</td>
+              <td><span class="tag tag-low">Добавить</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Рекомендации по рабочим условиям</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Параметр</th>
+              <th>Текущее состояние</th>
+              <th>Рекомендация</th>
+              <th>Приоритет</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Гарантия</strong></td>
+              <td class="cell-negative">Не указана</td>
+              <td>Минимум 2 года, опубликовать на сайте</td>
+              <td><span class="tag tag-critical">Критично</span></td>
+            </tr>
+            <tr>
+              <td><strong>Сроки производства</strong></td>
+              <td class="cell-negative">Не указаны</td>
+              <td>Указать 30-45 рабочих дней</td>
+              <td><span class="tag tag-critical">Критично</span></td>
+            </tr>
+            <tr>
+              <td><strong>Сертификаты тканей</strong></td>
+              <td class="cell-neutral">Не афишируются</td>
+              <td>Martindale, Oeko-Tex &mdash; на каждую карточку</td>
+              <td><span class="tag tag-high">Высокий</span></td>
+            </tr>
+            <tr>
+              <td><strong>Trade-in программа</strong></td>
+              <td class="cell-neutral">Отсутствует</td>
+              <td>Запустить с 20-30% скидкой на новый заказ</td>
+              <td><span class="tag tag-medium">Средний</span></td>
+            </tr>
+            <tr>
+              <td><strong>Маркетплейсы</strong></td>
+              <td class="cell-neutral">Отсутствует</td>
+              <td>Выход на OZON, Яндекс.Маркет с entry-линейкой</td>
+              <td><span class="tag tag-medium">Средний</span></td>
+            </tr>
+            <tr>
+              <td><strong>HoReCa / B2B</strong></td>
+              <td class="cell-neutral">Не развито</td>
+              <td>Специальные условия для дизайнеров и проектов</td>
+              <td><span class="tag tag-low">Низкий</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!--  PART VI — ROADMAP                                        -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div class="section" id="part6">
+      <h2 class="section-title"><span class="num">VI</span> Дорожная карта</h2>
+
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-date">Месяц 1&ndash;2 &mdash; Quick Wins (коммуникация)</div>
+          <div class="timeline-content">
+            <ul>
+              <li>Опубликовать гарантийные условия на сайте</li>
+              <li>Указать сроки производства для каждого продукта</li>
+              <li>Добавить сертификаты тканей (Martindale, состав) в карточки товаров</li>
+              <li>Запустить рассрочку с явным отображением на сайте</li>
+              <li>Обновить SEO: добавить сравнительные страницы</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Месяц 2&ndash;4 &mdash; Расширение entry-сегмента</div>
+          <div class="timeline-content">
+            <ul>
+              <li>Разработать линейку аксессуаров (подушки, пледы, свечи) &mdash; 5 000&ndash;25 000 &#8381;</li>
+              <li>Запустить entry-стул в ценовом диапазоне 15 000&ndash;25 000 &#8381;</li>
+              <li>Добавить 2-3 модели столов (журнальный, приставной)</li>
+              <li>Выйти на маркетплейс с entry-линейкой</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Месяц 4&ndash;8 &mdash; Расширение core-сегмента</div>
+          <div class="timeline-content">
+            <ul>
+              <li>Запустить диван среднего сегмента (120 000&ndash;200 000 &#8381;)</li>
+              <li>Расширить линейку кроватей вверх (до 200 000 &#8381;)</li>
+              <li>Начать разработку корпусной мебели (комоды, стеллажи)</li>
+              <li>Запустить trade-in программу</li>
+              <li>Развить HoReCa / B2B направление</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Месяц 8&ndash;12 &mdash; Масштабирование</div>
+          <div class="timeline-content">
+            <ul>
+              <li>Довести SKU до 50+ позиций</li>
+              <li>Запустить collectible-линейку (лимитированные серии, коллаборации)</li>
+              <li>Расширить присутствие на маркетплейсах</li>
+              <li>Открыть шоурум / pop-up в Москве</li>
+              <li>Цель: покрытие всех 5 ценовых уровней архитектуры</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="callout callout-success">
+        <strong>Целевой результат через 12 месяцев:</strong> annki studio трансформируется из нишевого бренда с 18-20 SKU в полноценную дизайнерскую марку с 50+ позициями, покрывающими ценовой диапазон от 5 000 до 350 000+ &#8381;. Это позволит конкурировать не только по дизайну, но и по ширине предложения.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="report-footer">
+    ANNKI STUDIO &mdash; Конкурентная матрица &middot; Подготовлено в 2026<br>
+    <span style="margin-top: 4px; display: inline-block;">Источники: официальные сайты delo-design.ru, skdesign.ru, dantonehome.ru, yaratam.ru, archpole.ru, bocaroom.ru, unikamoblar.ru</span>
+  </footer>
+
+</body>
+</html>

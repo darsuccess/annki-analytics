@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Себестоимость и маржинальность -- annki studio</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .fabric-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; font-size: 13px; }
+    .fabric-legend span { display: inline-flex; align-items: center; gap: 4px; }
+    .fabric-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .dot-rogojka { background: #425a5e; }
+    .dot-bukle { background: #f3713c; }
+    .dot-velur { background: #5a8ab5; }
+    .dot-eco { background: #d4a03c; }
+    .dot-natur { background: #c0504d; }
+    .dot-wool-b { background: #4a9e6e; }
+    .dot-wool-a { background: #95a3a7; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .margin-high { color: var(--success); font-weight: 600; }
+    .margin-mid { color: var(--warning); font-weight: 600; }
+    .margin-low { color: var(--danger); font-weight: 600; }
+    .config-block { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.5rem; margin: 1rem 0; }
+    .config-block h4 { margin-top: 0; }
+    .plus-formula { font-family: 'SF Mono', monospace; font-size: 14px; background: var(--primary-dark); color: #a8c8cc; padding: 1.5rem; border-radius: var(--radius-sm); line-height: 1.8; }
+    .plus-formula .hl { color: var(--accent); font-weight: 700; }
+    .ratio-bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; margin: 4px 0; }
+    .ratio-mat { background: var(--primary); }
+    .ratio-lab { background: var(--accent); }
+    .ratio-label { font-size: 11px; color: white; line-height: 20px; padding: 0 6px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="brand">annki studio</a>
+  <a href="index.html">Главная</a>
+  <a href="analysis.html">Бизнес-анализ</a>
+  <a href="competitors.html">Конкуренты</a>
+  <a href="benchmarks.html">Бенчмарки</a>
+  <a href="new-products.html">Новые продукты</a>
+  <a href="cost-analysis.html" class="active">Себестоимость</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="badge">Финансовый анализ</div>
+  <h1>Себестоимость и маржинальность</h1>
+  <p class="subtitle">Детальный анализ структуры затрат, маржи по продуктам и тканям, экономика дивана Plus</p>
+</section>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <h3>Содержание</h3>
+    <ol>
+      <li><a href="#part1">Структура себестоимости: материалы vs работа</a></li>
+      <li><a href="#part2">Себестоимость по типам ткани</a></li>
+      <li><a href="#part3">Маржинальность по продажам (янв-мар 2026)</a></li>
+      <li><a href="#part4">Сводная экономика продуктов</a></li>
+      <li><a href="#part5">Диван Plus: детальный расчет</a></li>
+      <li><a href="#part6">Ключевые инсайты и выводы</a></li>
+    </ol>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="callout callout-warning">
+    <strong>Важно:</strong> Себестоимость включает ТОЛЬКО прямые затраты (материалы + работа). НЕ включены: аренда, электричество, накладные расходы, маркетинг, бонусы дизайнерам. Реальная чистая маржа ниже указанной на 20-30 п.п.
+  </div>
+
+  <!-- KPI cards -->
+  <div class="kv-grid">
+    <div class="kv-item">
+      <div class="kv-label">Средняя маржа (рогожка)</div>
+      <div class="kv-value">67%</div>
+    </div>
+    <div class="kv-item">
+      <div class="kv-label">Самый маржинальный</div>
+      <div class="kv-value small">Ernest кресло 77.8%</div>
+    </div>
+    <div class="kv-item">
+      <div class="kv-label">Наименее маржинальный</div>
+      <div class="kv-value small">Clover табурет 46.7%</div>
+    </div>
+    <div class="kv-item">
+      <div class="kv-label">Натур кожа vs рогожка</div>
+      <div class="kv-value">1.5-2.7x</div>
+    </div>
+  </div>
+
+  <!-- Part 1: Cost Structure -->
+  <section class="section" id="part1">
+    <h2 class="section-title"><span class="num">1</span> Структура себестоимости: материалы vs работа</h2>
+
+    <p>Каждый продукт annki studio состоит из четырех групп затрат: каркас, поролон/наполнитель, раскрой/пошив/обтяжка и упаковка. К ним добавляется работа по каждой операции.</p>
+
+    <h3>Сводная таблица: материалы и работа</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Продукт</th>
+            <th>Материалы</th>
+            <th>Работа</th>
+            <th>Итого (без ткани)</th>
+            <th>% мат.</th>
+            <th>% раб.</th>
+            <th>Соотношение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Steve обеденный</strong></td>
+            <td class="num">2,700</td>
+            <td class="num">8,300</td>
+            <td class="num"><strong>11,000</strong></td>
+            <td class="num">25%</td>
+            <td class="num">75%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:25%"><span class="ratio-label">25%</span></div><div class="ratio-lab" style="width:75%"><span class="ratio-label">75%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Steve без локтей</strong></td>
+            <td class="num">2,850</td>
+            <td class="num">9,550</td>
+            <td class="num"><strong>12,400</strong></td>
+            <td class="num">23%</td>
+            <td class="num">77%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:23%"><span class="ratio-label">23%</span></div><div class="ratio-lab" style="width:77%"><span class="ratio-label">77%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Steve с локтями</strong></td>
+            <td class="num">3,700</td>
+            <td class="num">11,100</td>
+            <td class="num"><strong>14,800</strong></td>
+            <td class="num">25%</td>
+            <td class="num">75%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:25%"><span class="ratio-label">25%</span></div><div class="ratio-lab" style="width:75%"><span class="ratio-label">75%</span></div></div></td>
+          </tr>
+          <tr class="cell-highlight">
+            <td><strong>Диван модуль нераскл.</strong></td>
+            <td class="num">11,150</td>
+            <td class="num">8,550</td>
+            <td class="num"><strong>19,700</strong></td>
+            <td class="num">57%</td>
+            <td class="num">43%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:57%"><span class="ratio-label">57%</span></div><div class="ratio-lab" style="width:43%"><span class="ratio-label">43%</span></div></div></td>
+          </tr>
+          <tr class="cell-highlight">
+            <td><strong>Диван модуль раскл.</strong></td>
+            <td class="num">12,900</td>
+            <td class="num">11,600</td>
+            <td class="num"><strong>24,500</strong></td>
+            <td class="num">53%</td>
+            <td class="num">47%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:53%"><span class="ratio-label">53%</span></div><div class="ratio-lab" style="width:47%"><span class="ratio-label">47%</span></div></div></td>
+          </tr>
+          <tr class="cell-highlight">
+            <td><strong>Диван локоть</strong></td>
+            <td class="num">3,900</td>
+            <td class="num">4,400</td>
+            <td class="num"><strong>8,300</strong></td>
+            <td class="num">47%</td>
+            <td class="num">53%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:47%"><span class="ratio-label">47%</span></div><div class="ratio-lab" style="width:53%"><span class="ratio-label">53%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Стол BILL нераскл.</strong></td>
+            <td class="num">39,200</td>
+            <td class="num">10,800</td>
+            <td class="num"><strong>50,000</strong></td>
+            <td class="num">78%</td>
+            <td class="num">22%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:78%"><span class="ratio-label">78% мат.</span></div><div class="ratio-lab" style="width:22%"><span class="ratio-label">22%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Стол BILL раскл.</strong></td>
+            <td class="num">58,500</td>
+            <td class="num">16,500</td>
+            <td class="num"><strong>75,000</strong></td>
+            <td class="num">78%</td>
+            <td class="num">22%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:78%"><span class="ratio-label">78% мат.</span></div><div class="ratio-lab" style="width:22%"><span class="ratio-label">22%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Стул гардероб</strong></td>
+            <td class="num">14,100</td>
+            <td class="num">5,900</td>
+            <td class="num"><strong>20,000</strong></td>
+            <td class="num">71%</td>
+            <td class="num">29%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:71%"><span class="ratio-label">71%</span></div><div class="ratio-lab" style="width:29%"><span class="ratio-label">29%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Кровать SOVA 160</strong></td>
+            <td class="num">17,800</td>
+            <td class="num">22,900</td>
+            <td class="num"><strong>40,700</strong></td>
+            <td class="num">44%</td>
+            <td class="num">56%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:44%"><span class="ratio-label">44%</span></div><div class="ratio-lab" style="width:56%"><span class="ratio-label">56%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Кровать BASIC 160 нр.</strong></td>
+            <td class="num">19,260</td>
+            <td class="num">16,740</td>
+            <td class="num"><strong>36,000</strong></td>
+            <td class="num">54%</td>
+            <td class="num">46%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:54%"><span class="ratio-label">54%</span></div><div class="ratio-lab" style="width:46%"><span class="ratio-label">46%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Кровать BASIC 160 р.</strong></td>
+            <td class="num">23,260</td>
+            <td class="num">20,540</td>
+            <td class="num"><strong>43,800</strong></td>
+            <td class="num">53%</td>
+            <td class="num">47%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:53%"><span class="ratio-label">53%</span></div><div class="ratio-lab" style="width:47%"><span class="ratio-label">47%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Кровать CUBE 160 нр.</strong></td>
+            <td class="num">19,800</td>
+            <td class="num">19,000</td>
+            <td class="num"><strong>38,800</strong></td>
+            <td class="num">51%</td>
+            <td class="num">49%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:51%"><span class="ratio-label">51%</span></div><div class="ratio-lab" style="width:49%"><span class="ratio-label">49%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Кровать CUBE 160 р.</strong></td>
+            <td class="num">22,500</td>
+            <td class="num">23,000</td>
+            <td class="num"><strong>45,500</strong></td>
+            <td class="num">49%</td>
+            <td class="num">51%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:49%"><span class="ratio-label">49%</span></div><div class="ratio-lab" style="width:51%"><span class="ratio-label">51%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Workaholic кресло</strong></td>
+            <td class="num">10,750</td>
+            <td class="num">13,550</td>
+            <td class="num"><strong>24,300</strong></td>
+            <td class="num">44%</td>
+            <td class="num">56%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:44%"><span class="ratio-label">44%</span></div><div class="ratio-lab" style="width:56%"><span class="ratio-label">56%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Workaholic диван</strong></td>
+            <td class="num">16,800</td>
+            <td class="num">18,000</td>
+            <td class="num"><strong>34,800</strong></td>
+            <td class="num">48%</td>
+            <td class="num">52%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:48%"><span class="ratio-label">48%</span></div><div class="ratio-lab" style="width:52%"><span class="ratio-label">52%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>HERO диван прямой</strong></td>
+            <td class="num">32,700</td>
+            <td class="num">27,400</td>
+            <td class="num"><strong>60,100</strong></td>
+            <td class="num">54%</td>
+            <td class="num">46%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:54%"><span class="ratio-label">54%</span></div><div class="ratio-lab" style="width:46%"><span class="ratio-label">46%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Ernest кресло</strong></td>
+            <td class="num">17,500</td>
+            <td class="num">12,500</td>
+            <td class="num"><strong>30,000</strong></td>
+            <td class="num">58%</td>
+            <td class="num">42%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:58%"><span class="ratio-label">58%</span></div><div class="ratio-lab" style="width:42%"><span class="ratio-label">42%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Bono кресло</strong></td>
+            <td class="num">20,000</td>
+            <td class="num">14,300</td>
+            <td class="num"><strong>34,300</strong></td>
+            <td class="num">58%</td>
+            <td class="num">42%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:58%"><span class="ratio-label">58%</span></div><div class="ratio-lab" style="width:42%"><span class="ratio-label">42%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Пуф RUNDA 900/OVAL</strong></td>
+            <td class="num">4,800</td>
+            <td class="num">3,200</td>
+            <td class="num"><strong>8,000</strong></td>
+            <td class="num">60%</td>
+            <td class="num">40%</td>
+            <td><div class="ratio-bar"><div class="ratio-mat" style="width:60%"><span class="ratio-label">60%</span></div><div class="ratio-lab" style="width:40%"><span class="ratio-label">40%</span></div></div></td>
+          </tr>
+          <tr>
+            <td><strong>Табурет clover МДФ</strong></td>
+            <td class="num">16,005</td>
+            <td class="num">0*</td>
+            <td class="num"><strong>16,005</strong></td>
+            <td class="num" colspan="3"><em>*Аутсорс, работа в стоимости</em></td>
+          </tr>
+          <tr>
+            <td><strong>Скамья clover МДФ</strong></td>
+            <td class="num">20,005</td>
+            <td class="num">0*</td>
+            <td class="num"><strong>20,005</strong></td>
+            <td class="num" colspan="3"><em>*Аутсорс</em></td>
+          </tr>
+          <tr>
+            <td><strong>Табурет clover ясень</strong></td>
+            <td class="num">17,505</td>
+            <td class="num">0*</td>
+            <td class="num"><strong>17,505</strong></td>
+            <td class="num" colspan="3"><em>*Аутсорс (Иван)</em></td>
+          </tr>
+          <tr>
+            <td><strong>Скамья clover ясень</strong></td>
+            <td class="num">21,505</td>
+            <td class="num">0*</td>
+            <td class="num"><strong>21,505</strong></td>
+            <td class="num" colspan="3"><em>*Аутсорс (Иван)</em></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Детальная раскладка материалов</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Продукт</th><th>Каркас</th><th>Поролон</th><th>Раскрой/пошив</th><th>Упаковка</th><th>Итого</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Steve обеденный</td><td class="num">1,685</td><td class="num">500</td><td class="num">90</td><td class="num">425</td><td class="num"><strong>2,700</strong></td></tr>
+          <tr><td>Steve без локтей</td><td class="num">1,790</td><td class="num">545</td><td class="num">90</td><td class="num">425</td><td class="num"><strong>2,850</strong></td></tr>
+          <tr><td>Steve с локтями</td><td class="num">2,285</td><td class="num">900</td><td class="num">90</td><td class="num">425</td><td class="num"><strong>3,700</strong></td></tr>
+          <tr><td>Диван модуль нераскл.</td><td class="num">3,640</td><td class="num">6,370</td><td class="num">90</td><td class="num">1,050</td><td class="num"><strong>11,150</strong></td></tr>
+          <tr><td>Диван модуль раскл.</td><td class="num">5,390</td><td class="num">6,370</td><td class="num">90</td><td class="num">1,050</td><td class="num"><strong>12,900</strong></td></tr>
+          <tr><td>Диван локоть</td><td class="num">1,650</td><td class="num">1,850</td><td class="num">90</td><td class="num">310</td><td class="num"><strong>3,900</strong></td></tr>
+          <tr><td>Стол BILL нераскл.</td><td class="num">38,150</td><td class="num">0</td><td class="num">0</td><td class="num">1,050</td><td class="num"><strong>39,200</strong></td></tr>
+          <tr><td>Стол BILL раскл.</td><td class="num">57,350</td><td class="num">0</td><td class="num">0</td><td class="num">1,150</td><td class="num"><strong>58,500</strong></td></tr>
+          <tr><td>Стул гардероб</td><td class="num">11,700</td><td class="num">0</td><td class="num">0</td><td class="num">2,400</td><td class="num"><strong>14,100</strong></td></tr>
+          <tr><td>Кровать SOVA 160</td><td class="num">13,530</td><td class="num">2,720</td><td class="num">150</td><td class="num">1,400</td><td class="num"><strong>17,800</strong></td></tr>
+          <tr><td>Кровать BASIC 160 нр.</td><td class="num">10,200</td><td class="num">7,460</td><td class="num">150</td><td class="num">1,450</td><td class="num"><strong>19,260</strong></td></tr>
+          <tr><td>Кровать BASIC 160 р.</td><td class="num">13,700</td><td class="num">7,460</td><td class="num">150</td><td class="num">1,950</td><td class="num"><strong>23,260</strong></td></tr>
+          <tr><td>Кровать CUBE 160 нр.</td><td class="num">10,050</td><td class="num">8,200</td><td class="num">150</td><td class="num">1,400</td><td class="num"><strong>19,800</strong></td></tr>
+          <tr><td>Кровать CUBE 160 р.</td><td class="num">12,250</td><td class="num">8,200</td><td class="num">150</td><td class="num">1,900</td><td class="num"><strong>22,500</strong></td></tr>
+          <tr><td>Workaholic кресло</td><td class="num">6,890</td><td class="num">3,295</td><td class="num">90</td><td class="num">475</td><td class="num"><strong>10,750</strong></td></tr>
+          <tr><td>Workaholic диван</td><td class="num">9,650</td><td class="num">6,435</td><td class="num">90</td><td class="num">625</td><td class="num"><strong>16,800</strong></td></tr>
+          <tr><td>HERO диван</td><td class="num">23,270</td><td class="num">8,665</td><td class="num">90</td><td class="num">675</td><td class="num"><strong>32,700</strong></td></tr>
+          <tr><td>Ernest кресло (дер.)</td><td class="num">15,605</td><td class="num">1,330</td><td class="num">90</td><td class="num">475</td><td class="num"><strong>17,500</strong></td></tr>
+          <tr><td>Bono кресло (дер.)</td><td class="num">15,975</td><td class="num">3,460</td><td class="num">90</td><td class="num">475</td><td class="num"><strong>20,000</strong></td></tr>
+          <tr><td>Пуф RUNDA/OVAL</td><td class="num">2,625</td><td class="num">1,550</td><td class="num">250</td><td class="num">375</td><td class="num"><strong>4,800</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Детальная раскладка работы по операциям</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Продукт</th><th>Распил</th><th>Сборка</th><th>Поролон</th><th>Раскрой</th><th>Пошив</th><th>Обтяжка</th><th>Упак.</th><th>Итого</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Steve обед.</td><td class="num">2,700</td><td class="num">1,200</td><td class="num">900</td><td class="num">700</td><td class="num">1,150</td><td class="num">1,350</td><td class="num">300</td><td class="num"><strong>8,300</strong></td></tr>
+          <tr><td>Steve б/л</td><td class="num">3,300</td><td class="num">1,500</td><td class="num">1,000</td><td class="num">700</td><td class="num">1,150</td><td class="num">1,350</td><td class="num">300</td><td class="num"><strong>9,300</strong></td></tr>
+          <tr><td>Steve с/л</td><td class="num">3,800</td><td class="num">1,900</td><td class="num">1,200</td><td class="num">950</td><td class="num">1,350</td><td class="num">1,600</td><td class="num">300</td><td class="num"><strong>11,100</strong></td></tr>
+          <tr><td>Див. мод. нр.</td><td class="num">3,550</td><td class="num">600</td><td class="num">700</td><td class="num">900</td><td class="num">1,200</td><td class="num">1,000</td><td class="num">600</td><td class="num"><strong>8,550</strong></td></tr>
+          <tr><td>Див. мод. р.</td><td class="num">5,150</td><td class="num">900</td><td class="num">700</td><td class="num">1,100</td><td class="num">1,450</td><td class="num">1,700</td><td class="num">600</td><td class="num"><strong>11,600</strong></td></tr>
+          <tr><td>Див. локоть</td><td class="num">2,600</td><td class="num">300</td><td class="num">350</td><td class="num">250</td><td class="num">300</td><td class="num">300</td><td class="num">300</td><td class="num"><strong>4,400</strong></td></tr>
+          <tr><td>BILL нр.</td><td class="num">8,400</td><td class="num">1,200</td><td class="num">--</td><td class="num">--</td><td class="num">--</td><td class="num">--</td><td class="num">1,200</td><td class="num"><strong>10,800</strong></td></tr>
+          <tr><td>BILL р.</td><td class="num">13,400</td><td class="num">1,600</td><td class="num">--</td><td class="num">--</td><td class="num">--</td><td class="num">--</td><td class="num">1,500</td><td class="num"><strong>16,500</strong></td></tr>
+          <tr><td>Гардероб</td><td class="num">5,000</td><td class="num">300</td><td class="num">--</td><td class="num">--</td><td class="num">--</td><td class="num">--</td><td class="num">600</td><td class="num"><strong>5,900</strong></td></tr>
+          <tr><td>SOVA 160</td><td class="num">14,700</td><td class="num">1,200</td><td class="num">1,200</td><td class="num">1,000</td><td class="num">1,400</td><td class="num">2,200</td><td class="num">1,200</td><td class="num"><strong>22,900</strong></td></tr>
+          <tr><td>BASIC 160 нр.</td><td class="num">6,940</td><td class="num">1,200</td><td class="num">1,200</td><td class="num">1,000</td><td class="num">3,000</td><td class="num">2,200</td><td class="num">1,200</td><td class="num"><strong>16,740</strong></td></tr>
+          <tr><td>BASIC 160 р.</td><td class="num">10,740</td><td class="num">1,200</td><td class="num">1,200</td><td class="num">1,000</td><td class="num">3,000</td><td class="num">2,200</td><td class="num">1,200</td><td class="num"><strong>20,540</strong></td></tr>
+          <tr><td>CUBE 160 нр.</td><td class="num">7,200</td><td class="num">1,200</td><td class="num">1,200</td><td class="num">1,500</td><td class="num">4,500</td><td class="num">2,200</td><td class="num">1,200</td><td class="num"><strong>19,000</strong></td></tr>
+          <tr><td>CUBE 160 р.</td><td class="num">11,200</td><td class="num">1,200</td><td class="num">1,200</td><td class="num">1,500</td><td class="num">4,500</td><td class="num">2,200</td><td class="num">1,200</td><td class="num"><strong>23,000</strong></td></tr>
+          <tr><td>Worka. кресло</td><td class="num">4,850</td><td class="num">1,900</td><td class="num">1,200</td><td class="num">1,500</td><td class="num">2,200</td><td class="num">1,600</td><td class="num">300</td><td class="num"><strong>13,550</strong></td></tr>
+          <tr><td>Worka. диван</td><td class="num">6,700</td><td class="num">2,400</td><td class="num">1,200</td><td class="num">2,100</td><td class="num">3,000</td><td class="num">2,000</td><td class="num">600</td><td class="num"><strong>18,000</strong></td></tr>
+          <tr><td>HERO диван</td><td class="num">12,600</td><td class="num">2,000</td><td class="num">2,100</td><td class="num">3,300</td><td class="num">4,200</td><td class="num">2,000</td><td class="num">1,200</td><td class="num"><strong>27,400</strong></td></tr>
+          <tr><td>Ernest кр.</td><td class="num">4,800</td><td class="num">1,900</td><td class="num">1,200</td><td class="num">1,100</td><td class="num">1,600</td><td class="num">1,600</td><td class="num">300</td><td class="num"><strong>12,500</strong></td></tr>
+          <tr><td>Bono кр.</td><td class="num">6,400</td><td class="num">1,900</td><td class="num">1,200</td><td class="num">1,200</td><td class="num">1,700</td><td class="num">1,600</td><td class="num">300</td><td class="num"><strong>14,300</strong></td></tr>
+          <tr><td>Пуф RUNDA</td><td class="num">1,000</td><td class="num">300</td><td class="num">300</td><td class="num">200</td><td class="num">300</td><td class="num">300</td><td class="num">300</td><td class="num"><strong>2,700</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Part 2: Fabric costs -->
+  <section class="section" id="part2">
+    <h2 class="section-title"><span class="num">2</span> Себестоимость по типам ткани</h2>
+
+    <div class="fabric-legend">
+      <span><span class="dot dot-rogojka"></span> Рогожка (350 р/мп)</span>
+      <span><span class="dot dot-bukle"></span> Букле (1,465 р/мп)</span>
+      <span><span class="dot dot-velur"></span> Велюр (749 р/мп)</span>
+      <span><span class="dot dot-eco"></span> Эко кожа (1,199 р/мп)</span>
+      <span><span class="dot dot-natur"></span> Натур кожа (4,720 р/мп)</span>
+      <span><span class="dot dot-wool-b"></span> Эко шерсть Б. (2,640 р/мп)</span>
+      <span><span class="dot dot-wool-a"></span> Эко шерсть А. (752 р/мп)</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Продукт</th><th>Рогожка</th><th>Букле</th><th>Велюр</th><th>Эко кожа</th><th>Натур кожа</th><th>Эко шерсть Б.</th><th>Эко шерсть А.</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Steve обед.</strong></td><td class="num">11,525</td><td class="num">13,198</td><td class="num">12,124</td><td class="num">12,799</td><td class="num cell-negative">18,080</td><td class="num">14,960</td><td class="num">12,128</td></tr>
+          <tr><td><strong>Steve б/л</strong></td><td class="num">13,205</td><td class="num">15,770</td><td class="num">14,123</td><td class="num">15,158</td><td class="num cell-negative">23,256</td><td class="num">18,472</td><td class="num">14,130</td></tr>
+          <tr><td><strong>Steve с/л</strong></td><td class="num">15,675</td><td class="num">18,463</td><td class="num">16,673</td><td class="num">17,798</td><td class="num cell-negative">26,600</td><td class="num">21,400</td><td class="num">16,680</td></tr>
+          <tr><td><strong>SOVA 160</strong></td><td class="num">44,200</td><td class="num">55,350</td><td class="num">48,190</td><td class="num">52,690</td><td class="num cell-negative">87,900</td><td class="num">67,100</td><td class="num">48,220</td></tr>
+          <tr><td><strong>BASIC 160 нр.</strong></td><td class="num">39,850</td><td class="num">52,115</td><td class="num">44,239</td><td class="num">49,189</td><td class="num cell-negative">87,920</td><td class="num">65,040</td><td class="num">44,272</td></tr>
+          <tr><td><strong>BASIC 160 р.</strong></td><td class="num">47,650</td><td class="num">59,915</td><td class="num">52,039</td><td class="num">56,989</td><td class="num cell-negative">95,720</td><td class="num">72,840</td><td class="num">52,072</td></tr>
+          <tr><td><strong>CUBE 160 нр.</strong></td><td class="num">42,650</td><td class="num">54,915</td><td class="num">47,039</td><td class="num">51,989</td><td class="num cell-negative">90,720</td><td class="num">67,840</td><td class="num">47,072</td></tr>
+          <tr><td><strong>CUBE 160 р.</strong></td><td class="num">49,350</td><td class="num">61,615</td><td class="num">53,739</td><td class="num">58,689</td><td class="num cell-negative">97,420</td><td class="num">74,540</td><td class="num">53,772</td></tr>
+          <tr><td><strong>Worka. кресло</strong></td><td class="num">28,150</td><td class="num">40,415</td><td class="num">32,539</td><td class="num">37,489</td><td class="num cell-negative">76,220</td><td class="num">53,340</td><td class="num">32,572</td></tr>
+          <tr><td><strong>Worka. диван</strong></td><td class="num">39,000</td><td class="num">52,380</td><td class="num">43,788</td><td class="num">49,188</td><td class="num cell-negative">91,440</td><td class="num">66,480</td><td class="num">43,824</td></tr>
+          <tr><td><strong>HERO прям.</strong></td><td class="num">64,300</td><td class="num">77,680</td><td class="num">69,088</td><td class="num">74,488</td><td class="num cell-negative">116,740</td><td class="num">91,780</td><td class="num">69,124</td></tr>
+          <tr><td><strong>Ernest (мет.)</strong></td><td class="num">25,550</td><td class="num">28,895</td><td class="num">26,747</td><td class="num">28,097</td><td class="num cell-negative">38,660</td><td class="num">32,420</td><td class="num">26,756</td></tr>
+          <tr><td><strong>Ernest (дер.)</strong></td><td class="num">31,050</td><td class="num">34,395</td><td class="num">32,247</td><td class="num">33,597</td><td class="num cell-negative">44,160</td><td class="num">37,920</td><td class="num">32,256</td></tr>
+          <tr><td><strong>Bono (мет.)</strong></td><td class="num">30,200</td><td class="num">34,660</td><td class="num">31,796</td><td class="num">33,596</td><td class="num cell-negative">47,680</td><td class="num">39,360</td><td class="num">31,808</td></tr>
+          <tr><td><strong>Bono (дер.)</strong></td><td class="num">35,700</td><td class="num">40,160</td><td class="num">37,296</td><td class="num">39,096</td><td class="num cell-negative">53,180</td><td class="num">44,860</td><td class="num">37,308</td></tr>
+          <tr><td><strong>Пуф RUNDA/OVAL</strong></td><td class="num">9,050</td><td class="num">12,395</td><td class="num">10,247</td><td class="num">11,597</td><td class="num cell-negative">22,160</td><td class="num">15,920</td><td class="num">10,256</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Множитель удорожания: натуральная кожа vs рогожка</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Продукт</th><th>Расход ткани (мп)</th><th>Рогожка</th><th>Натур кожа</th><th>Множитель</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Workaholic кресло</td><td class="num">11</td><td class="num">28,150</td><td class="num">76,220</td><td class="num cell-negative"><strong>2.71x</strong></td></tr>
+          <tr><td>Кровать BASIC 160 нр.</td><td class="num">11</td><td class="num">39,850</td><td class="num">87,920</td><td class="num cell-negative"><strong>2.21x</strong></td></tr>
+          <tr><td>Кровать CUBE 160 нр.</td><td class="num">11</td><td class="num">42,650</td><td class="num">90,720</td><td class="num cell-negative"><strong>2.13x</strong></td></tr>
+          <tr><td>Кровать SOVA 160</td><td class="num">10</td><td class="num">44,200</td><td class="num">87,900</td><td class="num cell-negative"><strong>1.99x</strong></td></tr>
+          <tr><td>HERO диван</td><td class="num">12</td><td class="num">64,300</td><td class="num">116,740</td><td class="num"><strong>1.82x</strong></td></tr>
+          <tr><td>Steve без локтей</td><td class="num">2.3</td><td class="num">13,205</td><td class="num">23,256</td><td class="num"><strong>1.76x</strong></td></tr>
+          <tr><td>Bono кресло (дер.)</td><td class="num">4</td><td class="num">35,700</td><td class="num">53,180</td><td class="num"><strong>1.49x</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>Вывод:</strong> Натуральная кожа увеличивает себестоимость в 1.5-2.7x. Наибольшее влияние -- на продукты с большим расходом ткани (кровати: 10-11 мп, Workaholic: 7-11 мп). Для стульев Steve (1.5-2.5 мп) влияние ткани значительно меньше.
+    </div>
+  </section>
+
+  <!-- Part 3: Margin analysis from sales -->
+  <section class="section" id="part3">
+    <h2 class="section-title"><span class="num">3</span> Маржинальность по продажам (янв-мар 2026)</h2>
+
+    <div class="callout callout-warning">
+      <strong>Напоминание:</strong> Маржа рассчитана только от прямых затрат (материалы + работа). Реальная маржа ниже после вычета аренды, коммуналки, маркетинга, бонусов дизайнерам и прочих накладных.
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Дата</th><th>Продукт</th><th>Кол-во</th><th>Выручка</th><th>Себест.</th><th>Маржа</th><th>%</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td><td>13.01</td><td>Steve кресло (букле 208)</td><td class="num">2</td>
+            <td class="num">120,000</td><td class="num">49,600</td><td class="num cell-positive">70,400</td><td class="num margin-high">58.7%</td>
+          </tr>
+          <tr>
+            <td>2</td><td>14.01</td><td>Табурет clover 2.0 МДФ</td><td class="num">3</td>
+            <td class="num">108,000</td><td class="num">48,015</td><td class="num cell-positive">59,985</td><td class="num margin-mid">55.5%</td>
+          </tr>
+          <tr>
+            <td>3</td><td>16.01</td><td>Кровать SOVA 160 (эко 319)</td><td class="num">1</td>
+            <td class="num">178,200</td><td class="num">40,700</td><td class="num cell-positive">137,500</td><td class="num margin-high">77.2%</td>
+          </tr>
+          <tr>
+            <td>4</td><td>24.01</td><td>Steve++ (букле 202)</td><td class="num">1</td>
+            <td class="num">75,000</td><td class="num">14,800</td><td class="num cell-positive">60,200</td><td class="num margin-high">80.3%</td>
+          </tr>
+          <tr>
+            <td>5</td><td>25.01</td><td>Чехол Plus + подушки + скамья clover</td><td class="num">4</td>
+            <td class="num">115,000</td><td class="num">32,505</td><td class="num cell-positive">82,495</td><td class="num margin-high">71.7%</td>
+          </tr>
+          <tr>
+            <td>6</td><td>29.01</td><td>Пуф OVAL (велюр 133)</td><td class="num">1</td>
+            <td class="num">60,000</td><td class="num">8,000</td><td class="num cell-positive">52,000</td><td class="num margin-high">86.7%</td>
+          </tr>
+          <tr>
+            <td>7</td><td>29.01</td><td>Steve dinner (букле 278) x4</td><td class="num">4</td>
+            <td class="num">149,200</td><td class="num">211,424</td><td class="num cell-negative">-62,224</td><td class="num margin-low">-41.7%*</td>
+          </tr>
+          <tr>
+            <td>8</td><td>04.02</td><td>Диван Plus (278)</td><td class="num">1</td>
+            <td class="num">190,000</td><td class="num">67,700</td><td class="num cell-positive">122,300</td><td class="num margin-high">64.4%</td>
+          </tr>
+          <tr>
+            <td>9</td><td>04.02</td><td>Пуф RUNDA (225)</td><td class="num">1</td>
+            <td class="num">33,250</td><td class="num">8,000</td><td class="num cell-positive">25,250</td><td class="num margin-high">75.9%</td>
+          </tr>
+          <tr>
+            <td>11</td><td>06.02</td><td>Workaholic кресло x2 (121)</td><td class="num">2</td>
+            <td class="num">200,000</td><td class="num">53,694</td><td class="num cell-positive">146,306</td><td class="num margin-high">73.2%</td>
+          </tr>
+          <tr>
+            <td>12</td><td>10.02</td><td>Диван Plus (букле 117) + чехол</td><td class="num">1+1</td>
+            <td class="num">325,000</td><td class="num">77,524</td><td class="num cell-positive">247,476</td><td class="num margin-high">76.2%</td>
+          </tr>
+          <tr>
+            <td>14</td><td>17.02</td><td>Диван на заказ</td><td class="num">1</td>
+            <td class="num">526,000</td><td class="num">112,075</td><td class="num cell-positive">413,925</td><td class="num margin-high">78.7%</td>
+          </tr>
+          <tr>
+            <td>17</td><td>24.02</td><td>Пуф RUNDA x2 + пуф Plus</td><td class="num">3</td>
+            <td class="num">115,000</td><td class="num">52,064</td><td class="num cell-positive">62,936</td><td class="num margin-mid">54.7%</td>
+          </tr>
+          <tr>
+            <td>18</td><td>25.02</td><td>Steve dinner x2</td><td class="num">2</td>
+            <td class="num">70,000</td><td class="num">49,520</td><td class="num cell-positive">20,480</td><td class="num margin-low">29.3%</td>
+          </tr>
+          <tr>
+            <td>22</td><td>07.03</td><td>Кровать SOVA 160</td><td class="num">1</td>
+            <td class="num">140,000</td><td class="num">~44,200</td><td class="num cell-positive">~95,800</td><td class="num margin-high">~68.4%</td>
+          </tr>
+          <tr>
+            <td>23</td><td>08.03</td><td>Диван Plus</td><td class="num">1</td>
+            <td class="num">182,000</td><td class="num">~50,000</td><td class="num cell-positive">~132,000</td><td class="num margin-high">~72.5%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><em>*Заказ #7: себестоимость 211,424 для 4 стульев steve dinner с букле 278 выглядит аномально высокой -- вероятно, включена стоимость дорогой ткани. При рогожке себестоимость 4 стульев = ~46,100.</em></p>
+  </section>
+
+  <!-- Part 4: Product economics summary -->
+  <section class="section" id="part4">
+    <h2 class="section-title"><span class="num">4</span> Сводная экономика продуктов</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Продукт</th><th>Себест. рогожка</th><th>Себест. букле</th><th>Себест. натур кожа</th><th>РРЦ от</th><th>Маржа (рог.)</th><th>Маржа %</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Steve обеденный</strong></td>
+            <td class="num">11,525</td><td class="num">13,198</td><td class="num">18,080</td>
+            <td class="num">34,575</td><td class="num cell-positive">23,050</td><td class="num margin-high">66.7%</td>
+          </tr>
+          <tr>
+            <td><strong>Steve кресло</strong></td>
+            <td class="num">13,205</td><td class="num">15,770</td><td class="num">23,256</td>
+            <td class="num">52,820</td><td class="num cell-positive">39,615</td><td class="num margin-high">75.0%</td>
+          </tr>
+          <tr>
+            <td><strong>Steve++</strong></td>
+            <td class="num">15,675</td><td class="num">18,463</td><td class="num">26,600</td>
+            <td class="num">62,700</td><td class="num cell-positive">47,025</td><td class="num margin-high">75.0%</td>
+          </tr>
+          <tr>
+            <td><strong>Workaholic кресло</strong></td>
+            <td class="num">28,150</td><td class="num">40,415</td><td class="num">76,220</td>
+            <td class="num">100,000</td><td class="num cell-positive">71,850</td><td class="num margin-high">71.9%</td>
+          </tr>
+          <tr>
+            <td><strong>Workaholic диван</strong></td>
+            <td class="num">39,000</td><td class="num">52,380</td><td class="num">91,440</td>
+            <td class="num">151,800</td><td class="num cell-positive">112,800</td><td class="num margin-high">74.3%</td>
+          </tr>
+          <tr>
+            <td><strong>Стол BILL нераскл. 1100</strong></td>
+            <td class="num" colspan="3">50,000 (без ткани)</td>
+            <td class="num">126,500</td><td class="num cell-positive">76,500</td><td class="num margin-mid">60.5%</td>
+          </tr>
+          <tr>
+            <td><strong>Стол BILL раскл.</strong></td>
+            <td class="num" colspan="3">75,000 (без ткани)</td>
+            <td class="num">207,000</td><td class="num cell-positive">132,000</td><td class="num margin-mid">63.8%</td>
+          </tr>
+          <tr>
+            <td><strong>Ernest кресло (мет.)</strong></td>
+            <td class="num">25,550</td><td class="num">28,895</td><td class="num">38,660</td>
+            <td class="num">115,000</td><td class="num cell-positive">89,450</td><td class="num margin-high">77.8%</td>
+          </tr>
+          <tr>
+            <td><strong>Ernest кресло (дер.)</strong></td>
+            <td class="num">31,050</td><td class="num">34,395</td><td class="num">44,160</td>
+            <td class="num">132,000</td><td class="num cell-positive">100,950</td><td class="num margin-high">76.5%</td>
+          </tr>
+          <tr>
+            <td><strong>Bono кресло (мет.)</strong></td>
+            <td class="num">30,200</td><td class="num">34,660</td><td class="num">47,680</td>
+            <td class="num">115,000</td><td class="num cell-positive">84,800</td><td class="num margin-high">73.7%</td>
+          </tr>
+          <tr>
+            <td><strong>Bono кресло (дер.)</strong></td>
+            <td class="num">35,700</td><td class="num">40,160</td><td class="num">53,180</td>
+            <td class="num">132,000</td><td class="num cell-positive">96,300</td><td class="num margin-high">73.0%</td>
+          </tr>
+          <tr>
+            <td><strong>HERO прямой</strong></td>
+            <td class="num">64,300</td><td class="num">77,680</td><td class="num">116,740</td>
+            <td class="num">160,750</td><td class="num cell-positive">96,450</td><td class="num margin-mid">60.0%</td>
+          </tr>
+          <tr>
+            <td><strong>HERO угловой</strong></td>
+            <td class="num">95,750</td><td class="num">113,590</td><td class="num">165,670</td>
+            <td class="num">239,375</td><td class="num cell-positive">143,625</td><td class="num margin-mid">60.0%</td>
+          </tr>
+          <tr>
+            <td><strong>Кровать SOVA 160</strong></td>
+            <td class="num">44,200</td><td class="num">55,350</td><td class="num">87,900</td>
+            <td class="num">135,000</td><td class="num cell-positive">90,800</td><td class="num margin-high">67.3%</td>
+          </tr>
+          <tr>
+            <td><strong>BASIC 160 нераскл.</strong></td>
+            <td class="num">39,850</td><td class="num">52,115</td><td class="num">87,920</td>
+            <td class="num">119,550</td><td class="num cell-positive">79,700</td><td class="num margin-high">66.7%</td>
+          </tr>
+          <tr>
+            <td><strong>BASIC 160 раскл.</strong></td>
+            <td class="num">47,650</td><td class="num">59,915</td><td class="num">95,720</td>
+            <td class="num">142,950</td><td class="num cell-positive">95,300</td><td class="num margin-high">66.7%</td>
+          </tr>
+          <tr>
+            <td><strong>CUBE 160 нераскл.</strong></td>
+            <td class="num">42,650</td><td class="num">54,915</td><td class="num">90,720</td>
+            <td class="num">127,950</td><td class="num cell-positive">85,300</td><td class="num margin-high">66.7%</td>
+          </tr>
+          <tr>
+            <td><strong>CUBE 160 раскл.</strong></td>
+            <td class="num">49,350</td><td class="num">61,615</td><td class="num">97,420</td>
+            <td class="num">148,050</td><td class="num cell-positive">98,700</td><td class="num margin-high">66.7%</td>
+          </tr>
+          <tr>
+            <td><strong>Пуф RUNDA 900</strong></td>
+            <td class="num">9,050</td><td class="num">12,395</td><td class="num">22,160</td>
+            <td class="num">~33,000</td><td class="num cell-positive">23,950</td><td class="num margin-high">72.6%</td>
+          </tr>
+          <tr>
+            <td><strong>Стул гардероб</strong></td>
+            <td class="num" colspan="3">20,000 (без ткани)</td>
+            <td class="num">50,000</td><td class="num cell-positive">30,000</td><td class="num margin-mid">60.0%</td>
+          </tr>
+          <tr>
+            <td><strong>Табурет clover 2.0 МДФ</strong></td>
+            <td class="num" colspan="3">16,005</td>
+            <td class="num">30,000</td><td class="num cell-positive">13,995</td><td class="num margin-low">46.7%</td>
+          </tr>
+          <tr>
+            <td><strong>Скамья clover 2.0 МДФ</strong></td>
+            <td class="num" colspan="3">20,005</td>
+            <td class="num">45,000</td><td class="num cell-positive">24,995</td><td class="num margin-mid">55.5%</td>
+          </tr>
+          <tr>
+            <td><strong>Табурет clover ясень</strong></td>
+            <td class="num" colspan="3">17,505</td>
+            <td class="num">35,000</td><td class="num cell-positive">17,495</td><td class="num margin-low">50.0%</td>
+          </tr>
+          <tr>
+            <td><strong>Скамья clover ясень</strong></td>
+            <td class="num" colspan="3">21,505</td>
+            <td class="num">55,000</td><td class="num cell-positive">33,495</td><td class="num margin-mid">60.9%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Part 5: Plus detailed -->
+  <section class="section" id="part5">
+    <h2 class="section-title"><span class="num">5</span> Диван Plus: детальный расчет</h2>
+
+    <p>Диван Plus -- модульная система. Каждый модуль может быть шириной от 50 до 120 см. Стандартный диван с шириной посадки 200 см состоит из <strong>двух раскладных модулей</strong> и двух подлокотников (локтей).</p>
+
+    <h3>Модули и их базовая стоимость</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Раскладной модуль</div>
+        <div class="card-subtitle">Основной блок дивана с механизмом раскладки</div>
+        <ul>
+          <li>Материалы: 12,900</li>
+          <li>Работа: 11,600</li>
+          <li><strong>Итого без ткани: 24,500</strong></li>
+          <li>Расход ткани: 8 мп</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Подлокотник (локоть)</div>
+        <div class="card-subtitle">Боковой модуль x2 для стандартной конфигурации</div>
+        <ul>
+          <li>Материалы: 3,900</li>
+          <li>Работа: 4,400</li>
+          <li><strong>Итого без ткани: 8,300</strong></li>
+          <li>Расход ткани: 2.5 мп</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Нераскладной модуль</div>
+        <div class="card-subtitle">Альтернативный основной блок без механизма</div>
+        <ul>
+          <li>Материалы: 11,150</li>
+          <li>Работа: 8,550</li>
+          <li><strong>Итого без ткани: 19,700</strong></li>
+          <li>Расход ткани: 6.5 мп</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Формула расчета: стандартный Plus (посадка 200 см)</h3>
+
+    <div class="plus-formula">
+<span class="hl">СТАНДАРТНЫЙ PLUS = 2x раскладной модуль + 2x локоть</span>
+
+Расход ткани: (8 x 2) + (2.5 x 2) = <span class="hl">21 мп</span>
+
+Базовая стоимость (без ткани):
+  2 модуля: 24,500 x 2 = 49,000
+  2 локтя:  8,300 x 2  = 16,600
+  ─────────────────────────
+  ИТОГО:    <span class="hl">65,600</span>
+
+С тканью (рогожка 350 р/мп):
+  Ткань:    21 x 350 = 7,350
+  ИТОГО:    65,600 + 7,350 = <span class="hl">72,950</span>
+    </div>
+
+    <h3>Полная себестоимость по тканям</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Ткань</th><th>Цена/мп</th><th>Стоимость ткани (21 мп)</th><th>Себест. 2 модуля</th><th>Себест. 2 локтя</th><th>Итого конфигурация</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Рогожка</strong></td><td class="num">350</td><td class="num">7,350</td><td class="num">54,600</td><td class="num">18,350</td><td class="num"><strong>72,950</strong></td></tr>
+          <tr><td><strong>Букле</strong></td><td class="num">1,465</td><td class="num">30,765</td><td class="num">72,440</td><td class="num">23,925</td><td class="num"><strong>96,365</strong></td></tr>
+          <tr><td><strong>Велюр</strong></td><td class="num">749</td><td class="num">15,729</td><td class="num">60,984</td><td class="num">20,345</td><td class="num"><strong>81,329</strong></td></tr>
+          <tr><td><strong>Эко кожа</strong></td><td class="num">1,199</td><td class="num">25,179</td><td class="num">68,184</td><td class="num">22,595</td><td class="num"><strong>90,779</strong></td></tr>
+          <tr><td><strong>Натур кожа</strong></td><td class="num">4,720</td><td class="num">99,120</td><td class="num">124,520</td><td class="num">40,200</td><td class="num cell-negative"><strong>164,720</strong></td></tr>
+          <tr><td><strong>Эко шерсть Бельгия</strong></td><td class="num">2,640</td><td class="num">55,440</td><td class="num">91,240</td><td class="num">29,800</td><td class="num"><strong>121,040</strong></td></tr>
+          <tr><td><strong>Эко шерсть аналог</strong></td><td class="num">752</td><td class="num">15,792</td><td class="num">61,032</td><td class="num">20,360</td><td class="num"><strong>81,392</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Сравнение с фактическими ценами продаж</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Заказ</th><th>Ткань/номер</th><th>Цена продажи</th><th>Себестоимость</th><th>Валовая маржа</th><th>Маржа %</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#8 (40226)</td><td>ткань 278</td>
+            <td class="num">190,000</td><td class="num">67,700</td><td class="num cell-positive">122,300</td><td class="num margin-high">64.4%</td>
+          </tr>
+          <tr>
+            <td>#12 (84429)</td><td>букле 117</td>
+            <td class="num">280,000</td><td class="num">66,663</td><td class="num cell-positive">213,337</td><td class="num margin-high">76.2%</td>
+          </tr>
+          <tr>
+            <td>#20a (32011)</td><td>--</td>
+            <td class="num">215,000</td><td class="num">~55,000</td><td class="num cell-positive">~160,000</td><td class="num margin-high">~74%</td>
+          </tr>
+          <tr>
+            <td>#20b (32011)</td><td>-- (модуль?)</td>
+            <td class="num">110,000</td><td class="num">~35,000</td><td class="num cell-positive">~75,000</td><td class="num margin-high">~68%</td>
+          </tr>
+          <tr>
+            <td>#23 (97887)</td><td>--</td>
+            <td class="num">182,000</td><td class="num">~50,000</td><td class="num cell-positive">~132,000</td><td class="num margin-high">~73%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-success">
+      <strong>Средняя маржа дивана Plus: 58-76%</strong> от прямых затрат. Цена продажи варьируется от 182,000 до 526,000 в зависимости от ткани и конфигурации. При себестоимости ~73-96K (стандартная конфигурация 2+2) это один из ключевых продуктов в линейке.
+    </div>
+
+    <h3>Сравнение с рынком</h3>
+    <p>Стандартный диван Plus (2 модуля + 2 локтя) в рогожке: себестоимость ~72,950, продажа ~190,000. Для сравнения, конкуренты аналогичного сегмента (Cosmo, THE IDEA, BoConcept) продают модульные диваны от 150,000 до 400,000+. Позиция annki -- конкурентоспособная цена при хорошей марже (~60%).</p>
+  </section>
+
+  <!-- Part 6: Key Insights -->
+  <section class="section" id="part6">
+    <h2 class="section-title"><span class="num">6</span> Ключевые инсайты и выводы</h2>
+
+    <h3>Рейтинг маржинальности (рогожка, % от РРЦ)</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title" style="color: var(--success);">Лидеры маржинальности</div>
+        <ul>
+          <li><strong>Ernest кресло мет. -- 77.8%</strong></li>
+          <li>Ernest кресло дер. -- 76.5%</li>
+          <li>Steve кресло / Steve++ -- 75.0%</li>
+          <li>Workaholic диван -- 74.3%</li>
+          <li>Bono кресло мет. -- 73.7%</li>
+          <li>Пуф RUNDA -- 72.6%</li>
+          <li>Workaholic кресло -- 71.9%</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color: var(--danger);">Аутсайдеры маржинальности</div>
+        <ul>
+          <li><strong>Табурет clover 2.0 МДФ -- 46.7%</strong></li>
+          <li>Табурет clover ясень -- 50.0%</li>
+          <li>Скамья clover 2.0 МДФ -- 55.5%</li>
+          <li>HERO диван -- 60.0%</li>
+          <li>Стул гардероб -- 60.0%</li>
+          <li>Стол BILL нераскл. -- 60.5%</li>
+          <li>Скамья clover ясень -- 60.9%</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Паттерны структуры затрат</h3>
+    <div class="swot-grid">
+      <div class="swot-box swot-s">
+        <h4>Материалоемкие продукты</h4>
+        <ul>
+          <li><strong>Стол BILL</strong> -- 78% материалы (шпон + покраска)</li>
+          <li><strong>Стул гардероб</strong> -- 71% материалы (декор + покраска)</li>
+          <li><strong>Пуф RUNDA</strong> -- 60% материалы</li>
+          <li><strong>Ernest/Bono</strong> -- 58% (деревянные опоры)</li>
+        </ul>
+      </div>
+      <div class="swot-box swot-o">
+        <h4>Трудоемкие продукты</h4>
+        <ul>
+          <li><strong>Steve стулья</strong> -- 75-77% работа</li>
+          <li><strong>Кровать SOVA</strong> -- 56% работа (распил 14,700!)</li>
+          <li><strong>Workaholic кресло</strong> -- 56% работа</li>
+          <li><strong>Диван локоть</strong> -- 53% работа</li>
+        </ul>
+      </div>
+      <div class="swot-box swot-w">
+        <h4>Влияние ткани</h4>
+        <ul>
+          <li>Натур кожа увеличивает себест. в <strong>1.5-2.7x</strong></li>
+          <li>Максимальное влияние: Workaholic кресло (2.71x)</li>
+          <li>Минимальное: Bono (1.49x) -- меньший расход ткани</li>
+          <li>Эко шерсть аналог ~ рогожка по стоимости</li>
+        </ul>
+      </div>
+      <div class="swot-box swot-t">
+        <h4>Зоны риска</h4>
+        <ul>
+          <li><strong>Clover</strong> -- аутсорс, нет контроля над структурой затрат, маржа 47-61%</li>
+          <li><strong>HERO</strong> -- сложный продукт, маржа только 60%</li>
+          <li>Рост цен на шпон/покраску критичен для столов BILL</li>
+          <li>Steve dinner с дорогой тканью может давать убыток</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Самые дорогие операции</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Операция</th><th>Диапазон стоимости</th><th>Самый дорогой продукт</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Распил</strong></td><td>1,000 -- 14,700</td><td>Кровать SOVA (14,700)</td></tr>
+          <tr><td><strong>Пошив</strong></td><td>300 -- 4,500</td><td>Кровать CUBE (4,500)</td></tr>
+          <tr><td><strong>Обтяжка</strong></td><td>300 -- 2,200</td><td>Кровати (2,200)</td></tr>
+          <tr><td><strong>Раскрой</strong></td><td>200 -- 3,300</td><td>HERO диван (3,300)</td></tr>
+          <tr><td><strong>Сборка</strong></td><td>300 -- 2,400</td><td>Workaholic диван (2,400)</td></tr>
+          <tr><td><strong>Поролон работа</strong></td><td>300 -- 2,100</td><td>HERO диван (2,100)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Итоговые рекомендации</h3>
+    <div class="callout callout-primary">
+      <strong>1. Фокус на высокомаржинальные кресла.</strong> Ernest (77.8%), Steve/Steve++ (75%) и Bono (73.7%) -- самые выгодные продукты. Каждая дополнительная продажа Ernest кресла при РРЦ 115K приносит ~89K валовой маржи.
+    </div>
+    <div class="callout callout-primary">
+      <strong>2. Пересмотр ценообразования Clover.</strong> Маржа 47-50% на табуреты -- минимальная в линейке. При аутсорсном производстве нет рычагов для снижения себестоимости. Варианты: повысить РРЦ или найти альтернативного производителя.
+    </div>
+    <div class="callout callout-primary">
+      <strong>3. Диван Plus -- главный генератор прибыли по абсолютной марже.</strong> Продажа одного Plus в рогожке (190K) дает ~122K маржи. В букле (280K) -- ~213K маржи. Модульность позволяет гибко работать со средним чеком.
+    </div>
+    <div class="callout callout-primary">
+      <strong>4. Осторожность с натуральной кожей.</strong> Хотя РРЦ растет, себестоимость увеличивается до 2.7x. Необходимо убедиться, что наценка на натуральную кожу покрывает дополнительные затраты с учетом рисков остатков и брака.
+    </div>
+    <div class="callout callout-primary">
+      <strong>5. Оптимизация стульев Steve.</strong> 75% затрат -- работа. Потенциал оптимизации: стандартизация операций, инвестиции в оснастку для снижения трудоемкости распила и сборки.
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="report-footer">
+  annki studio -- Анализ себестоимости и маржинальности, март 2026<br>
+  Данные: таблица себестоимости, Sales AI 2026, База знаний annki studio
+</footer>
+
+</body>
+</html>

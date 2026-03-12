@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANNKI STUDIO — Международные бенчмарки</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Price bar visualization ── */
+    .price-bars { margin: 1.5rem 0; }
+    .price-bar-row {
+      display: grid;
+      grid-template-columns: 160px 1fr 100px;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+    }
+    .price-bar-row .brand-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      text-align: right;
+    }
+    .price-bar-row .bar-track {
+      height: 22px;
+      background: var(--cream-dark);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .price-bar-row .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      transition: width 0.6s ease;
+    }
+    .price-bar-row .bar-fill.baseline { background: var(--accent); }
+    .price-bar-row .bar-fill.cheaper { background: var(--success); }
+    .price-bar-row .bar-fill.similar { background: var(--primary); }
+    .price-bar-row .bar-fill.pricier { background: var(--warning); }
+    .price-bar-row .bar-fill.expensive { background: var(--danger); }
+    .price-bar-row .delta {
+      font-size: 13px;
+      font-weight: 700;
+      text-align: left;
+    }
+    .delta.neg { color: var(--success); }
+    .delta.zero { color: var(--text-muted); }
+    .delta.pos { color: var(--danger); }
+
+    /* ── Insight numbered boxes ── */
+    .insight-boxes {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .insight-box {
+      display: flex;
+      gap: 1.25rem;
+      background: var(--cream);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    .insight-box .ib-num {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .insight-box .ib-content { flex: 1; }
+    .insight-box .ib-title {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+    .insight-box .ib-text {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 0;
+    }
+    .insight-box.box-accent { border-left: 4px solid var(--accent); }
+    .insight-box.box-success { border-left: 4px solid var(--success); }
+    .insight-box.box-warning { border-left: 4px solid var(--warning); }
+    .insight-box.box-danger { border-left: 4px solid var(--danger); }
+    .insight-box.box-info { border-left: 4px solid var(--info); }
+
+    /* ── Pricing matrix colored ── */
+    .pricing-matrix {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      margin: 1.5rem 0;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .pm-cell {
+      padding: 1.25rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .pm-cell:nth-child(5n) { border-right: none; }
+    .pm-cell .pm-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .pm-cell .pm-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .pm-cell .pm-share {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+    .pm-entry { background: #e8f5e9; }
+    .pm-value { background: #e3f2fd; }
+    .pm-core { background: rgba(243,113,60,0.08); }
+    .pm-premium { background: #fff3e0; }
+    .pm-collectible { background: #fce4ec; }
+
+    /* ── Practice cards with timeframe ── */
+    .practice-group { margin: 1.5rem 0; }
+    .practice-group-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .practice-group-header .pg-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      white-space: nowrap;
+    }
+    .pg-badge.immediate { background: var(--danger); }
+    .pg-badge.short { background: var(--warning); }
+    .pg-badge.medium { background: var(--info); }
+    .pg-badge.long { background: var(--primary); }
+    .practice-group-header h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .practice-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .practice-list li {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--cream);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .practice-list .pl-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .practice-list .pl-content { flex: 1; }
+    .practice-list .pl-title { font-weight: 600; color: var(--primary-dark); font-size: 14px; }
+    .practice-list .pl-desc { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+    .practice-list .pl-source {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    @media (max-width: 768px) {
+      .price-bar-row { grid-template-columns: 100px 1fr 70px; }
+      .pricing-matrix { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="top-nav">
+    <a href="index.html" class="brand">ANNKI STUDIO</a>
+    <a href="index.html">Главная</a>
+    <a href="analysis.html">Бизнес-анализ</a>
+    <a href="competitors.html">Конкуренты</a>
+    <a href="benchmarks.html" class="active">Бенчмарки</a>
+    <a href="new-products.html">Новые продукты</a>
+  <a href="cost-analysis.html">Себестоимость</a>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="badge">Международные бенчмарки</div>
+    <h1>Международные бенчмарки</h1>
+    <p class="subtitle">Лидеры рынка ЕС, США, Азия — сравнительный анализ и лучшие практики</p>
+  </section>
+
+  <div class="container">
+
+    <!-- ── Table of Contents ── -->
+    <div class="toc">
+      <h3>Содержание</h3>
+      <ol>
+        <li><a href="#eu">Бенчмарки ЕС (Скандинавия)</a></li>
+        <li><a href="#usa">Бенчмарки США</a></li>
+        <li><a href="#prices">Ценовая матрица сравнения</a></li>
+        <li><a href="#asia">Бенчмарки Азии</a></li>
+        <li><a href="#digital">Цифровое присутствие</a></li>
+        <li><a href="#best20">Топ-20 лучших практик</a></li>
+        <li><a href="#strategy">Ключевые стратегические выводы</a></li>
+      </ol>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- PART I — EU BENCHMARKS                                       -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="eu">
+      <h2 class="section-title"><span class="num">1</span> Бенчмарки ЕС (Скандинавия)</h2>
+
+      <p>Скандинавские бренды определяют глобальные стандарты в сегменте авторского дизайна мебели. Ниже — сводная таблица 7 ключевых брендов, задающих тон рынку.</p>
+
+      <h3>Сводная таблица</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Бренд</th>
+              <th>Страна</th>
+              <th>Год</th>
+              <th>Позиционирование</th>
+              <th>Instagram</th>
+              <th>Сегмент</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>HAY</strong></td>
+              <td>Дания</td>
+              <td>2002</td>
+              <td>Качественный дизайн для всех</td>
+              <td>2M</td>
+              <td><span class="tag tag-medium">Средний+</span></td>
+            </tr>
+            <tr>
+              <td><strong>Muuto</strong></td>
+              <td>Дания</td>
+              <td>2006</td>
+              <td>Новая перспектива</td>
+              <td>1M</td>
+              <td><span class="tag tag-medium">Средний+ / Премиум</span></td>
+            </tr>
+            <tr>
+              <td><strong>&amp;Tradition</strong></td>
+              <td>Дания</td>
+              <td>2010</td>
+              <td>Heritage + modern</td>
+              <td>533K</td>
+              <td><span class="tag tag-high">Премиум / Люкс</span></td>
+            </tr>
+            <tr>
+              <td><strong>Audo Copenhagen</strong></td>
+              <td>Дания</td>
+              <td>2023</td>
+              <td>Архитектурный минимализм</td>
+              <td>618K</td>
+              <td><span class="tag tag-high">Премиум / Люкс</span></td>
+            </tr>
+            <tr>
+              <td><strong>Bolia</strong></td>
+              <td>Дания</td>
+              <td>2000</td>
+              <td>Новый скандинавский дизайн</td>
+              <td>565K</td>
+              <td><span class="tag tag-high">Верхний премиум</span></td>
+            </tr>
+            <tr>
+              <td><strong>Normann Copenhagen</strong></td>
+              <td>Дания</td>
+              <td>1999</td>
+              <td>Серьёзная игривость</td>
+              <td>572K</td>
+              <td><span class="tag tag-medium">Средний+ / Премиум</span></td>
+            </tr>
+            <tr>
+              <td><strong>Takt</strong></td>
+              <td>Дания</td>
+              <td>new</td>
+              <td>Прозрачность, sustainability</td>
+              <td>87K</td>
+              <td><span class="tag tag-medium">Средний+</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Ключевые уроки для annki</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">HAY</div>
+          <div class="card-subtitle">Модель &laquo;от аксессуаров до диванов&raquo;</div>
+          <ul>
+            <li>Entry-level аксессуары от 500 руб. привлекают аудиторию</li>
+            <li>Постепенный апсейл до крупных предметов мебели</li>
+            <li>Коллаборации с IKEA расширили аудиторию в 10 раз</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Muuto</div>
+          <div class="card-subtitle">#muutoathome UGC community</div>
+          <ul>
+            <li>Собственный хештег объединяет комьюнити</li>
+            <li>Пользовательский контент — основа Instagram-стратегии</li>
+            <li>1M подписчиков через аутентичные интерьеры</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">&amp;Tradition</div>
+          <div class="card-subtitle">Storytelling для каждого продукта</div>
+          <ul>
+            <li>Каждый продукт — история дизайнера и контекст</li>
+            <li>Heritage-линейка: переиздание классики 1930-80-х</li>
+            <li>Нарратив оправдывает премиальную цену</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Audo Copenhagen</div>
+          <div class="card-subtitle">Experiential showroom (hotel + restaurant + store)</div>
+          <ul>
+            <li>Шоурум совмещён с отелем и рестораном</li>
+            <li>Клиент «живёт» с мебелью, а не смотрит витрину</li>
+            <li>Контент-фабрика: каждый гость — потенциальный амбассадор</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Bolia</div>
+          <div class="card-subtitle">Конфигуратор 500K вариаций, 10-year гарантия</div>
+          <ul>
+            <li>Онлайн-конфигуратор: ткань, цвет, размер, ноги</li>
+            <li>500 000+ уникальных комбинаций</li>
+            <li>10-летняя гарантия как сигнал качества</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Normann Copenhagen</div>
+          <div class="card-subtitle">Продуктовые семейства (Form series)</div>
+          <ul>
+            <li>Одна форма — стул, стол, барный стул, кресло</li>
+            <li>Клиент собирает целый интерьер в одном стиле</li>
+            <li>Рост среднего чека через cross-sell</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Takt</div>
+          <div class="card-subtitle">Прозрачное ценообразование</div>
+          <ul>
+            <li>Публичная разбивка цены: материалы, производство, логистика, маржа</li>
+            <li>CO2-паспорт каждого продукта</li>
+            <li>Доверие через радикальную открытость</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- PART II — USA BENCHMARKS                                     -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="usa">
+      <h2 class="section-title"><span class="num">2</span> Бенчмарки США</h2>
+
+      <p>Американские DTC-бренды демонстрируют альтернативные модели роста: прямые продажи, модульность, быстрая доставка.</p>
+
+      <h3>Сводная таблица</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Бренд</th>
+              <th>Год</th>
+              <th>Модель</th>
+              <th>Instagram</th>
+              <th>Сегмент</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Article</strong></td>
+              <td>2013</td>
+              <td>100% DTC</td>
+              <td>~800K</td>
+              <td><span class="tag tag-medium">Средний</span></td>
+            </tr>
+            <tr>
+              <td><strong>Floyd</strong></td>
+              <td>2013</td>
+              <td>DTC + модульность</td>
+              <td>~150K</td>
+              <td><span class="tag tag-medium">Средний+</span></td>
+            </tr>
+            <tr>
+              <td><strong>Burrow</strong></td>
+              <td>2017</td>
+              <td>DTC + быстрая доставка</td>
+              <td>171K</td>
+              <td><span class="tag tag-medium">Средний+</span></td>
+            </tr>
+            <tr>
+              <td><strong>Blu Dot</strong></td>
+              <td>1997</td>
+              <td>DTC + шоурумы</td>
+              <td>151K</td>
+              <td><span class="tag tag-medium">Средний+ / Премиум</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Ключевые уроки для annki</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">Article</div>
+          <div class="card-subtitle">UGC-стратегия, 85% NPS</div>
+          <ul>
+            <li>Net Promoter Score 85% — один из лучших в индустрии</li>
+            <li>UGC в центре маркетинга: реальные интерьеры</li>
+            <li>Минимум розницы — максимум маржи</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Floyd</div>
+          <div class="card-subtitle">Модульность, recommerce, Made in USA</div>
+          <ul>
+            <li>Модульная система: секции добавляются по мере роста семьи</li>
+            <li>Recommerce-платформа: обратный выкуп и перепродажа</li>
+            <li>Производство в США как USP</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Burrow</div>
+          <div class="card-subtitle">USB-зарядка, tool-free assembly, Burrow House</div>
+          <ul>
+            <li>USB-зарядка встроена в подлокотники</li>
+            <li>Сборка без инструментов за 10 минут</li>
+            <li>Burrow House — experiential pop-up шоурум</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Blu Dot</div>
+          <div class="card-subtitle">200+ SKU, outlet до 70%</div>
+          <ul>
+            <li>Широкий ассортимент: 200+ SKU во всех категориях</li>
+            <li>Outlet-секция со скидками до 70%</li>
+            <li>Шоурумы в ключевых городах + полный DTC</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- PART III — PRICE COMPARISON MATRIX                           -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="prices">
+      <h2 class="section-title"><span class="num">3</span> Ценовая матрица сравнения</h2>
+
+      <p>Сравнение средних цен по ключевым категориям в пересчёте на рубли. annki studio используется как baseline для расчёта дельты.</p>
+
+      <!-- SOFAS -->
+      <h3>Диваны (2-3 местные)</h3>
+      <p style="font-size:13px; color:var(--text-muted);">annki baseline: 270-300K (средняя ~285K)</p>
+
+      <div class="price-bars">
+        <div class="price-bar-row">
+          <div class="brand-name">annki studio</div>
+          <div class="bar-track"><div class="bar-fill baseline" style="width:30%;">270-300K</div></div>
+          <div class="delta zero">baseline</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Article</div>
+          <div class="bar-track"><div class="bar-fill cheaper" style="width:19%;">180K avg</div></div>
+          <div class="delta neg">&minus;37%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Burrow</div>
+          <div class="bar-track"><div class="bar-fill cheaper" style="width:23%;">220K avg</div></div>
+          <div class="delta neg">&minus;23%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Floyd</div>
+          <div class="bar-track"><div class="bar-fill similar" style="width:28%;">270K avg</div></div>
+          <div class="delta neg">&minus;5%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Takt</div>
+          <div class="bar-track"><div class="bar-fill similar" style="width:29%;">280K avg</div></div>
+          <div class="delta neg">&minus;2%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Blu Dot</div>
+          <div class="bar-track"><div class="bar-fill pricier" style="width:42%;">400K avg</div></div>
+          <div class="delta pos">+40%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Normann Cph</div>
+          <div class="bar-track"><div class="bar-fill pricier" style="width:47%;">450K avg</div></div>
+          <div class="delta pos">+58%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">HAY</div>
+          <div class="bar-track"><div class="bar-fill pricier" style="width:53%;">500K avg</div></div>
+          <div class="delta pos">+75%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Muuto</div>
+          <div class="bar-track"><div class="bar-fill expensive" style="width:50%;">480K avg</div></div>
+          <div class="delta pos">+68%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Audo Cph</div>
+          <div class="bar-track"><div class="bar-fill expensive" style="width:58%;">550K avg</div></div>
+          <div class="delta pos">+93%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">&amp;Tradition</div>
+          <div class="bar-track"><div class="bar-fill expensive" style="width:89%;">850K avg</div></div>
+          <div class="delta pos">+198%</div>
+        </div>
+        <div class="price-bar-row">
+          <div class="brand-name">Bolia</div>
+          <div class="bar-track"><div class="bar-fill expensive" style="width:100%;">950K avg</div></div>
+          <div class="delta pos">+233%</div>
+        </div>
+      </div>
+
+      <div class="callout callout-success">
+        <strong>Вывод:</strong> annki дешевле большинства скандинавских аналогов на 40-230%, при этом дороже американских DTC-брендов на уровне Floyd/Takt. Это уникальное ценовое позиционирование — «скандинавское качество по пост-американской цене».
+      </div>
+
+      <!-- OTHER CATEGORIES -->
+      <h3>Кресла лаунж</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Диапазон, тыс. &#8381;</th><th>Средняя</th><th>vs annki</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight"><td><strong>annki studio</strong></td><td>49-270K</td><td>~160K</td><td class="cell-accent">baseline</td></tr>
+            <tr><td>Article</td><td>50-200K</td><td>~120K</td><td class="cell-positive">&minus;25%</td></tr>
+            <tr><td>Floyd</td><td>100-180K</td><td>~140K</td><td class="cell-positive">&minus;12%</td></tr>
+            <tr><td>Burrow</td><td>120-220K</td><td>~170K</td><td class="cell-neutral">+6%</td></tr>
+            <tr><td>HAY</td><td>200-450K</td><td>~320K</td><td class="cell-negative">+100%</td></tr>
+            <tr><td>Muuto</td><td>250-500K</td><td>~380K</td><td class="cell-negative">+138%</td></tr>
+            <tr><td>&amp;Tradition</td><td>300-700K</td><td>~500K</td><td class="cell-negative">+213%</td></tr>
+            <tr><td>Bolia</td><td>350-600K</td><td>~450K</td><td class="cell-negative">+181%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Стулья обеденные</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Диапазон, тыс. &#8381;</th><th>Средняя</th><th>vs annki</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight"><td><strong>annki studio</strong></td><td>19.5K*</td><td>~20K</td><td class="cell-accent">baseline</td></tr>
+            <tr><td>Article</td><td>15-35K</td><td>~25K</td><td class="cell-negative">+25%</td></tr>
+            <tr><td>Floyd</td><td>25-45K</td><td>~35K</td><td class="cell-negative">+75%</td></tr>
+            <tr><td>HAY</td><td>20-80K</td><td>~45K</td><td class="cell-negative">+125%</td></tr>
+            <tr><td>Muuto</td><td>40-90K</td><td>~60K</td><td class="cell-negative">+200%</td></tr>
+            <tr><td>Normann Cph</td><td>25-70K</td><td>~45K</td><td class="cell-negative">+125%</td></tr>
+            <tr><td>&amp;Tradition</td><td>50-120K</td><td>~80K</td><td class="cell-negative">+300%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Столы</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Диапазон, тыс. &#8381;</th><th>Средняя</th><th>vs annki</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight"><td><strong>annki studio</strong></td><td>42K*</td><td>~42K</td><td class="cell-accent">baseline</td></tr>
+            <tr><td>Article</td><td>30-80K</td><td>~50K</td><td class="cell-negative">+19%</td></tr>
+            <tr><td>Floyd</td><td>50-110K</td><td>~75K</td><td class="cell-negative">+79%</td></tr>
+            <tr><td>HAY</td><td>60-200K</td><td>~120K</td><td class="cell-negative">+186%</td></tr>
+            <tr><td>Muuto</td><td>80-250K</td><td>~150K</td><td class="cell-negative">+257%</td></tr>
+            <tr><td>Normann Cph</td><td>60-180K</td><td>~110K</td><td class="cell-negative">+162%</td></tr>
+            <tr><td>Bolia</td><td>100-350K</td><td>~200K</td><td class="cell-negative">+376%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Кровати</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Диапазон, тыс. &#8381;</th><th>Средняя</th><th>vs annki</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight"><td><strong>annki studio</strong></td><td>150-300K</td><td>~225K</td><td class="cell-accent">baseline</td></tr>
+            <tr><td>Article</td><td>80-200K</td><td>~140K</td><td class="cell-positive">&minus;38%</td></tr>
+            <tr><td>Floyd</td><td>130-250K</td><td>~190K</td><td class="cell-positive">&minus;16%</td></tr>
+            <tr><td>HAY</td><td>250-500K</td><td>~375K</td><td class="cell-negative">+67%</td></tr>
+            <tr><td>Muuto</td><td>300-550K</td><td>~420K</td><td class="cell-negative">+87%</td></tr>
+            <tr><td>Bolia</td><td>350-700K</td><td>~500K</td><td class="cell-negative">+122%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-size:12px; color:var(--text-muted);">* Планируемые позиции из раздела «Новые продукты»</p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- PART IV — ASIA BENCHMARKS                                    -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="asia">
+      <h2 class="section-title"><span class="num">4</span> Бенчмарки Азии</h2>
+
+      <p>Азиатский рынок дизайнерской мебели — один из самых динамичных в мире. Япония, Корея и Китай предлагают три разные модели роста.</p>
+
+      <h3>Сводная таблица: 9 брендов</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Страна</th><th>Год</th><th>Позиционирование</th><th>Сегмент</th></tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="5" style="background:var(--cream-dark); font-weight:700; color:var(--primary-dark); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Япония</td></tr>
+            <tr>
+              <td><strong>Karimoku Case Study</strong></td>
+              <td>Япония</td>
+              <td>2019</td>
+              <td>Architect-led &laquo;Case&raquo; collections</td>
+              <td><span class="tag tag-high">Премиум / Люкс</span></td>
+            </tr>
+            <tr>
+              <td><strong>Maruni</strong></td>
+              <td>Япония</td>
+              <td>1928</td>
+              <td>Hiroshima Chair / Apple Park</td>
+              <td><span class="tag tag-high">Премиум / Люкс</span></td>
+            </tr>
+            <tr>
+              <td><strong>Conde House</strong></td>
+              <td>Япония</td>
+              <td>1968</td>
+              <td>Hokkaido wood, made-to-order</td>
+              <td><span class="tag tag-high">Премиум</span></td>
+            </tr>
+            <tr>
+              <td><strong>Ariake</strong></td>
+              <td>Япония</td>
+              <td>2018</td>
+              <td>Factory-founder, Stockholm debut</td>
+              <td><span class="tag tag-high">Премиум</span></td>
+            </tr>
+            <tr><td colspan="5" style="background:var(--cream-dark); font-weight:700; color:var(--primary-dark); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Корея</td></tr>
+            <tr>
+              <td><strong>Casamia</strong></td>
+              <td>Корея</td>
+              <td>~2000</td>
+              <td>Shinsegae group, life-stage marketing</td>
+              <td><span class="tag tag-medium">Средний+ / Премиум</span></td>
+            </tr>
+            <tr>
+              <td><strong>Hanssem</strong></td>
+              <td>Корея</td>
+              <td>1970</td>
+              <td>Total interior solutions</td>
+              <td><span class="tag tag-medium">Средний / Средний+</span></td>
+            </tr>
+            <tr><td colspan="5" style="background:var(--cream-dark); font-weight:700; color:var(--primary-dark); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Китай</td></tr>
+            <tr>
+              <td><strong>Stellar Works</strong></td>
+              <td>Китай</td>
+              <td>2012</td>
+              <td>East-West synthesis</td>
+              <td><span class="tag tag-high">Премиум / Люкс</span></td>
+            </tr>
+            <tr>
+              <td><strong>Ziinlife</strong></td>
+              <td>Китай</td>
+              <td>2013</td>
+              <td>Chinese HAY, Life Store</td>
+              <td><span class="tag tag-medium">Средний</span></td>
+            </tr>
+            <tr>
+              <td><strong>Norhor</strong></td>
+              <td>Китай</td>
+              <td>2003</td>
+              <td>Curator-to-producer</td>
+              <td><span class="tag tag-medium">Средний+ / Премиум</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Детальные карточки</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">Karimoku Case Study</div>
+          <div class="card-subtitle">Япония, 2019 &middot; $975-8,770</div>
+          <ul>
+            <li>Коллекции под руководством архитекторов (Norm Architects, Foster+Partners)</li>
+            <li>Каждая коллекция — «кейс» для конкретного пространства</li>
+            <li>100-летний деревообрабатывающий опыт семьи</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Maruni</div>
+          <div class="card-subtitle">Япония, 1928 &middot; $1,020-11,235</div>
+          <ul>
+            <li>Hiroshima Chair — стул, выбранный для Apple Park</li>
+            <li>Коллаборация с Наото Фукасава</li>
+            <li>Ценовой диапазон до $11,235 при безупречном ремесле</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Conde House</div>
+          <div class="card-subtitle">Япония, 1968 &middot; Hokkaido wood</div>
+          <ul>
+            <li>Древесина Хоккайдо как ключевой нарратив</li>
+            <li>Made-to-order: каждый предмет под заказ</li>
+            <li>Экспорт в 30+ стран через дилерскую сеть</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Ariake</div>
+          <div class="card-subtitle">Япония, 2018 &middot; $1,825-7,205</div>
+          <ul>
+            <li>Основатель — владелец фабрики в Сага</li>
+            <li>Дебют на Stockholm Design Week</li>
+            <li>Японское ремесло + скандинавская эстетика</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Casamia</div>
+          <div class="card-subtitle">Корея, ~2000 &middot; Shinsegae group</div>
+          <ul>
+            <li>Часть крупнейшего ритейл-холдинга Кореи</li>
+            <li>Life-stage marketing: мебель для каждого этапа жизни</li>
+            <li>Формат «total home» — от мебели до декора</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Hanssem</div>
+          <div class="card-subtitle">Корея, 1970 &middot; Total interior</div>
+          <ul>
+            <li>Полные интерьерные решения: кухни, ванные, мебель</li>
+            <li>Крупнейший мебельный бренд Кореи</li>
+            <li>Digital-first: 3D-планировщик интерьера</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Stellar Works</div>
+          <div class="card-subtitle">Китай (Шанхай), 2012 &middot; $1,144-12,070</div>
+          <ul>
+            <li>East-West synthesis: Юити Ямамото + европейские дизайнеры</li>
+            <li>Производство в Китае, позиционирование — глобальный люкс</li>
+            <li>Доказательство: страна производства не определяет бренд</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Ziinlife</div>
+          <div class="card-subtitle">Китай, 2013 &middot; $100-1,410</div>
+          <ul>
+            <li>«Китайский HAY» — скандинавская эстетика по доступным ценам</li>
+            <li>Life Store формат: мебель + посуда + текстиль</li>
+            <li>Ценовой аналог annki по позиционированию</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Norhor</div>
+          <div class="card-subtitle">Китай, 2003 &middot; 13+ шоурумов</div>
+          <ul>
+            <li>Эволюция от куратора (селектив) к собственному производству</li>
+            <li>13+ шоурумов по Китаю</li>
+            <li>Модель: начать с дистрибуции, перейти к собственному бренду</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Ценовая матрица Азия (тыс. &#8381;)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Продукт</th>
+              <th>Karimoku</th>
+              <th>Maruni</th>
+              <th>Ariake</th>
+              <th>Stellar Works</th>
+              <th>Ziinlife</th>
+              <th>annki</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Диван 2-мест</strong></td>
+              <td>296-877K</td>
+              <td>~1,124K</td>
+              <td>447-487K</td>
+              <td>388-883K</td>
+              <td>85-141K</td>
+              <td class="cell-accent">115-300K</td>
+            </tr>
+            <tr>
+              <td><strong>Кресло</strong></td>
+              <td>296-387K</td>
+              <td>165K</td>
+              <td>341K</td>
+              <td>176-452K</td>
+              <td>39-53K</td>
+              <td class="cell-accent">49-270K</td>
+            </tr>
+            <tr>
+              <td><strong>Стул</strong></td>
+              <td>98-191K</td>
+              <td>102-165K</td>
+              <td>&mdash;</td>
+              <td>114-222K</td>
+              <td>10-76K</td>
+              <td class="cell-accent">19.5K*</td>
+            </tr>
+            <tr>
+              <td><strong>Стол журн.</strong></td>
+              <td>79-135K</td>
+              <td>154-269K</td>
+              <td>183K</td>
+              <td>78-143K</td>
+              <td>&mdash;</td>
+              <td class="cell-accent">42K*</td>
+            </tr>
+            <tr>
+              <td><strong>Барный стул</strong></td>
+              <td>&mdash;</td>
+              <td>69-95K</td>
+              <td>&mdash;</td>
+              <td>112-163K</td>
+              <td>26-63K</td>
+              <td class="cell-accent">42K*</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted);">* Планируемые позиции</p>
+
+      <h3>Ключевые выводы по Азии</h3>
+      <div class="insight-boxes">
+        <div class="insight-box box-success">
+          <div class="ib-num">1</div>
+          <div class="ib-content">
+            <div class="ib-title">annki в 2-5 раз дешевле японских брендов</div>
+            <p class="ib-text">При сопоставимом уровне ремесла и качества материалов annki предлагает цены в 2-5 раз ниже Karimoku, Maruni и Ariake.</p>
+          </div>
+        </div>
+        <div class="insight-box box-info">
+          <div class="ib-num">2</div>
+          <div class="ib-content">
+            <div class="ib-title">Ziinlife — ближайший ценовой аналог</div>
+            <p class="ib-text">Китайский бренд Ziinlife ближе всего к annki по ценовому позиционированию. Однако annki превосходит по качеству материалов и производства.</p>
+          </div>
+        </div>
+        <div class="insight-box box-accent">
+          <div class="ib-num">3</div>
+          <div class="ib-content">
+            <div class="ib-title">Японская модель &laquo;craft at scale&raquo; = модель annki</div>
+            <p class="ib-text">Японцы масштабируют ремесленное качество через технологии. Это именно то, что делает annki — ручное мастерство с фабричной эффективностью.</p>
+          </div>
+        </div>
+        <div class="insight-box box-warning">
+          <div class="ib-num">4</div>
+          <div class="ib-content">
+            <div class="ib-title">Ariake = идеальная ролевая модель</div>
+            <p class="ib-text">Основатель-владелец фабрики, международный дебют на Stockholm DW, японское ремесло + скандинавская эстетика. Траектория annki один в один.</p>
+          </div>
+        </div>
+        <div class="insight-box box-success">
+          <div class="ib-num">5</div>
+          <div class="ib-content">
+            <div class="ib-title">Stellar Works доказывает: страна не определяет бренд</div>
+            <p class="ib-text">Китайский бренд продаёт по $12,000 за предмет. &laquo;Made in China&raquo; не помешало стать глобальным люксом. То же может &laquo;Made in Russia&raquo;.</p>
+          </div>
+        </div>
+        <div class="insight-box box-accent">
+          <div class="ib-num">6</div>
+          <div class="ib-content">
+            <div class="ib-title">Региональный нарратив — нереализованная возможность</div>
+            <p class="ib-text">Урал / Екатеринбург как аналог Хоккайдо (Conde House) или Сага (Ariake). Территория происхождения может стать мощным маркетинговым инструментом.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Лучшие практики Азии</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Практика</th><th>Источник</th><th>Применимость для annki</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Architect-led коллекции</td><td>Karimoku Case</td><td>Коллаборации с российскими архитекторами</td></tr>
+            <tr><td>2</td><td>Иконический продукт</td><td>Maruni (Hiroshima Chair)</td><td>Создание одного &laquo;героического&raquo; стула</td></tr>
+            <tr><td>3</td><td>Региональная древесина как нарратив</td><td>Conde House</td><td>Уральская берёза / дуб как story</td></tr>
+            <tr><td>4</td><td>Factory-founder story</td><td>Ariake</td><td>История основателя-производителя</td></tr>
+            <tr><td>5</td><td>Life-stage marketing</td><td>Casamia</td><td>Мебель для молодых пар → семей → зрелых</td></tr>
+            <tr><td>6</td><td>Total interior solutions</td><td>Hanssem</td><td>Расширение в смежные категории</td></tr>
+            <tr><td>7</td><td>East-West design synthesis</td><td>Stellar Works</td><td>Российско-скандинавский синтез</td></tr>
+            <tr><td>8</td><td>Доступный дизайн + Life Store</td><td>Ziinlife</td><td>Entry-level линейка + lifestyle-товары</td></tr>
+            <tr><td>9</td><td>От куратора к производителю</td><td>Norhor</td><td>Развитие собственного бренда</td></tr>
+            <tr><td>10</td><td>Международные дизайн-недели</td><td>Ariake, Stellar</td><td>Присутствие на Stockholm/Milan DW</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- PART V — DIGITAL PRESENCE                                    -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="digital">
+      <h2 class="section-title"><span class="num">5</span> Цифровое присутствие (мировой контекст)</h2>
+
+      <p>Сравнение аудитории Instagram — ключевого канала для дизайнерской мебели.</p>
+
+      <h3>Instagram: annki vs мировые бренды</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Бренд</th><th>Подписчики</th><th>Разрыв с annki</th><th>Регион</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cell-highlight">
+              <td><strong>annki studio</strong></td>
+              <td><strong>16K</strong></td>
+              <td class="cell-accent">baseline</td>
+              <td>Россия</td>
+            </tr>
+            <tr><td>HAY</td><td>2,000K</td><td class="cell-negative">&times;125</td><td>Дания</td></tr>
+            <tr><td>Muuto</td><td>1,000K</td><td class="cell-negative">&times;63</td><td>Дания</td></tr>
+            <tr><td>Article</td><td>~800K</td><td class="cell-negative">&times;50</td><td>США</td></tr>
+            <tr><td>Audo Copenhagen</td><td>618K</td><td class="cell-negative">&times;39</td><td>Дания</td></tr>
+            <tr><td>Normann Copenhagen</td><td>572K</td><td class="cell-negative">&times;36</td><td>Дания</td></tr>
+            <tr><td>Bolia</td><td>565K</td><td class="cell-negative">&times;35</td><td>Дания</td></tr>
+            <tr><td>&amp;Tradition</td><td>533K</td><td class="cell-negative">&times;33</td><td>Дания</td></tr>
+            <tr><td>Burrow</td><td>171K</td><td class="cell-negative">&times;11</td><td>США</td></tr>
+            <tr><td>Blu Dot</td><td>151K</td><td class="cell-negative">&times;9</td><td>США</td></tr>
+            <tr><td>Floyd</td><td>~150K</td><td class="cell-negative">&times;9</td><td>США</td></tr>
+            <tr><td>Takt</td><td>87K</td><td class="cell-negative">&times;5</td><td>Дания</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-danger">
+        <strong>Цифровой разрыв катастрофический.</strong> Даже самый маленький скандинавский бренд (Takt, 87K) превосходит annki в 5 раз. Лидеры — в 50-125 раз. Это главный нереализованный потенциал роста.
+      </div>
+
+      <div class="kv-grid">
+        <div class="kv-item">
+          <div class="kv-label">Минимальная цель (6 мес.)</div>
+          <div class="kv-value">50K</div>
+        </div>
+        <div class="kv-item">
+          <div class="kv-label">Целевой уровень (12 мес.)</div>
+          <div class="kv-value">100K</div>
+        </div>
+        <div class="kv-item">
+          <div class="kv-label">Амбициозная цель (24 мес.)</div>
+          <div class="kv-value">250K+</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- PART VI — TOP-20 BEST PRACTICES                              -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="best20">
+      <h2 class="section-title"><span class="num">6</span> Топ-20 лучших практик</h2>
+
+      <p>Систематизированные практики мировых лидеров, адаптированные для annki studio, с приоритизацией по срокам внедрения.</p>
+
+      <!-- IMMEDIATELY -->
+      <div class="practice-group">
+        <div class="practice-group-header">
+          <span class="pg-badge immediate">НЕМЕДЛЕННО</span>
+          <h4>Месяц 1-2</h4>
+        </div>
+        <ol class="practice-list">
+          <li>
+            <span class="pl-num">1</span>
+            <div class="pl-content">
+              <div class="pl-title">Heritage storytelling</div>
+              <div class="pl-desc">Создать нарратив происхождения: основатель, фабрика, материалы, процесс. Каждый продукт — история.</div>
+              <div class="pl-source">Источник: &amp;Tradition</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">2</span>
+            <div class="pl-content">
+              <div class="pl-title">Прозрачное ценообразование</div>
+              <div class="pl-desc">Публиковать разбивку стоимости: материалы, производство, логистика, маржа. Формирует доверие.</div>
+              <div class="pl-source">Источник: Takt</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">3</span>
+            <div class="pl-content">
+              <div class="pl-title">UGC-хештег #annkihome</div>
+              <div class="pl-desc">Запустить хештег, стимулировать клиентов делиться фото интерьеров. Репостить лучшее в основной аккаунт.</div>
+              <div class="pl-source">Источник: Muuto (#muutoathome)</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">4</span>
+            <div class="pl-content">
+              <div class="pl-title">Расширенная гарантия 3-5 лет</div>
+              <div class="pl-desc">Гарантия как сигнал уверенности в качестве. Минимум 3 года, амбициозно — 5 лет (Bolia даёт 10).</div>
+              <div class="pl-source">Источник: Bolia, Floyd</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">5</span>
+            <div class="pl-content">
+              <div class="pl-title">Таймлайны производства</div>
+              <div class="pl-desc">Публиковать сроки изготовления и статус заказа. Клиент ценит предсказуемость выше скорости.</div>
+              <div class="pl-source">Источник: Article, Burrow</div>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- SHORT-TERM -->
+      <div class="practice-group">
+        <div class="practice-group-header">
+          <span class="pg-badge short">КРАТКОСРОЧНО</span>
+          <h4>Месяц 2-6</h4>
+        </div>
+        <ol class="practice-list">
+          <li>
+            <span class="pl-num">6</span>
+            <div class="pl-content">
+              <div class="pl-title">Entry-level продукты</div>
+              <div class="pl-desc">Линейка аксессуаров и малых предметов от 3-15K для привлечения аудитории с последующим апсейлом.</div>
+              <div class="pl-source">Источник: HAY (модель &laquo;от аксессуаров до диванов&raquo;)</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">7</span>
+            <div class="pl-content">
+              <div class="pl-title">Конфигуратор тканей</div>
+              <div class="pl-desc">Онлайн-инструмент выбора обивки, цвета, ножек. Персонализация увеличивает конверсию на 30-40%.</div>
+              <div class="pl-source">Источник: Bolia (500K вариаций)</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">8</span>
+            <div class="pl-content">
+              <div class="pl-title">Продуктовые семейства</div>
+              <div class="pl-desc">Одна дизайн-линия: стул + кресло + барный стул + стол. Клиент собирает целый интерьер.</div>
+              <div class="pl-source">Источник: Normann Copenhagen (Form series)</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">9</span>
+            <div class="pl-content">
+              <div class="pl-title">Trade-программа для дизайнеров</div>
+              <div class="pl-desc">Скидки 15-20% для архитекторов и дизайнеров интерьеров. Библиотека 3D-моделей и образцов тканей.</div>
+              <div class="pl-source">Источник: Blu Dot, Muuto</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">10</span>
+            <div class="pl-content">
+              <div class="pl-title">Сезонные лимитированные коллекции</div>
+              <div class="pl-desc">2-4 раза в год — капсульные коллекции ограниченным тиражом. Создаёт ажиотаж и срочность покупки.</div>
+              <div class="pl-source">Источник: HAY, Normann Copenhagen</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">11</span>
+            <div class="pl-content">
+              <div class="pl-title">Программа лояльности / Members</div>
+              <div class="pl-desc">Ранний доступ к коллекциям, приглашения на мероприятия, накопительные скидки.</div>
+              <div class="pl-source">Источник: Bolia, Article</div>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- MEDIUM-TERM -->
+      <div class="practice-group">
+        <div class="practice-group-header">
+          <span class="pg-badge medium">СРЕДНЕСРОЧНО</span>
+          <h4>Месяц 6-12</h4>
+        </div>
+        <ol class="practice-list">
+          <li>
+            <span class="pl-num">12</span>
+            <div class="pl-content">
+              <div class="pl-title">Модульность</div>
+              <div class="pl-desc">Модульные системы: клиент начинает с 2 секций и добавляет по мере необходимости. Рост LTV.</div>
+              <div class="pl-source">Источник: Floyd</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">13</span>
+            <div class="pl-content">
+              <div class="pl-title">Experiential showroom</div>
+              <div class="pl-desc">Шоурум как пространство для жизни: кафе, мероприятия, коворкинг. Мебель в реальном контексте.</div>
+              <div class="pl-source">Источник: Audo Copenhagen</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">14</span>
+            <div class="pl-content">
+              <div class="pl-title">Компактный диван 150-180K</div>
+              <div class="pl-desc">Диван для малых квартир — самый массовый формат. Заполнить ценовой разрыв между 50K и 270K.</div>
+              <div class="pl-source">Источник: Article, Burrow</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">15</span>
+            <div class="pl-content">
+              <div class="pl-title">AR на сайте</div>
+              <div class="pl-desc">Дополненная реальность: клиент &laquo;ставит&raquo; мебель в свою комнату через камеру телефона.</div>
+              <div class="pl-source">Источник: Article, IKEA</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">16</span>
+            <div class="pl-content">
+              <div class="pl-title">B2B / contract-канал</div>
+              <div class="pl-desc">Рестораны, отели, офисы — отдельный каталог и менеджер. Высокий средний чек и объём.</div>
+              <div class="pl-source">Источник: Blu Dot, Stellar Works</div>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- LONG-TERM -->
+      <div class="practice-group">
+        <div class="practice-group-header">
+          <span class="pg-badge long">ДОЛГОСРОЧНО</span>
+          <h4>Месяц 12-24</h4>
+        </div>
+        <ol class="practice-list">
+          <li>
+            <span class="pl-num">17</span>
+            <div class="pl-content">
+              <div class="pl-title">Recommerce (обратный выкуп)</div>
+              <div class="pl-desc">Программа trade-in: выкуп старой мебели annki, реставрация и перепродажа. ESG + повторные покупки.</div>
+              <div class="pl-source">Источник: Floyd</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">18</span>
+            <div class="pl-content">
+              <div class="pl-title">Outlet-секция</div>
+              <div class="pl-desc">Постоянный раздел со скидками до 70% на образцы, возвраты, прошлые коллекции. Привлекает новую аудиторию.</div>
+              <div class="pl-source">Источник: Blu Dot</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">19</span>
+            <div class="pl-content">
+              <div class="pl-title">Международная DTC-экспансия</div>
+              <div class="pl-desc">Запуск продаж в СНГ, затем в ЕС/Азию. Отдельный англоязычный сайт и логистика.</div>
+              <div class="pl-source">Источник: Ariake, Stellar Works</div>
+            </div>
+          </li>
+          <li>
+            <span class="pl-num">20</span>
+            <div class="pl-content">
+              <div class="pl-title">ESG-сертификация</div>
+              <div class="pl-desc">FSC-сертификация древесины, CO2-паспорт, B Corp-сертификация. Обязательно для входа на рынок ЕС.</div>
+              <div class="pl-source">Источник: Takt, Bolia</div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- PART VII — KEY STRATEGIC INSIGHTS                            -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="strategy">
+      <h2 class="section-title"><span class="num">7</span> Ключевые стратегические выводы</h2>
+
+      <div class="insight-boxes">
+        <div class="insight-box box-success">
+          <div class="ib-num">1</div>
+          <div class="ib-content">
+            <div class="ib-title">Ценовое позиционирование уникально сильное</div>
+            <p class="ib-text">annki на 30-60% дешевле европейских оригиналов при сопоставимом качестве дизайна и материалов. Это не слабость, а стратегическое преимущество — при условии правильной коммуникации.</p>
+          </div>
+        </div>
+        <div class="insight-box box-danger">
+          <div class="ib-num">2</div>
+          <div class="ib-content">
+            <div class="ib-title">Ассортимент — главная слабость</div>
+            <p class="ib-text">~20 SKU у annki vs 100-200 у среднего бенчмарка. Узкий ассортимент ограничивает средний чек, cross-sell и повторные покупки. Расширение до 50-80 SKU — критический приоритет.</p>
+          </div>
+        </div>
+        <div class="insight-box box-danger">
+          <div class="ib-num">3</div>
+          <div class="ib-content">
+            <div class="ib-title">Цифровой разрыв катастрофический</div>
+            <p class="ib-text">16K подписчиков vs 87K-2M у бенчмарков. Разрыв от 5x до 125x. Без агрессивного digital-маркетинга бренд останется невидимым даже на домашнем рынке.</p>
+          </div>
+        </div>
+        <div class="insight-box box-warning">
+          <div class="ib-num">4</div>
+          <div class="ib-content">
+            <div class="ib-title">&laquo;Quiet luxury&raquo; — глобальный тренд, и annki в нём</div>
+            <p class="ib-text">Мировой рынок сдвигается к сдержанной роскоши без логоманского шума. annki уже там эстетически — но нужно коммуницировать это значительно громче. Тишина бренда ≠ quiet luxury.</p>
+          </div>
+        </div>
+        <div class="insight-box box-accent">
+          <div class="ib-num">5</div>
+          <div class="ib-content">
+            <div class="ib-title">&laquo;Made in Russia&raquo; = конкурентное преимущество для экспорта</div>
+            <p class="ib-text">Stellar Works доказал, что страна производства не определяет восприятие бренда. Уральское ремесло, российская древесина, уникальная дизайн-культура — это экспортный нарратив, а не ограничение.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Рекомендуемая ценовая матрица</h3>
+      <div class="pricing-matrix">
+        <div class="pm-cell pm-entry">
+          <div class="pm-label">Entry</div>
+          <div class="pm-price">3-15K</div>
+          <div class="pm-share">5% выручки</div>
+        </div>
+        <div class="pm-cell pm-value">
+          <div class="pm-label">Value</div>
+          <div class="pm-price">15-50K</div>
+          <div class="pm-share">15% выручки</div>
+        </div>
+        <div class="pm-cell pm-core">
+          <div class="pm-label">Core</div>
+          <div class="pm-price">50-150K</div>
+          <div class="pm-share">40% выручки</div>
+        </div>
+        <div class="pm-cell pm-premium">
+          <div class="pm-label">Premium</div>
+          <div class="pm-price">150-350K</div>
+          <div class="pm-share">30% выручки</div>
+        </div>
+        <div class="pm-cell pm-collectible">
+          <div class="pm-label">Collectible</div>
+          <div class="pm-price">350K+</div>
+          <div class="pm-share">10% выручки</div>
+        </div>
+      </div>
+
+      <!-- Main conclusion -->
+      <div style="background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); border-radius: var(--radius-lg); padding: 2.5rem 3rem; color: white; margin-top: 2rem; position: relative; overflow: hidden;">
+        <div style="position:absolute; top:-10px; left:20px; font-size:8rem; opacity:0.08; font-family:Georgia,serif; line-height:1;">&ldquo;</div>
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:2px; opacity:0.6; margin-bottom:1rem; font-weight:600;">Главный вывод</div>
+        <p style="font-size:1.2rem; line-height:1.7; font-weight:400; max-width:800px; margin:0;">
+          <strong style="color:var(--accent);">annki studio обладает продуктом мирового уровня по ценам значительно ниже мировых аналогов, но катастрофически недокоммуницирует свою ценность.</strong>
+        </p>
+        <p style="font-size:0.95rem; line-height:1.7; margin-top:1rem; opacity:0.85;">
+          Ключевой вызов — не качество продукта, а его visibility. Бренды с объективно худшим продуктом продают в 10-50 раз больше, потому что умеют рассказывать свою историю.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="report-footer">
+    ANNKI STUDIO — Международные бенчмарки &middot; Подготовлено в 2026
+    <br>
+    <span style="margin-top:0.5rem; display:inline-block;">
+      Источники: официальные сайты брендов, Instagram, Dezeen, Wallpaper*, Architectural Digest, Monocle, отраслевые отчёты CSIL, Euromonitor
+    </span>
+  </footer>
+
+</body>
+</html>
