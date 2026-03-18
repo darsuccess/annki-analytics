@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANNKI STUDIO — P&L</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    /* ── Auth overlay ── */
+    #auth-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 1.5rem;
+    }
+    #auth-overlay.hidden { display: none; }
+    .auth-box {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 3rem; text-align: center; box-shadow: var(--shadow-lg);
+      max-width: 380px; width: 90%;
+    }
+    .auth-box h2 { font-size: 1.3rem; color: var(--primary-dark); margin-bottom: 0.5rem; }
+    .auth-box p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem; }
+    .auth-input {
+      width: 100%; padding: 12px 16px; border: 2px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 16px; font-family: inherit;
+      outline: none; transition: border-color 0.2s;
+    }
+    .auth-input:focus { border-color: var(--primary); }
+    .auth-input.error { border-color: var(--danger); animation: shake 0.4s; }
+    .auth-btn {
+      width: 100%; padding: 12px; margin-top: 1rem;
+      background: var(--primary); color: var(--white); border: none;
+      border-radius: var(--radius-sm); font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .auth-btn:hover { background: var(--primary-dark); }
+    .auth-error { color: var(--danger); font-size: 0.82rem; margin-top: 0.75rem; display: none; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    /* ── Dashboard content ── */
+    #dashboard { display: none; }
+    #dashboard.visible { display: block; }
+
+    /* ── KPI cards ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem; margin: 2rem 0;
+    }
+    .kpi-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      box-shadow: var(--shadow-sm); border-top: 3px solid var(--primary);
+    }
+    .kpi-card.positive { border-top-color: var(--success); }
+    .kpi-card.negative { border-top-color: var(--danger); }
+    .kpi-card.accent { border-top-color: var(--accent); }
+    .kpi-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 600; }
+    .kpi-value { font-size: 1.8rem; font-weight: 700; color: var(--primary-dark); line-height: 1.2; }
+    .kpi-value.positive { color: var(--success); }
+    .kpi-value.negative { color: var(--danger); }
+    .kpi-sub { font-size: 0.78rem; color: var(--text-light); margin-top: 0.3rem; }
+
+    /* ── Year tabs ── */
+    .year-tabs {
+      display: flex; gap: 0.5rem; margin: 2rem 0 1rem;
+    }
+    .year-tab {
+      padding: 8px 24px; border: 2px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--white); font-weight: 600; font-size: 14px; cursor: pointer;
+      transition: all 0.2s; color: var(--text-light);
+    }
+    .year-tab.active {
+      border-color: var(--primary); background: var(--primary); color: var(--white);
+    }
+
+    /* ── Charts ── */
+    .charts-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0;
+    }
+    .chart-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .chart-card.full { grid-column: 1 / -1; }
+    .chart-title {
+      font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);
+      margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .chart-container { position: relative; height: 300px; }
+
+    /* ── PnL table ── */
+    .pnl-table-wrap {
+      overflow-x: auto; margin: 1.5rem 0;
+      border-radius: var(--radius-sm); border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .pnl-table {
+      width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap;
+    }
+    .pnl-table thead { background: var(--primary); color: var(--white); }
+    .pnl-table th {
+      padding: 10px 12px; font-weight: 600; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; text-align: right;
+    }
+    .pnl-table th:first-child { text-align: left; position: sticky; left: 0; background: var(--primary); z-index: 2; min-width: 200px; }
+    .pnl-table td {
+      padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .pnl-table td:first-child {
+      text-align: left; font-weight: 500; position: sticky; left: 0;
+      background: inherit; z-index: 1; min-width: 200px;
+    }
+    .pnl-table tbody tr:nth-child(even) { background: var(--cream); }
+    .pnl-table tbody tr:nth-child(even) td:first-child { background: var(--cream); }
+    .pnl-table tbody tr:nth-child(odd) td:first-child { background: var(--white); }
+    .pnl-table tbody tr:hover { background: var(--cream-dark); }
+    .pnl-table tbody tr:hover td:first-child { background: var(--cream-dark); }
+    .pnl-table .row-header { font-weight: 700; background: var(--cream-dark) !important; }
+    .pnl-table .row-header td { font-weight: 700; color: var(--primary-dark); border-top: 2px solid var(--border); }
+    .pnl-table .row-header td:first-child { background: var(--cream-dark) !important; }
+    .pnl-table .row-sub td:first-child { padding-left: 28px; color: var(--text-light); font-weight: 400; font-size: 12.5px; }
+    .pnl-table .row-total { font-weight: 700; }
+    .pnl-table .row-total td { border-top: 2px solid var(--primary); color: var(--primary-dark); }
+    .pnl-table .row-total td:first-child { background: var(--white) !important; }
+    .pnl-table .val-neg { color: var(--danger); }
+    .pnl-table .val-pos { color: var(--success); }
+    .pnl-table .val-plan { font-style: italic; color: var(--text-muted); }
+    .pnl-table th.col-total { background: var(--primary-dark); }
+
+    /* ── Fixed costs breakdown ── */
+    .costs-legend {
+      display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; font-size: 12px;
+    }
+    .costs-legend-item {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .costs-legend-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      .chart-container { height: 250px; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .kpi-value { font-size: 1.4rem; }
+    }
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Auth Overlay ── -->
+  <div id="auth-overlay">
+    <div class="auth-box">
+      <h2>ANNKI STUDIO</h2>
+      <p>Управленческая отчётность</p>
+      <input type="password" id="auth-password" class="auth-input" placeholder="Пароль" autofocus>
+      <button id="auth-btn" class="auth-btn">Войти</button>
+      <div id="auth-error" class="auth-error">Неверный пароль</div>
+    </div>
+  </div>
+
+  <!-- ── Navigation ── -->
+  <nav class="top-nav">
+    <a href="index.html" class="brand">ANNKI STUDIO</a>
+    <a href="index.html">Главная</a>
+    <a href="analysis.html">Бизнес-анализ</a>
+    <a href="competitors.html">Конкуренты</a>
+    <a href="benchmarks.html">Бенчмарки</a>
+    <a href="cost-analysis.html">Себестоимость</a>
+    <a href="pnl.html" class="active">P&L</a>
+  </nav>
+
+  <!-- ── Dashboard (hidden until auth) ── -->
+  <div id="dashboard">
+
+    <section class="hero">
+      <div class="badge">Управленческая отчётность</div>
+      <h1>Отчёт о прибылях и убытках</h1>
+      <p class="subtitle">annki studio — помесячный PnL с аналитикой</p>
+    </section>
+
+    <div class="container">
+
+      <!-- KPI Cards -->
+      <div id="kpi-section" class="kpi-grid"></div>
+
+      <!-- Year Tabs -->
+      <div class="year-tabs">
+        <div class="year-tab active" data-year="2025">2025</div>
+        <div class="year-tab" data-year="2026">2026</div>
+      </div>
+
+      <!-- PnL Table -->
+      <div id="pnl-table-section" class="pnl-table-wrap"></div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+        <div class="chart-card full">
+          <div class="chart-title">Выручка vs Расходы</div>
+          <div class="chart-container"><canvas id="chart-revenue-costs"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Прибыль / Убыток (помесячно)</div>
+          <div class="chart-container"><canvas id="chart-pl"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Накопленный P&L</div>
+          <div class="chart-container"><canvas id="chart-cumulative"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Структура постоянных расходов</div>
+          <div class="chart-container"><canvas id="chart-costs-breakdown"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Маржинальность (%)</div>
+          <div class="chart-container"><canvas id="chart-margin"></canvas></div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="report-footer">
+      ANNKI STUDIO — Управленческая отчётность &middot; 2026
+    </footer>
+
+  </div>
+
+<script>
+// ── Password Auth ──
+const PASS_HASH = '4ba7fad9b2eae2d7b406f48d3415d6d8a43b29ef6a6267707b47e4ef23c64459'; // sha256 of 'annki2026'
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function tryAuth() {
+  const input = document.getElementById('auth-password');
+  const hash = await sha256(input.value);
+  if (hash === PASS_HASH) {
+    sessionStorage.setItem('annki_auth', '1');
+    document.getElementById('auth-overlay').classList.add('hidden');
+    document.getElementById('dashboard').classList.add('visible');
+    loadDashboard();
+  } else {
+    input.classList.add('error');
+    document.getElementById('auth-error').style.display = 'block';
+    setTimeout(() => { input.classList.remove('error'); }, 400);
+  }
+}
+
+document.getElementById('auth-btn').addEventListener('click', tryAuth);
+document.getElementById('auth-password').addEventListener('keydown', e => { if (e.key === 'Enter') tryAuth(); });
+
+// Auto-login if session valid
+if (sessionStorage.getItem('annki_auth') === '1') {
+  document.getElementById('auth-overlay').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('visible');
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadDashboard);
+  } else {
+    loadDashboard();
+  }
+} else {
+  document.getElementById('auth-password').focus();
+}
+
+// ── Data (embedded for file:// and GitHub Pages compatibility) ──
+const DATA_2025 = {
+  year: 2025,
+  months: ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],
+  revenue_incl_delivery: [3012800,3357933,5609323,4067758,3779426,3025183,3592150,4338700,2907100,3046650,3016740,2599400],
+  revenue_excl_delivery: [2885700,3188433,5471023,3713758,3517370,2804933,3297150,3900050,2632100,2851150,2804240,2415400],
+  cogs: [925763,1142896,2473352,1214906,1062142,1214374,1279003,1251746,1243312,967462,929454,640453],
+  designer_bonuses: [230856,255075,437682,297101,281390,224395,263772,312004,210568,228092,224339,193232],
+  fixed_costs_total: [1662889,1645871,1843403,1749303,1861082,1879392,1802941,1775026,1741627,1639343,1718538,1625621],
+  fixed_costs_breakdown: {
+    labels: ["Шоурум МСК","Склад (Qubi)","Производство","Команда","Руководство","Обслуживание","Маркетинг (РК)"],
+    showroom_msk: [0,0,107000,150000,236806,354000,294000,310000,310000,310000,310000,310000],
+    storage: [0,0,0,0,24473,29589,13138,9338,15824,13540,12735,9818],
+    production: [588486,567968,576000,448400,448400,418400,418400,418400,418400,398400,468400,468400],
+    team: [520900,524400,606900,597400,597900,523900,523900,478785,438900,358900,368900,278900],
+    management: [400000,400000,400000,400000,400000,400000,400000,400000,400000,400000,400000,400000],
+    business_ops: [83503,83503,83503,83503,83503,83503,83503,88503,88503,88503,88503,88503],
+    marketing: [70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000,70000]
+  },
+  // Детализация шоурума
+  showroom_detail: {
+    "Аренда": [0,0,107000,150000,219806,277000,217000,217000,217000,217000,217000,217000],
+    "КУ": [0,0,0,0,15000,15000,15000,15000,15000,15000,15000,15000],
+    "Сопровождение": [0,0,0,0,1000,1000,1000,1000,1000,1000,1000,1000],
+    "Вода": [0,0,0,0,1000,1000,1000,1000,1000,1000,1000,1000],
+    "Яна (шоурум)": [0,0,0,0,0,60000,60000,76000,76000,76000,76000,76000]
+  },
+  // Детализация производства
+  production_detail: {
+    "Аренда": [324225,324225,332775,225000,225000,225000,225000,225000,225000,225000,300000,300000],
+    "КУ": [55861,35343,34825,15000,15000,15000,15000,15000,15000,15000,10000,10000],
+    "Запас на оборудование": [5000,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000],
+    "Чай/кофе/бумага": [1500,1500,1500,1500,1500,1500,1500,1500,1500,1500,1500,1500],
+    "Интернет/телефон": [1900,1900,1900,1900,1900,1900,1900,1900,1900,1900,1900,1900],
+    "Антон (управляющий)": [200000,200000,200000,200000,200000,170000,170000,170000,170000,150000,150000,150000]
+  },
+  // Детализация команды
+  team_detail: {
+    "_section_admin": "Административный блок",
+    "Софа (ст. менеджер)": [83000,86500,89000,79500,80000,80000,80000,80000,80000,80000,80000,110000],
+    "Лиза (логист+закуп)": [55000,55000,55000,55000,75000,75000,75000,75000,75000,75000,75000,75000],
+    "Алла (ст. мен. продаж)": [110000,110000,110000,110000,110000,110000,110000,110000,110000,110000,80000,0],
+    "Диана (ассистент)": [20000,20000,20000,20000,0,0,0,0,0,0,0,0],
+    "_section_marketing": "Маркетинг",
+    "Поля Бынова (таргетолог)": [30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000],
+    "Света (гл. маркетолог)": [159000,159000,159000,159000,159000,85000,85000,39885,0,0,0,0],
+    "Аня Вилле (SMM)": [63900,63900,63900,63900,63900,63900,63900,63900,63900,63900,63900,63900],
+    "_section_product": "Продукт",
+    "Илья (пром. дизайнер)": [0,0,80000,80000,80000,80000,80000,80000,80000,0,40000,0]
+  },
+  // Детализация руководства
+  management_detail: {
+    "Аня": [200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000],
+    "Лёша": [200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000]
+  },
+  // Детализация обслуживания
+  ops_detail: {
+    "Бухгалтерия": [25000,25000,25000,25000,25000,25000,25000,30000,30000,30000,30000,30000],
+    "Подписки": [15503,15503,15503,15503,15503,15503,15503,15503,15503,15503,15503,15503],
+    "Рекламации": [30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000],
+    "AMO + поддержка": [13000,13000,13000,13000,13000,13000,13000,13000,13000,13000,13000,13000]
+  },
+  // Инвестиции детализация
+  investment_detail: {
+    "Спец. проекты (выставки)": [0,309000,0,0,472056,0,0,0,137170,0,0,0],
+    "Бартеры/интеграции": [23005,52373,0,0,0,592846,38000,0,67000,38353,90878,0],
+    "Изготовление в склад/шоурум": [0,0,310952,150000,100000,60000,0,212325,43200,0,0,0],
+    "Обустройство шоурума": [0,0,0,434000,539291,0,0,0,141000,0,5680,0],
+    "Фотосессии": [0,0,15625,19148,51062,0,0,0,25532,138637,0,0],
+    "Командировки": [30000,35000,30000,100000,34000,269630,67000,35000,55000,88300,35000,99250]
+  },
+  tax: [120512,134317,224373,162710,151177,121007,143686,173548,116284,121866,120670,103976],
+  tax_detail: {
+    "3% (Д-Р)": [90384,100738,168280,122033,113383,90755,107765,130161,87213,91400,90502,77982],
+    "1% оборота": [30128,33579,56093,40678,37794,30252,35922,43387,29071,30467,30167,25994]
+  },
+  logistics: {
+    "Логистика (расход)": [149886,158460,257026,308163,270388,65705,266485,325203,257026,240295,218218,0],
+    "Логистика (получили)": [159000,107000,297300,238500,324556,80000,435000,441500,297300,364650,297000,0],
+    "Итого +/- логистика": [9114,-51460,40274,-69663,54168,14295,168515,116297,40274,124355,78782,0]
+  },
+  breakeven: [1783402,1780188,2067776,1912013,2012260,2000399,1946627,1948574,1857911,1761209,1839208,1729597],
+  marginal_profit: [1722377,1940012,2821771,2194512,2333478,1502689,554076,2439724,1355900,1746588,1856036,1752548],
+  net_pl: [-61025,159824,753995,282499,321218,-497710,-1392551,491150,-502011,-14621,16828,22951],
+  pl_incl_investments: [-114030,-236549,397418,-420649,-875191,-1420186,-1497551,243825,-970913,-279911,-114730,-76300],
+  investment_costs: [53005,396373,356577,703148,1196409,922476,105000,247325,468902,265290,131558,99250],
+  totals: {
+    revenue_incl_delivery: 42353163, revenue_excl_delivery: 39481307,
+    cogs: 14344863, designer_bonuses: 3158505, fixed_costs: 20945036,
+    tax: 1694127, breakeven: 22639165, marginal_profit: 22219710,
+    net_pl: -419454, pl_incl_investments: -5364767, investment_costs: 4945313
+  }
+};
+
+const DATA_2026 = {
+  year: 2026,
+  months: ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],
+  type: ["fact","fact","plan","plan","plan","plan","plan","plan","plan","plan","plan","plan"],
+  revenue_incl_delivery: [808940,1883295,null,null,null,null,null,null,null,null,null,null],
+  revenue_excl_delivery: [751940,1781795,null,null,null,null,null,null,null,null,null,null],
+  cogs: [156666,398413,null,null,null,null,null,null,null,null,null,null],
+  designer_bonuses: [37720,75100,null,null,null,null,null,null,null,null,null,null],
+  fixed_costs_total: [2029093,2450082,2456303,2456303,2456303,2464303,2464303,2469303,2469303,2469303,2499303,2499303],
+  fixed_costs_breakdown: {
+    labels: ["Шоурум МСК","Склад (Qubi)","Производство","Команда","Руководство","Обслуживание","Маркетинг (РК)"],
+    showroom_msk: [347000,497000,497000,497000,497000,497000,497000,497000,497000,497000,497000,497000],
+    storage: [7790,8779,15000,15000,15000,15000,15000,15000,15000,15000,15000,15000],
+    production: [469900,469900,469900,469900,469900,469900,469900,469900,469900,469900,499900,499900],
+    team: [640900,840900,840900,840900,840900,848900,848900,848900,848900,848900,848900,848900],
+    management: [400000,400000,400000,400000,400000,400000,400000,400000,400000,400000,400000,400000],
+    business_ops: [83503,83503,83503,83503,83503,83503,83503,88503,88503,88503,88503,88503],
+    marketing: [80000,150000,150000,150000,150000,150000,150000,150000,150000,150000,150000,150000]
+  },
+  showroom_detail: {
+    "Аренда": [230000,230000,230000,230000,230000,230000,230000,230000,230000,230000,230000,230000],
+    "КУ": [15000,15000,15000,15000,15000,15000,15000,15000,15000,15000,15000,15000],
+    "Сопровождение": [13500,13500,13500,13500,13500,13500,13500,13500,13500,13500,13500,13500],
+    "Вода": [1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000],
+    "Интернет": [2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500,2500],
+    "Уборка": [10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000],
+    "Яна (шоурум)": [75000,75000,75000,75000,75000,75000,75000,75000,75000,75000,75000,75000],
+    "Сотрудник 2 (гл. продаж)": [0,150000,150000,150000,150000,150000,150000,150000,150000,150000,150000,150000]
+  },
+  production_detail: {
+    "Аренда": [300000,300000,300000,300000,300000,300000,300000,300000,300000,300000,330000,330000],
+    "КУ": [10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000],
+    "Запас на оборудование": [5000,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000,5000],
+    "Чай/кофе/бумага": [3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000],
+    "Интернет/телефон": [1900,1900,1900,1900,1900,1900,1900,1900,1900,1900,1900,1900],
+    "Антон (управляющий)": [150000,150000,150000,150000,150000,150000,150000,150000,150000,150000,150000,150000]
+  },
+  team_detail: {
+    "_section_admin": "Административный блок",
+    "Софа (менеджер проектов)": [110000,110000,110000,110000,110000,110000,110000,110000,110000,110000,110000,110000],
+    "Лиза (операц. менеджер)": [87000,87000,87000,87000,87000,95000,95000,95000,95000,95000,95000,95000],
+    "Рук. отдела продаж": [0,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000],
+    "_section_marketing": "Маркетинг",
+    "Поля Бынова (таргетолог)": [30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000],
+    "Аня Вилле (SMM)": [63900,63900,63900,63900,63900,63900,63900,63900,63900,63900,63900,63900],
+    "_section_product": "Продукт",
+    "Пром. дизайнер": [150000,150000,150000,150000,150000,150000,150000,150000,150000,150000,150000,150000],
+    "Граф. дизайнер": [50000,50000,50000,50000,50000,50000,50000,50000,50000,50000,50000,50000]
+  },
+  management_detail: {
+    "Аня": [200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000],
+    "Лёша": [200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000,200000]
+  },
+  ops_detail: {
+    "Бухгалтерия": [25000,25000,25000,25000,25000,25000,25000,30000,30000,30000,30000,30000],
+    "Подписки": [15503,15503,15503,15503,15503,15503,15503,15503,15503,15503,15503,15503],
+    "Рекламации": [30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,30000],
+    "AMO + поддержка": [13000,13000,13000,13000,13000,13000,13000,13000,13000,13000,13000,13000]
+  },
+  tax: [32358,75332,null,null,null,null,null,null,null,null,null,null],
+  logistics: {
+    "Логистика (расход)": [81383,199598,null,null,null,null,null,null,null,null,null,null],
+    "Логистика (получили)": [10000,215500,null,null,null,null,null,null,null,null,null,null],
+    "Итого +/- логистика": [-71383,15902,null,null,null,null,null,null,null,null,null,null]
+  },
+  marginal_profit: [557554,1308283,null,null,null,null,null,null,null,null,null,null],
+  net_pl: [-1503897,-1217131,null,null,null,null,null,null,null,null,null,null],
+  pl_incl_investments: [-1563897,-1307131,null,null,null,null,null,null,null,null,null,null],
+  investment_costs: [60000,90000,90000,90000,90000,90000,90000,90000,90000,90000,90000,90000]
+};
+
+let data2025 = null, data2026 = null;
+let currentYear = 2025;
+let charts = {};
+
+function loadDashboard() {
+  data2025 = DATA_2025;
+  data2026 = DATA_2026;
+  renderKPIs();
+  renderTable(2025);
+  renderCharts(2025);
+  setupTabs();
+}
+
+function fmt(n, short) {
+  if (n == null) return '—';
+  if (short) {
+    const abs = Math.abs(n);
+    if (abs >= 1000000) return (n < 0 ? '-' : '') + (abs / 1000000).toFixed(1) + 'M';
+    if (abs >= 1000) return (n < 0 ? '-' : '') + (abs / 1000).toFixed(0) + 'K';
+    return n.toFixed(0);
+  }
+  return n.toLocaleString('ru-RU', { maximumFractionDigits: 0 });
+}
+
+function sum(arr) {
+  return arr.reduce((a, b) => a + (b || 0), 0);
+}
+
+// ── KPI Cards ──
+function renderKPIs() {
+  const d = data2025;
+  const t = d.totals;
+  const margin_pct = ((t.marginal_profit / t.revenue_incl_delivery) * 100).toFixed(1);
+
+  // 2026 YTD
+  const rev26_ytd = sum(data2026.revenue_incl_delivery.filter(v => v !== null));
+  const pl26_ytd = sum(data2026.net_pl.filter(v => v !== null));
+
+  const html = `
+    <div class="kpi-card accent">
+      <div class="kpi-label">Выручка 2025</div>
+      <div class="kpi-value">${fmt(t.revenue_incl_delivery, true)}</div>
+      <div class="kpi-sub">${fmt(t.revenue_incl_delivery)} руб.</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Маржинальная прибыль</div>
+      <div class="kpi-value">${fmt(t.marginal_profit, true)}</div>
+      <div class="kpi-sub">${margin_pct}% от выручки</div>
+    </div>
+    <div class="kpi-card ${t.net_pl >= 0 ? 'positive' : 'negative'}">
+      <div class="kpi-label">Чистый P&L 2025</div>
+      <div class="kpi-value ${t.net_pl >= 0 ? 'positive' : 'negative'}">${fmt(t.net_pl, true)}</div>
+      <div class="kpi-sub">Без учёта инвестиций</div>
+    </div>
+    <div class="kpi-card negative">
+      <div class="kpi-label">P&L с инвестициями 2025</div>
+      <div class="kpi-value negative">${fmt(t.pl_incl_investments, true)}</div>
+      <div class="kpi-sub">Инвестиции: ${fmt(t.investment_costs, true)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Выручка 2026 YTD</div>
+      <div class="kpi-value">${fmt(rev26_ytd, true)}</div>
+      <div class="kpi-sub">Янв-Фев факт</div>
+    </div>
+  `;
+  document.getElementById('kpi-section').innerHTML = html;
+}
+
+// ── Year Tabs ──
+function setupTabs() {
+  document.querySelectorAll('.year-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const year = parseInt(tab.dataset.year);
+      currentYear = year;
+      renderTable(year);
+      renderCharts(year);
+    });
+  });
+}
+
+// ── PnL Table ──
+function renderTable(year) {
+  const d = year === 2025 ? data2025 : data2026;
+  const months = d.months;
+  const isPartial = year === 2026;
+
+  function valClass(v, i) {
+    let cls = '';
+    if (v == null) return 'val-plan';
+    if (v < 0) cls += ' val-neg';
+    else if (v > 0) cls += ' val-pos';
+    if (isPartial && d.type && d.type[i] === 'plan') cls += ' val-plan';
+    return cls;
+  }
+
+  function row(label, arr, cls) {
+    const total = sum(arr);
+    const cells = arr.map((v, i) => `<td class="${valClass(v, i)}">${v != null ? fmt(v) : '—'}</td>`).join('');
+    const totalCls = total < 0 ? 'val-neg' : (total > 0 ? 'val-pos' : '');
+    const hasData = arr.some(v => v != null);
+    return `<tr class="${cls || ''}"><td>${label}</td>${cells}<td class="${totalCls}">${hasData ? fmt(total) : '—'}</td></tr>`;
+  }
+
+  function totalRow(label, arr) {
+    const filtered = arr.filter(v => v != null);
+    const total = sum(filtered);
+    const cells = arr.map((v, i) => `<td class="${valClass(v, i)}">${v != null ? fmt(v) : '—'}</td>`).join('');
+    return `<tr class="row-total"><td>${label}</td>${cells}<td class="${total < 0 ? 'val-neg' : 'val-pos'}">${filtered.length ? fmt(total) : '—'}</td></tr>`;
+  }
+
+  function dividerRow(label) {
+    return `<tr class="row-header"><td colspan="${months.length + 2}">${label}</td></tr>`;
+  }
+
+  function detailBlock(obj) {
+    let h = '';
+    for (const [label, arr] of Object.entries(obj)) {
+      if (label.startsWith('_section_')) {
+        h += `<tr class="row-sub"><td style="padding-left:24px;font-weight:600;font-style:italic;color:var(--text-muted)">${arr}</td>${months.map(() => '<td></td>').join('')}<td></td></tr>`;
+      } else {
+        h += row(label, arr, 'row-sub');
+      }
+    }
+    return h;
+  }
+
+  const fb = d.fixed_costs_breakdown;
+  const fbKeys = ['showroom_msk','storage','production','team','management','business_ops','marketing'];
+  const detailMaps = {
+    showroom_msk: d.showroom_detail,
+    production: d.production_detail,
+    team: d.team_detail,
+    management: d.management_detail,
+    business_ops: d.ops_detail
+  };
+
+  let html = `<table class="pnl-table">
+    <thead><tr>
+      <th>Статья</th>
+      ${months.map(m => `<th>${m}</th>`).join('')}
+      <th class="col-total">Итого</th>
+    </tr></thead><tbody>`;
+
+  // Выручка
+  html += dividerRow('Выручка');
+  html += row('Выручка (с доставкой)', d.revenue_incl_delivery);
+  if (d.revenue_excl_delivery) html += row('Выручка (без доставок)', d.revenue_excl_delivery, 'row-sub');
+
+  // Переменные расходы
+  html += dividerRow('Переменные расходы');
+  html += row('Себестоимость (COGS)', d.cogs);
+  html += row('Бонусы дизайнерам', d.designer_bonuses, 'row-sub');
+
+  // Маржинальная прибыль
+  if (d.marginal_profit) html += totalRow('Маржинальная прибыль', d.marginal_profit);
+
+  // Постоянные расходы — с детализацией
+  html += dividerRow('Постоянные расходы');
+  html += row('Итого постоянные', d.fixed_costs_total);
+
+  fbKeys.forEach((key, idx) => {
+    if (fb[key]) {
+      html += row(fb.labels[idx], fb[key], 'row-sub');
+      if (detailMaps[key]) html += detailBlock(detailMaps[key]);
+    }
+  });
+
+  // Налоги
+  if (d.tax) {
+    html += dividerRow('Налоги');
+    html += row('Налог (итого)', d.tax);
+    if (d.tax_detail) html += detailBlock(d.tax_detail);
+  }
+
+  // Логистика
+  if (d.logistics) {
+    html += dividerRow('Клиентская логистика');
+    html += detailBlock(d.logistics);
+  }
+
+  // Результат
+  html += dividerRow('Результат');
+  html += totalRow('Чистый P&L', d.net_pl);
+
+  // Инвестиции
+  if (d.investment_costs) {
+    html += dividerRow('Инвестиции');
+    html += row('Инвест. затраты (итого)', d.investment_costs);
+    if (d.investment_detail) html += detailBlock(d.investment_detail);
+    if (d.pl_incl_investments) html += totalRow('P&L с инвестициями', d.pl_incl_investments);
+  }
+
+  html += '</tbody></table>';
+  document.getElementById('pnl-table-section').innerHTML = html;
+}
+
+// ── Charts ──
+const COLORS = {
+  revenue: '#5a8ab5',
+  costs: '#c0504d',
+  profit: '#4a9e6e',
+  loss: '#c0504d',
+  accent: '#f3713c',
+  primary: '#425a5e',
+  muted: '#95a3a7',
+  costCategories: ['#f3713c','#5a8ab5','#425a5e','#4a9e6e','#d4a03c','#95a3a7','#5a7a7f']
+};
+
+function destroyCharts() {
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+}
+
+function renderCharts(year) {
+  destroyCharts();
+  const d = year === 2025 ? data2025 : data2026;
+  const months = d.months;
+  const validIdx = d.revenue_incl_delivery.map((v, i) => v != null ? i : -1).filter(i => i >= 0);
+  const labels = validIdx.map(i => months[i]);
+
+  // 1. Revenue vs Costs (full width)
+  const revData = validIdx.map(i => d.revenue_incl_delivery[i]);
+  const costData = validIdx.map(i => {
+    const cogs = d.cogs[i] || 0;
+    const bonus = d.designer_bonuses[i] || 0;
+    const fixed = d.fixed_costs_total[i] || 0;
+    const tax = d.tax ? (d.tax[i] || 0) : 0;
+    return cogs + bonus + fixed + tax;
+  });
+
+  charts.revCosts = new Chart(document.getElementById('chart-revenue-costs'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Выручка', data: revData, backgroundColor: COLORS.revenue + 'cc', borderRadius: 4, order: 2 },
+        { label: 'Расходы (всего)', data: costData, type: 'line', borderColor: COLORS.costs, borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: COLORS.costs, fill: false, order: 1, tension: 0.3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { font: { family: 'Inter', size: 12 } } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmt(ctx.raw) + ' руб.' } }
+      },
+      scales: {
+        y: { ticks: { callback: v => fmt(v, true) }, grid: { color: '#e0ddd822' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // 2. Monthly P&L
+  const plData = validIdx.map(i => d.net_pl[i]);
+  const plColors = plData.map(v => v >= 0 ? COLORS.profit + 'cc' : COLORS.loss + 'cc');
+
+  charts.pl = new Chart(document.getElementById('chart-pl'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{ label: 'P&L', data: plData, backgroundColor: plColors, borderRadius: 4 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmt(ctx.raw) + ' руб.' } }
+      },
+      scales: {
+        y: { ticks: { callback: v => fmt(v, true) }, grid: { color: '#e0ddd822' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // 3. Cumulative P&L
+  let cumul = 0;
+  const cumulData = validIdx.map(i => { cumul += (d.net_pl[i] || 0); return cumul; });
+
+  charts.cumulative = new Chart(document.getElementById('chart-cumulative'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Накопленный P&L',
+        data: cumulData,
+        borderColor: COLORS.primary,
+        backgroundColor: cumulData.map(v => v >= 0 ? COLORS.profit + '33' : COLORS.loss + '33'),
+        fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: COLORS.primary
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmt(ctx.raw) + ' руб.' } }
+      },
+      scales: {
+        y: { ticks: { callback: v => fmt(v, true) }, grid: { color: '#e0ddd822' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // 4. Fixed Costs Breakdown (doughnut)
+  const fb = d.fixed_costs_breakdown;
+  const fbKeys = ['showroom_msk','storage','production','team','management','business_ops','marketing'];
+  const fbTotals = fbKeys.map(key => sum(fb[key]));
+
+  charts.costsBreakdown = new Chart(document.getElementById('chart-costs-breakdown'), {
+    type: 'doughnut',
+    data: {
+      labels: fb.labels,
+      datasets: [{
+        data: fbTotals,
+        backgroundColor: COLORS.costCategories,
+        borderWidth: 2, borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'right', labels: { font: { family: 'Inter', size: 11 }, padding: 12 } },
+        tooltip: { callbacks: { label: ctx => ctx.label + ': ' + fmt(ctx.raw) + ' руб. (' + ((ctx.raw / sum(fbTotals)) * 100).toFixed(1) + '%)' } }
+      }
+    }
+  });
+
+  // 5. Margin %
+  const marginData = validIdx.map(i => {
+    const rev = d.revenue_incl_delivery[i];
+    const cogs = d.cogs[i] || 0;
+    const bonus = d.designer_bonuses[i] || 0;
+    return rev ? (((rev - cogs - bonus) / rev) * 100) : null;
+  });
+
+  charts.margin = new Chart(document.getElementById('chart-margin'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Маржинальность',
+        data: marginData,
+        borderColor: COLORS.accent,
+        backgroundColor: COLORS.accent + '22',
+        fill: true, tension: 0.3, pointRadius: 5, pointBackgroundColor: COLORS.accent, borderWidth: 2.5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.raw.toFixed(1) + '%' } }
+      },
+      scales: {
+        y: { min: 0, max: 100, ticks: { callback: v => v + '%' }, grid: { color: '#e0ddd822' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
