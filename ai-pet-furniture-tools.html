@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-инструменты для pet-линейки | annki studio</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tool-card {
+            background: #f8f7f5;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            border-left: 4px solid #8b7355;
+        }
+        .tool-card h4 {
+            margin: 0 0 8px 0;
+            color: #2c2c2c;
+        }
+        .tool-card .price {
+            display: inline-block;
+            background: #8b7355;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+        .tool-card .verdict {
+            font-style: italic;
+            color: #666;
+            margin-top: 8px;
+        }
+        .tool-card.recommended {
+            border-left-color: #4a8b3f;
+            background: #f5f8f4;
+        }
+        .tool-card.recommended .price {
+            background: #4a8b3f;
+        }
+        .workflow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .step-num {
+            background: #8b7355;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9em;
+        }
+        .comparison-table th {
+            background: #2c2c2c;
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #e0ddd8;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: #f8f7f5;
+        }
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-right: 4px;
+        }
+        .tag-best { background: #4a8b3f; color: white; }
+        .tag-good { background: #8b7355; color: white; }
+        .tag-ok { background: #ccc; color: #333; }
+        .prompt-box {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin: 12px 0;
+            white-space: pre-wrap;
+        }
+        .section-nav {
+            background: #f8f7f5;
+            padding: 20px 24px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+        .section-nav a {
+            display: block;
+            padding: 4px 0;
+            color: #8b7355;
+            text-decoration: none;
+        }
+        .section-nav a:hover {
+            text-decoration: underline;
+        }
+        .cost-summary {
+            background: #2c2c2c;
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .cost-summary h3 {
+            color: #d4c5a9;
+            margin-top: 0;
+        }
+        .limitation {
+            background: #fff3e0;
+            border-left: 4px solid #e65100;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI-инструменты для визуализации pet-мебели</h1>
+        <p>annki studio | Pet-линейка как AI-first бизнес</p>
+        <p><em>Исследование актуально на март 2026</em></p>
+    </header>
+
+    <main>
+        <div class="section-nav">
+            <strong>Содержание</strong>
+            <a href="#images">1. Фотореалистичные изображения продукции</a>
+            <a href="#3d">2. AI для 3D-моделей</a>
+            <a href="#video">3. AI-видео для TikTok/Reels</a>
+            <a href="#catalog">4. AI для каталога и сайта</a>
+            <a href="#workflow">5. Workflow: от идеи до карточки товара</a>
+            <a href="#social">6. AI для соцсетей</a>
+            <a href="#budget">7. Бюджет и рекомендации</a>
+            <a href="#limits">8. Ограничения</a>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 1: IMAGE GENERATION -->
+        <!-- ============================================ -->
+        <section id="images">
+            <h2>1. AI-генерация фотореалистичных изображений</h2>
+
+            <h3>Сравнение ключевых инструментов</h3>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Инструмент</th>
+                    <th>Фотореализм мебели</th>
+                    <th>Белый фон</th>
+                    <th>Consistency</th>
+                    <th>Цена/мес</th>
+                    <th>Вердикт</th>
+                </tr>
+                <tr>
+                    <td><strong>Midjourney v7</strong></td>
+                    <td><span class="tag tag-best">отлично</span></td>
+                    <td><span class="tag tag-best">да</span></td>
+                    <td><span class="tag tag-good">хорошо</span></td>
+                    <td>$10-30</td>
+                    <td>Лучший для hero-изображений и каталога</td>
+                </tr>
+                <tr>
+                    <td><strong>GPT Image (DALL-E)</strong></td>
+                    <td><span class="tag tag-best">отлично</span></td>
+                    <td><span class="tag tag-best">да</span></td>
+                    <td><span class="tag tag-good">хорошо</span></td>
+                    <td>$20 (ChatGPT Plus)</td>
+                    <td>Лучший текст на изображениях + удобная итерация</td>
+                </tr>
+                <tr>
+                    <td><strong>Flux 1.1 Pro</strong></td>
+                    <td><span class="tag tag-best">отлично</span></td>
+                    <td><span class="tag tag-best">да</span></td>
+                    <td><span class="tag tag-best">отлично</span></td>
+                    <td>$0.03-0.05/изобр.</td>
+                    <td>Лучший для масштаба, можно fine-tune</td>
+                </tr>
+                <tr>
+                    <td><strong>Leonardo AI</strong></td>
+                    <td><span class="tag tag-good">хорошо</span></td>
+                    <td><span class="tag tag-best">да</span></td>
+                    <td><span class="tag tag-best">отлично</span></td>
+                    <td>$12-48</td>
+                    <td>Лучший для consistency (Elements + Canvas)</td>
+                </tr>
+                <tr>
+                    <td><strong>Ideogram</strong></td>
+                    <td><span class="tag tag-good">хорошо</span></td>
+                    <td><span class="tag tag-good">да</span></td>
+                    <td><span class="tag tag-ok">средне</span></td>
+                    <td>$7-48</td>
+                    <td>Лучший для изображений с текстом (упаковка, лого)</td>
+                </tr>
+                <tr>
+                    <td><strong>Adobe Firefly</strong></td>
+                    <td><span class="tag tag-good">хорошо</span></td>
+                    <td><span class="tag tag-best">да</span></td>
+                    <td><span class="tag tag-good">хорошо</span></td>
+                    <td>от $10</td>
+                    <td>Полная юридическая чистота для коммерции</td>
+                </tr>
+            </table>
+
+            <h3>Рекомендация для annki pet</h3>
+            <div class="tool-card recommended">
+                <h4>Основной стек: Midjourney v7 + Leonardo AI</h4>
+                <p><strong>Midjourney</strong> -- для hero-изображений каталога и маркетплейсов (лучший фотореализм для мебели/интерьеров).</p>
+                <p><strong>Leonardo AI</strong> -- для серийной генерации с единым стилем. Elements позволяет обучить модель на стиле annki и воспроизводить его в каждом следующем SKU. Canvas Editor -- для точечных правок без перегенерации.</p>
+                <p><strong>GPT Image</strong> -- для быстрых итераций и концептов в диалоге (уже есть в ChatGPT Plus).</p>
+            </div>
+
+            <h3>Примеры промптов для pet-мебели</h3>
+
+            <p><strong>Лежанка для собаки, белый фон (для маркетплейса):</strong></p>
+            <div class="prompt-box">Product photography of a minimalist Scandinavian dog bed, solid oak frame with rounded edges, cushion in warm beige linen fabric, on pure white background, studio lighting, soft shadows, commercial product shot, 8K, hyper-detailed texture --ar 4:3 --style raw</div>
+
+            <p><strong>Лежанка в интерьере:</strong></p>
+            <div class="prompt-box">Interior photography, Scandinavian living room with light oak floors, a golden retriever sleeping on a minimalist designer dog bed with oak frame and natural linen cushion, warm natural lighting from large windows, hygge atmosphere, editorial photography for design magazine --ar 16:9</div>
+
+            <p><strong>Когтеточка для кошки:</strong></p>
+            <div class="prompt-box">Product photography of a modern Scandinavian cat scratching post, solid oak base, wrapped in natural sisal rope, platform with beige wool felt pad, pure white background, studio lighting, commercial catalog shot, 8K detail --ar 3:4 --style raw</div>
+
+            <p><strong>Домик для кошки:</strong></p>
+            <div class="prompt-box">Minimalist Scandinavian cat house, geometric plywood form with oak veneer, round entrance, soft wool cushion inside in warm sand color, sitting in a bright modern apartment, natural daylight, interior design photography --ar 16:9</div>
+
+            <p><strong>Подставка для мисок:</strong></p>
+            <div class="prompt-box">Product photo of a minimalist elevated dog bowl stand, solid oak construction, two ceramic white bowls, clean lines, Scandinavian design aesthetic, pure white background, professional studio lighting, commercial e-commerce photography --ar 1:1 --style raw</div>
+
+            <h3>Как добиться consistent design (один продукт с разных ракурсов)</h3>
+            <ol>
+                <li><strong>Midjourney --sref + --cref</strong>: используй reference-изображение. Сгенерируй лучший ракурс, затем используй его как style reference для остальных.</li>
+                <li><strong>Leonardo AI Elements</strong>: обучи Element на нескольких изображениях продукта. Все последующие генерации будут следовать стилю.</li>
+                <li><strong>Flux fine-tuning</strong>: для максимального контроля -- обучи LoRA на 10-20 изображениях продукта. Все генерации будут точно воспроизводить дизайн.</li>
+                <li><strong>Seed-based подход</strong>: используй один seed + вариации ракурса в промпте (front view, side view, 3/4 view, top-down view).</li>
+            </ol>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 2: 3D MODELS -->
+        <!-- ============================================ -->
+        <section id="3d">
+            <h2>2. AI для 3D-моделей</h2>
+
+            <h3>Инструменты генерации 3D</h3>
+
+            <div class="tool-card recommended">
+                <h4>Meshy AI</h4>
+                <span class="price">Free: 100 кредитов/мес | Pro: $20/мес (1000 кредитов) | Max: $120/мес</span>
+                <p>Лидер рынка. Быстрая итерация, batch-генерация, multi-view image-to-3D. Экспорт: FBX, GLB, OBJ, STL, USDZ, BLEND.</p>
+                <p>Для мебели -- одно из лучших решений: хорошо передаёт текстуры дерева и ткани.</p>
+                <p class="verdict">Рекомендация: основной инструмент для 3D-моделей pet-линейки.</p>
+            </div>
+
+            <div class="tool-card">
+                <h4>Tripo 3D</h4>
+                <span class="price">Free: 300 кредитов/мес | Pro: $19.90/мес | Advanced: $49.90/мес</span>
+                <p>Чистая quad-топология (хорошо для web). Экспорт: OBJ, GLTF, GLB, FBX (на платных планах). Image-to-3D и text-to-3D.</p>
+                <p>Tripo v3.0 Ultra -- существенный скачок качества в 2026.</p>
+                <p class="verdict">Хорош для web-моделей с правильной топологией.</p>
+            </div>
+
+            <div class="tool-card">
+                <h4>3D AI Studio</h4>
+                <span class="price">По кредитам, 25-35 кредитов за генерацию</span>
+                <p>Агрегатор: доступ к Meshy, Rodin, Tripo, CSM в одном интерфейсе. Экспорт: GLB, FBX, OBJ, USDZ, STL, DAE, BLEND.</p>
+                <p class="verdict">Удобно для сравнения моделей разных движков.</p>
+            </div>
+
+            <div class="tool-card">
+                <h4>TRELLIS 3D AI</h4>
+                <span class="price">Бесплатно</span>
+                <p>Полностью бесплатный конвертер изображений в 3D. Экспорт: GLB, OBJ, STL, GLTF, USDZ, PLY. Превью прямо в браузере.</p>
+                <p class="verdict">Для быстрого прототипирования без затрат.</p>
+            </div>
+
+            <h3>Качество для мебели</h3>
+            <ul>
+                <li><strong>Простые формы</strong> (лежанки, подставки для мисок) -- генерируются хорошо, текстуры дерева и ткани передаются адекватно</li>
+                <li><strong>Сложные формы</strong> (когтеточки с несколькими уровнями, домики) -- требуют ручной доработки в Blender</li>
+                <li><strong>Rodin</strong> -- лучший для фотореалистичных объектов, но дороже</li>
+                <li><strong>Meshy</strong> -- лучший баланс скорости и качества</li>
+                <li><strong>Tripo</strong> -- лучшая топология для web-использования</li>
+            </ul>
+
+            <h3>3D-просмотр на сайте</h3>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Решение</th>
+                    <th>Тип</th>
+                    <th>Цена</th>
+                    <th>Форматы</th>
+                    <th>AR</th>
+                </tr>
+                <tr>
+                    <td><strong>Google model-viewer</strong></td>
+                    <td>Open-source web component</td>
+                    <td>Бесплатно</td>
+                    <td>GLB/GLTF</td>
+                    <td>Android (ARCore) + iOS (AR Quick Look)</td>
+                </tr>
+                <tr>
+                    <td><strong>Sketchfab</strong></td>
+                    <td>Hosted embed</td>
+                    <td>Free / $15/мес</td>
+                    <td>Все основные</td>
+                    <td>Да</td>
+                </tr>
+                <tr>
+                    <td><strong>Modelry</strong></td>
+                    <td>E-commerce платформа</td>
+                    <td>По запросу</td>
+                    <td>Все основные</td>
+                    <td>Да</td>
+                </tr>
+                <tr>
+                    <td><strong>Three.js</strong></td>
+                    <td>JS-библиотека</td>
+                    <td>Бесплатно</td>
+                    <td>GLTF/GLB</td>
+                    <td>Через WebXR</td>
+                </tr>
+            </table>
+
+            <div class="tool-card recommended">
+                <h4>Рекомендация: Google model-viewer</h4>
+                <p>Минимальная интеграция -- пара строк HTML. Поддерживает GLB, автоматический AR на мобильных. Для pet-мебели в сканди-стиле это идеальный вариант: покупатель видит лежанку в 3D, крутит, и может "поставить" в свою комнату через AR.</p>
+                <div class="prompt-box">&lt;model-viewer
+  src="/models/dog-bed-oak.glb"
+  alt="Лежанка для собаки из дуба"
+  ar
+  camera-controls
+  shadow-intensity="1"
+  style="width: 100%; height: 400px;"&gt;
+&lt;/model-viewer&gt;</div>
+            </div>
+
+            <h3>Workflow: промпт --> 2D --> 3D --> сайт</h3>
+            <ol>
+                <li>Генерация 2D-изображения в Midjourney (белый фон, чёткий ракурс 3/4)</li>
+                <li>Загрузка в Meshy AI (image-to-3D), генерация за 30-60 сек</li>
+                <li>Экспорт в GLB</li>
+                <li>Оптимизация в Blender (если нужно) -- уменьшение полигонов, правка текстур</li>
+                <li>Загрузка на CDN, вставка через model-viewer на страницу товара</li>
+            </ol>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 3: VIDEO -->
+        <!-- ============================================ -->
+        <section id="video">
+            <h2>3. AI-видео для TikTok / Instagram Reels</h2>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Инструмент</th>
+                    <th>Качество</th>
+                    <th>Длина</th>
+                    <th>Цена</th>
+                    <th>Лучше всего для</th>
+                </tr>
+                <tr>
+                    <td><strong>Kling 3.0</strong></td>
+                    <td><span class="tag tag-best">отлично</span></td>
+                    <td>до 10 сек (1080p)</td>
+                    <td>от $6.99/мес</td>
+                    <td>Объём, скорость, UGC-контент. E-commerce: -80% стоимости видео</td>
+                </tr>
+                <tr>
+                    <td><strong>Sora 2</strong></td>
+                    <td><span class="tag tag-best">топ</span></td>
+                    <td>до 20 сек</td>
+                    <td>$20/мес (ChatGPT Plus)</td>
+                    <td>Максимальный реализм, бренд-видео, понимание физики</td>
+                </tr>
+                <tr>
+                    <td><strong>Runway Gen-4.5</strong></td>
+                    <td><span class="tag tag-best">отлично</span></td>
+                    <td>до 10 сек</td>
+                    <td>от $12/мес</td>
+                    <td>Креативный контроль: камера, VFX, стилизация</td>
+                </tr>
+                <tr>
+                    <td><strong>Veo 3.1 (Google)</strong></td>
+                    <td><span class="tag tag-best">отлично</span></td>
+                    <td>до 8 сек</td>
+                    <td>В Google AI</td>
+                    <td>Реализм, звук, текстуры</td>
+                </tr>
+                <tr>
+                    <td><strong>Pika</strong></td>
+                    <td><span class="tag tag-good">хорошо</span></td>
+                    <td>3-4 сек</td>
+                    <td>от $8/мес</td>
+                    <td>Быстрые стилизованные клипы</td>
+                </tr>
+            </table>
+
+            <h3>Видео-обзоры продукта (вращение, zoom)</h3>
+            <div class="tool-card recommended">
+                <h4>Runway Gen-4.5 -- лучший для product videos</h4>
+                <p>Director Mode: точный контроль камеры -- pan, tilt, zoom, dolly. Текстуры ткани и дерева сохраняются между кадрами (temporal consistency улучшена в Gen-4). Можно задать вращение продукта на 360 и zoom на текстуру.</p>
+                <p>Промпт-пример:</p>
+                <div class="prompt-box">A slow 360-degree rotation of a minimalist oak dog bed with beige linen cushion, on white background, soft studio lighting, product showcase video, smooth camera orbit</div>
+            </div>
+
+            <h3>Видео с животными</h3>
+            <div class="tool-card">
+                <h4>Kling 3.0 + Sora 2 -- реалистичные животные</h4>
+                <p>AI-модели 2026 года хорошо понимают физику движения животных: правильные тени, взаимодействие с поверхностями, естественные позы.</p>
+                <p><strong>Что работает:</strong> кошка спит на лежанке, собака подходит к миске, кот точит когти -- базовые сценарии генерируются убедительно.</p>
+                <p><strong>Что пока сложно:</strong> длинные взаимодействия (>10 сек), несколько животных в кадре, точное воспроизведение конкретной породы.</p>
+                <p>Промпт-пример:</p>
+                <div class="prompt-box">A fluffy ginger cat curling up on a minimalist Scandinavian cat bed, natural oak frame, soft wool cushion in warm beige, living room with soft natural light, cozy hygge atmosphere, cinematic 4K</div>
+            </div>
+
+            <h3>TikTok Symphony -- встроенный AI TikTok</h3>
+            <ul>
+                <li><strong>Image to Video</strong>: загрузи фото продукта + текстовый промпт = 5-секундный клип</li>
+                <li><strong>Text to Video</strong>: опиши концепт = готовое видео</li>
+                <li><strong>Digital Avatars</strong>: AI-презентер говорит о продукте с lip-sync на нескольких языках</li>
+                <li>Идеально для масштабирования TikTok-контента</li>
+            </ul>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 4: CATALOG & SITE -->
+        <!-- ============================================ -->
+        <section id="catalog">
+            <h2>4. AI для каталога и сайта</h2>
+
+            <h3>Генерация описаний товаров</h3>
+            <div class="tool-card recommended">
+                <h4>Claude (Anthropic) -- основной копирайтер</h4>
+                <p>Лучший для длинных описаний с сохранением tone of voice бренда. Можно задать стиль annki ("скрытая роскошь", сканди-минимализм) и генерировать описания всей линейки с единым голосом.</p>
+                <p>Workflow: шаблон описания + характеристики SKU = готовое описание на русском и английском.</p>
+            </div>
+
+            <div class="tool-card">
+                <h4>GPT-4 / GPT-5</h4>
+                <p>Хорош для SEO-оптимизированных описаний и bulk-генерации через API.</p>
+            </div>
+
+            <h3>AI для макетов сайта</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>Инструмент</th>
+                    <th>Что делает</th>
+                    <th>Цена</th>
+                </tr>
+                <tr>
+                    <td><strong>v0 (Vercel)</strong></td>
+                    <td>Генерация React-компонентов из текста. Идеально для карточек товара, каталога, лендинга</td>
+                    <td>Free / $20/мес</td>
+                </tr>
+                <tr>
+                    <td><strong>Cursor / Claude Code</strong></td>
+                    <td>AI-разработка полного сайта. Можно сгенерировать весь e-commerce frontend</td>
+                    <td>$20-200/мес</td>
+                </tr>
+                <tr>
+                    <td><strong>Framer AI</strong></td>
+                    <td>Генерация сайта из промпта. Встроенный CMS, анимации</td>
+                    <td>Free / $15/мес</td>
+                </tr>
+                <tr>
+                    <td><strong>Figma AI</strong></td>
+                    <td>Генерация макетов внутри Figma</td>
+                    <td>В подписке Figma</td>
+                </tr>
+            </table>
+
+            <h3>Интеграция 3D-просмотра</h3>
+            <p>Схема для сайта annki pet:</p>
+            <ol>
+                <li>Карточка товара: фото (AI-generated) + 3D-вьюер (model-viewer) + AR-кнопка</li>
+                <li>3D-модели хранятся на CDN в формате GLB (оптимально: 2-5 MB на модель)</li>
+                <li>model-viewer загружается лениво (lazy loading), не замедляет страницу</li>
+                <li>На мобильных -- кнопка "Посмотреть у себя дома" запускает AR</li>
+            </ol>
+            <p><strong>Результат:</strong> конверсия до +94%, возвраты -40% (данные e-commerce бенчмарков 2026).</p>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 5: WORKFLOW -->
+        <!-- ============================================ -->
+        <section id="workflow">
+            <h2>5. Workflow: от идеи до готовой карточки товара</h2>
+
+            <div class="workflow-step">
+                <div class="step-num">1</div>
+                <div>
+                    <h4>Концепт и дизайн (15 мин)</h4>
+                    <p><strong>Инструмент:</strong> Claude / ChatGPT</p>
+                    <p>Текстовое описание продукта: материалы, размеры, стиль, целевая аудитория. Генерация названия, описания, ключевых характеристик.</p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="step-num">2</div>
+                <div>
+                    <h4>AI-рендер продукта (30 мин)</h4>
+                    <p><strong>Инструмент:</strong> Midjourney v7 / Leonardo AI</p>
+                    <p>Генерация 5-8 изображений: белый фон (4 ракурса) + в интерьере (2-3 варианта) + с животным (1-2). Итерации до идеального результата.</p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="step-num">3</div>
+                <div>
+                    <h4>3D-модель (20 мин)</h4>
+                    <p><strong>Инструмент:</strong> Meshy AI (image-to-3D)</p>
+                    <p>Загрузка лучшего изображения с белого фона. Генерация 3D (30-60 сек). Экспорт в GLB. При необходимости -- правка в Blender (ещё 30 мин).</p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="step-num">4</div>
+                <div>
+                    <h4>Видео-контент (20 мин)</h4>
+                    <p><strong>Инструмент:</strong> Runway Gen-4.5 / Kling 3.0</p>
+                    <p>Product rotation video (белый фон). Lifestyle video (продукт в интерьере с животным). 2-3 клипа по 5-10 сек для Reels/TikTok.</p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="step-num">5</div>
+                <div>
+                    <h4>Описания и SEO (15 мин)</h4>
+                    <p><strong>Инструмент:</strong> Claude</p>
+                    <p>Описание для сайта (RU + EN). Описание для маркетплейсов. SEO-метаданные. Alt-тексты для изображений.</p>
+                </div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="step-num">6</div>
+                <div>
+                    <h4>Сборка карточки товара (20 мин)</h4>
+                    <p><strong>Инструмент:</strong> v0 / Cursor / CMS</p>
+                    <p>Загрузка изображений, 3D-модели, видео. Заполнение описаний. Публикация на сайте и маркетплейсах.</p>
+                </div>
+            </div>
+
+            <div class="cost-summary">
+                <h3>Итого на 1 SKU</h3>
+                <table class="comparison-table" style="color: white;">
+                    <tr>
+                        <td>Время</td>
+                        <td><strong>~2 часа</strong> (от концепта до публикации)</td>
+                    </tr>
+                    <tr>
+                        <td>Прямые затраты AI</td>
+                        <td><strong>$2-5 за SKU</strong> (при подписках на инструменты)</td>
+                    </tr>
+                    <tr>
+                        <td>Сравнение с традиционным подходом</td>
+                        <td>Фотосессия продукта: $200-500. 3D-моделирование: $100-300. Видео: $300-1000. <strong>Итого: $600-1800 за SKU</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Экономия</td>
+                        <td><strong>95-99%</strong> на визуальном контенте</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 6: SOCIAL -->
+        <!-- ============================================ -->
+        <section id="social">
+            <h2>6. AI для соцсетей</h2>
+
+            <h3>Автопостинг и автоматизация</h3>
+
+            <div class="tool-card recommended">
+                <h4>PostEverywhere</h4>
+                <span class="price">Цена по запросу</span>
+                <p>AI-генерация текстов + автопостинг на все платформы (Instagram, TikTok, YouTube, VK, Telegram). Кросс-платформенное форматирование. Bulk-scheduling 20+ постов за сессию. Рециклинг лучшего контента.</p>
+            </div>
+
+            <div class="tool-card">
+                <h4>Predis.ai</h4>
+                <span class="price">от $29/мес</span>
+                <p>Генерация полных постов (изображение + текст) из промпта. Особенно полезен для команды без дизайнера.</p>
+            </div>
+
+            <div class="tool-card">
+                <h4>Buffer + AI</h4>
+                <span class="price">Free / от $6/мес</span>
+                <p>Планирование + AI-помощник для текстов. Аналитика.</p>
+            </div>
+
+            <h3>TikTok-автоматизация</h3>
+            <ul>
+                <li><strong>TikTok Symphony</strong>: встроенный AI -- image-to-video, text-to-video, AI-аватары</li>
+                <li><strong>AutoShorts.ai</strong>: автоматическая генерация, расписание и публикация faceless-видео</li>
+                <li>Cadence 3-5 постов/неделю без burnout. Сокращение production time на 80%.</li>
+            </ul>
+
+            <h3>Генерация lifestyle-контента</h3>
+            <div class="tool-card">
+                <h4>Workflow для соцсетей</h4>
+                <ol>
+                    <li><strong>Midjourney / Leonardo</strong>: генерация lifestyle-фото (квартира + питомец + мебель annki)</li>
+                    <li><strong>Kling / Sora</strong>: анимация lifestyle-фото в короткое видео</li>
+                    <li><strong>Claude / GPT</strong>: тексты постов в tone of voice бренда</li>
+                    <li><strong>PostEverywhere / Buffer</strong>: планирование и автопостинг</li>
+                </ol>
+                <p>Результат: полный контент-план на неделю за 2-3 часа.</p>
+            </div>
+
+            <h3>AI-копирайтинг</h3>
+            <p>Для annki pet оптимально:</p>
+            <ul>
+                <li><strong>Claude</strong> -- основной копирайтер (лучший для сохранения бренд-голоса, длинных текстов)</li>
+                <li><strong>GPT</strong> -- bulk-генерация вариантов постов, хештегов</li>
+                <li><strong>Промпт-шаблон</strong>: "Напиши Instagram-пост для бренда дизайнерской мебели для животных annki pet. Стиль: скандинавский минимализм, тёплый, но сдержанный тон. Продукт: [название]. Длина: 150-200 символов. Включи 5 хештегов."</li>
+            </ul>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 7: BUDGET -->
+        <!-- ============================================ -->
+        <section id="budget">
+            <h2>7. Рекомендуемый бюджет на AI-инструменты</h2>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>Инструмент</th>
+                    <th>Назначение</th>
+                    <th>План</th>
+                    <th>$/мес</th>
+                </tr>
+                <tr>
+                    <td>Midjourney</td>
+                    <td>Hero-изображения, каталог</td>
+                    <td>Standard (unlimited relaxed)</td>
+                    <td>$30</td>
+                </tr>
+                <tr>
+                    <td>Leonardo AI</td>
+                    <td>Серийная генерация, consistency</td>
+                    <td>Apprentice</td>
+                    <td>$12</td>
+                </tr>
+                <tr>
+                    <td>ChatGPT Plus</td>
+                    <td>GPT Image + Sora + копирайтинг</td>
+                    <td>Plus</td>
+                    <td>$20</td>
+                </tr>
+                <tr>
+                    <td>Meshy AI</td>
+                    <td>3D-модели</td>
+                    <td>Pro</td>
+                    <td>$20</td>
+                </tr>
+                <tr>
+                    <td>Kling AI</td>
+                    <td>Видео для TikTok/Reels</td>
+                    <td>Pro</td>
+                    <td>$10</td>
+                </tr>
+                <tr>
+                    <td>Runway</td>
+                    <td>Product videos, VFX</td>
+                    <td>Standard</td>
+                    <td>$12</td>
+                </tr>
+                <tr>
+                    <td>Buffer</td>
+                    <td>Автопостинг</td>
+                    <td>Essentials</td>
+                    <td>$6</td>
+                </tr>
+                <tr>
+                    <td>Claude Pro</td>
+                    <td>Копирайтинг, описания, стратегия</td>
+                    <td>Pro</td>
+                    <td>$20</td>
+                </tr>
+                <tr style="background: #2c2c2c; color: white; font-weight: bold;">
+                    <td colspan="3">ИТОГО</td>
+                    <td>~$130/мес</td>
+                </tr>
+            </table>
+
+            <p>При запуске 10-15 SKU в первый месяц это <strong>$9-13 за полный набор контента на 1 SKU</strong> (изображения + 3D + видео + тексты). Сравни с $600-1800 за традиционный подход.</p>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION 8: LIMITATIONS -->
+        <!-- ============================================ -->
+        <section id="limits">
+            <h2>8. Ограничения: что AI пока не может</h2>
+
+            <div class="limitation">
+                <strong>Точные размеры и пропорции.</strong> AI не гарантирует соблюдение конкретных размеров. Если нужна лежанка 60x80 см, придётся итерировать и корректировать. Для 3D-моделей -- ручная правка масштаба в Blender.
+            </div>
+
+            <div class="limitation">
+                <strong>Идеальная consistency между SKU.</strong> Даже с reference images и seed -- разные продукты могут выглядеть немного по-разному. Решение: fine-tuning (Flux LoRA / Leonardo Elements).
+            </div>
+
+            <div class="limitation">
+                <strong>Сложные механизмы.</strong> Складные элементы, трансформеры, скрытые крепления -- AI генерирует визуально, но не гарантирует инженерную осмысленность.
+            </div>
+
+            <div class="limitation">
+                <strong>Точное воспроизведение конкретных тканей/текстур.</strong> "Рогожка в конкретном артикуле" -- AI не воспроизведёт. Можно приблизиться через style reference и inpainting.
+            </div>
+
+            <div class="limitation">
+                <strong>Длинное видео с животными.</strong> >10 секунд непрерывного реалистичного видео с животным -- пока артефакты. Решение: монтаж из нескольких коротких клипов.
+            </div>
+
+            <div class="limitation">
+                <strong>3D-модели production quality.</strong> AI-генерированные 3D подходят для web-просмотра и маркетинга, но НЕ для производства (ЧПУ, 3D-печать деталей). Для производства нужны CAD-модели.
+            </div>
+
+            <div class="limitation">
+                <strong>Юридическая чистота.</strong> Midjourney, Flux, Leonardo -- потенциальные вопросы с авторскими правами в России. Adobe Firefly -- единственный с полной юридической гарантией. Для коммерции в РФ риск минимален, но стоит отслеживать законодательство.
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SOURCES -->
+        <!-- ============================================ -->
+        <section id="sources">
+            <h2>Источники</h2>
+            <ul>
+                <li><a href="https://www.techno-pulse.com/2026/03/best-ai-image-generators-in-2026.html">Best AI Image Generators in 2026 -- Techno-Pulse</a></li>
+                <li><a href="https://www.gradually.ai/en/ai-image-models/">The 9 Best AI Image Generation Models in 2026</a></li>
+                <li><a href="https://www.comparegen.ai/blog/best-ai-image-generators-2026">Best AI Image Generators 2026: Complete Comparison -- CompareGen.AI</a></li>
+                <li><a href="https://awesomeagents.ai/tools/best-ai-image-generators-2026/">Best AI Image Generators in 2026 -- Awesome Agents</a></li>
+                <li><a href="https://www.3daistudio.com/3d-generator-ai-comparison-alternatives-guide/best-3d-generation-tools-2026/12-essential-ai-3d-creation-tools-2026">12 Essential AI 3D Creation Tools for 2026</a></li>
+                <li><a href="https://www.sloyd.ai/blog/3d-ai-price-comparison">3D AI Pricing & Credits Comparison 2026</a></li>
+                <li><a href="https://lorphic.com/tripo-ai-pricing-3d-models-full-guide-and-review/">Tripo AI 2026: Pricing, 3D Models & Guide</a></li>
+                <li><a href="https://www.meshy.ai/pricing">Meshy AI Pricing</a></li>
+                <li><a href="https://pxz.ai/blog/kling-ai-vs-sora-(2026):-quality-pricing-speed-&-best-use-cases-compared">Kling AI vs Sora 2026 Comparison</a></li>
+                <li><a href="https://manus.im/blog/best-ai-video-generator">Top 10 Best AI Video Generators of 2026</a></li>
+                <li><a href="https://max-productive.ai/ai-tools/runwayml/">Runway AI Review 2026</a></li>
+                <li><a href="https://pxz.ai/blog/ideogram-ai-review-2026">Ideogram AI Review 2026</a></li>
+                <li><a href="https://aiflowreview.com/leonardo-ai-product-mockups/">Leonardo AI Review 2026: Product Mockups</a></li>
+                <li><a href="https://zolak.tech/blog/best-3d-product-visualization-platforms-for-ecommerce">12 Best 3D Product Visualization Platforms for E-commerce 2026</a></li>
+                <li><a href="https://web.dev/articles/model-viewer">Google model-viewer web component</a></li>
+                <li><a href="https://buffer.com/resources/ai-social-media-content-creation/">14 AI Tools for Social Media Content Creation 2026 -- Buffer</a></li>
+                <li><a href="https://www.mirra.my/en/blog/tiktok-ai-automation-bulk-content-guide-2026">TikTok AI Automation: Bulk Content Guide 2026</a></li>
+                <li><a href="https://www.enrichlabs.ai/blog/best-ai-social-media-automation-tools">Best AI Social Media Automation Tools 2026</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>annki studio | AI Pet Furniture Tools Research | Март 2026</p>
+    </footer>
+</body>
+</html>

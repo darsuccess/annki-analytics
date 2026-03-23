@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>annki studio — Pet Brand Platform</title>
+    <style>
+        :root {
+            --bg: #faf9f7;
+            --text: #1a1a1a;
+            --accent: #8b7355;
+            --accent-light: #c4a97d;
+            --border: #e5e0d8;
+            --card-bg: #ffffff;
+            --muted: #6b6560;
+            --green: #4a7c59;
+            --red: #9c4040;
+            --blue: #4a6b8b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: var(--muted);
+            margin-bottom: 48px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 24px;
+        }
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 48px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+            color: var(--text);
+        }
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            color: var(--accent);
+        }
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 16px 0 8px;
+        }
+        p { margin-bottom: 12px; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-top { background: #e8dcc8; color: var(--accent); }
+        .badge-good { background: #d4e8d9; color: var(--green); }
+        .badge-ok { background: #dce5ed; color: var(--blue); }
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 12px 0;
+        }
+        .pros, .cons {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .pros { background: #f0f7f1; border-left: 3px solid var(--green); }
+        .cons { background: #faf0f0; border-left: 3px solid var(--red); }
+        .pros strong { color: var(--green); }
+        .cons strong { color: var(--red); }
+        .domain-info {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+        .domain-info span {
+            background: var(--bg);
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #f5f0e8, #ece5d8);
+            border: 1px solid var(--accent-light);
+            border-radius: 12px;
+            padding: 28px;
+            margin: 24px 0;
+        }
+        .highlight-box h3 { color: var(--accent); margin-top: 0; }
+        ul { margin: 8px 0 12px 20px; }
+        li { margin-bottom: 6px; font-size: 0.95rem; }
+        .section-intro {
+            font-size: 1rem;
+            color: var(--muted);
+            margin-bottom: 24px;
+            padding-left: 16px;
+            border-left: 3px solid var(--accent-light);
+        }
+        .brand-platform {
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 24px 0;
+        }
+        .brand-platform h3 { margin-top: 0; font-size: 1.4rem; }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+        .value-item {
+            background: var(--bg);
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .value-item strong { display: block; margin-bottom: 4px; color: var(--accent); }
+        .slogans {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        .slogan {
+            background: var(--bg);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-style: italic;
+            font-size: 1.05rem;
+            border-left: 3px solid var(--accent-light);
+        }
+        .positioning-formula {
+            background: #1a1a1a;
+            color: #faf9f7;
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin: 16px 0;
+        }
+        .positioning-formula em { color: var(--accent-light); font-style: normal; font-weight: 600; }
+        .color-palette {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+        .color-swatch {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-end;
+            padding: 6px;
+            font-size: 0.65rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .competitor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .competitor-item {
+            background: var(--bg);
+            padding: 16px;
+            border-radius: 8px;
+        }
+        .competitor-item strong { color: var(--accent); }
+        .toc {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+        .toc h3 { margin-top: 0; }
+        .toc ul { list-style: none; margin-left: 0; }
+        .toc li { margin-bottom: 4px; }
+        .toc a { color: var(--accent); text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        @media (max-width: 768px) {
+            .pros-cons { grid-template-columns: 1fr; }
+            h1 { font-size: 1.6rem; }
+            .domain-info { flex-direction: column; gap: 4px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>annki studio / Pet Brand Platform</h1>
+        <p class="subtitle">Бренд-платформа линейки дизайнерской мебели для домашних животных. Март 2026.</p>
+
+        <div class="toc">
+            <h3>Содержание</h3>
+            <ul>
+                <li><a href="#research">0. Результаты исследования рынка</a></li>
+                <li><a href="#naming">1. Нейминг: 15 вариантов</a></li>
+                <li><a href="#platforms">2. Бренд-платформы (топ-3)</a></li>
+                <li><a href="#positioning">3. Позиционирование</a></li>
+                <li><a href="#next">4. Следующие шаги</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 0: RESEARCH -->
+        <!-- ============================================ -->
+        <h2 id="research">0. Результаты исследования рынка</h2>
+
+        <h3>Конкурентный ландшафт</h3>
+        <div class="competitor-grid">
+            <div class="competitor-item">
+                <strong>Международные</strong>
+                <ul>
+                    <li><b>MiaCara</b> (Германия) -- минималистичный дизайн, премиум материалы, нейтральные палитры</li>
+                    <li><b>Mau</b> (США) -- "мебель как искусство" для кошек, высокое качество</li>
+                    <li><b>Tuft + Paw</b> (Канада) -- современная кошачья мебель, вписывается в интерьер</li>
+                    <li><b>Fable</b> (США) -- минималистичный шрифт, design-led, история с питомцем</li>
+                    <li><b>Wild One</b> (США) -- яркий минимализм, lifestyle-бренд</li>
+                    <li><b>Rosi & Rufus</b> (Италия) -- устойчивая роскошь, итальянское производство</li>
+                    <li><b>Lord Lou</b> (Нидерланды) -- элитная мебель, классический европейский стиль</li>
+                </ul>
+            </div>
+            <div class="competitor-item">
+                <strong>Россия</strong>
+                <ul>
+                    <li><b>PetSpaces</b> -- стильная мебель, водные краски, дерево</li>
+                    <li><b>Teddy Room</b> -- лофт-стиль, ручная работа</li>
+                    <li><b>KotoMoto</b> -- дизайнерская мебель для кошек и собак</li>
+                    <li><b>Kotspit</b> -- эксклюзивная дизайнерская мебель</li>
+                    <li><b>ФУНТИК</b> -- авторские диваны и лежанки</li>
+                    <li><b>Home Concept</b> -- дистрибуция Lord Lou в РФ</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Паттерны нейминга успешных pet-брендов</h3>
+        <table>
+            <tr><th>Паттерн</th><th>Примеры</th><th>Характеристика</th></tr>
+            <tr><td>Имя/кличка</td><td>Fable, Mau, Lord Lou</td><td>Эмоциональная связь, персональность</td></tr>
+            <tr><td>Описательный</td><td>Tuft + Paw, Wild One</td><td>Понятность, SEO-friendly</td></tr>
+            <tr><td>Место/пространство</td><td>PetSpaces, Teddy Room</td><td>Ассоциация с домом и комфортом</td></tr>
+            <tr><td>Составной</td><td>KotoMoto, MiaCara</td><td>Запоминаемость, уникальность</td></tr>
+            <tr><td>Иноязычный</td><td>MiaCara (итал. "моя дорогая")</td><td>Культурная отсылка, звучание</td></tr>
+        </table>
+
+        <h3>Тренды нейминга 2025-2026</h3>
+        <ul>
+            <li><b>Краткость</b> -- 70% топовых брендов имеют название до 10 символов</li>
+            <li><b>Портманто</b> -- слияние двух слов в одно (Netflix = net + flicks)</li>
+            <li><b>Международность</b> -- тестирование на звучание в нескольких языках обязательно</li>
+            <li><b>Purpose-driven</b> -- название отражает ценности, а не просто категорию</li>
+            <li><b>1-2 слога</b> -- Stripe, Bolt, Mau -- работают в digital-среде</li>
+        </ul>
+
+        <h3>Скандинавская лексика (ключевые слова для нейминга)</h3>
+        <table>
+            <tr><th>Слово</th><th>Язык</th><th>Значение</th></tr>
+            <tr><td>hygge</td><td>датский</td><td>уютная атмосфера, тёплое настроение</td></tr>
+            <tr><td>mysa / mys</td><td>шведский</td><td>уют, расслабленность, тепло</td></tr>
+            <tr><td>koselig</td><td>норвежский</td><td>теплота, интимность, уют</td></tr>
+            <tr><td>lagom</td><td>шведский</td><td>в самый раз, баланс</td></tr>
+            <tr><td>hem</td><td>шведский</td><td>дом (эмоциональное, не физическое)</td></tr>
+            <tr><td>bo</td><td>шведский</td><td>жить, обитать; жилище</td></tr>
+            <tr><td>stuga</td><td>шведский</td><td>домик, хижина, дача</td></tr>
+            <tr><td>tass</td><td>шведский</td><td>лапа (лапка)</td></tr>
+            <tr><td>katt</td><td>шведский</td><td>кот/кошка</td></tr>
+            <tr><td>hund</td><td>шведский</td><td>собака</td></tr>
+            <tr><td>vrå</td><td>шведский</td><td>угол, уголок</td></tr>
+        </table>
+
+        <!-- ============================================ -->
+        <!-- SECTION 1: NAMING -->
+        <!-- ============================================ -->
+        <h2 id="naming">1. Нейминг: 15 вариантов</h2>
+
+        <p class="section-intro">
+            Критерии отбора: краткость (до 8 символов в идеале), звучание на русском и международно, доступность для Instagram-хендла, связь с ценностями annki (скандинавский минимализм, уют, тактильность). Отсортировано по рекомендации.
+        </p>
+
+        <!-- #1 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">1. TASS</span>
+                    <div class="card-subtitle">швед. "tass" = лапа, лапка</div>
+                </div>
+                <span class="badge badge-top">TOP PICK</span>
+            </div>
+            <p>Короткое, звучное, международное. Прямая связь с животными через скандинавский язык. Ассоциируется с прикосновением (тактильность -- ключевая ценность annki). На русском звучит мягко и тепло.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>4 буквы. Легко произнести на любом языке. Тактильная ассоциация. Скандинавский код. Отличный Instagram-хендл.</div>
+                <div class="cons"><strong>-</strong><br>В России "ТАСС" -- информагентство. Нужно добавить визуальный контекст, чтобы отстроиться. Возможно, потребуется модификатор (tass home, tass by annki).</div>
+            </div>
+            <div class="domain-info">
+                <span>tass.com -- занят (ТАСС)</span>
+                <span>tass.ru -- занят</span>
+                <span>tasspets.com -- проверить</span>
+                <span>@tass.pets -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #2 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">2. MYSA</span>
+                    <div class="card-subtitle">швед. "mysa" = уют, нежиться, свернуться клубком</div>
+                </div>
+                <span class="badge badge-top">TOP PICK</span>
+            </div>
+            <p>Идеальное скандинавское слово для pet-бренда. "Mysa" -- это именно то, что делают кошки и собаки: сворачиваются клубком в тёплом месте. Звучит женственно, мягко, подходит ЦА. Созвучно с именем "Мыся" (ласковое обращение к кошке в русском).</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>4 буквы. Точно передаёт суть (уют + животное). Скандинавский код. Созвучие с русским ласковым "мыся". Красивая фонетика.</div>
+                <div class="cons"><strong>-</strong><br>Может ассоциироваться с "мышью". "Mysa" используется некоторыми брендами (матрасы Mysa IKEA). Нужно проверить товарный знак.</div>
+            </div>
+            <div class="domain-info">
+                <span>mysa.com -- вероятно занят</span>
+                <span>mysa.ru -- проверить</span>
+                <span>mysa.studio -- проверить</span>
+                <span>@mysa.home -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #3 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">3. HEMBO</span>
+                    <div class="card-subtitle">швед. "hem" (дом) + "bo" (жить, обитать)</div>
+                </div>
+                <span class="badge badge-top">TOP PICK</span>
+            </div>
+            <p>Портманто из двух шведских слов. Буквально "дом-жить" -- жилище. Звучит игриво и тепло. На международном рынке легко произносится. Не имеет негативных ассоциаций.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>5 букв. Уникальное слово. Два скандинавских корня. Звучит игриво и дружелюбно. Нет прямых конкурентов с таким именем.</div>
+                <div class="cons"><strong>-</strong><br>Нет прямой связи с животными в названии. Требует объяснения значения. На русском может звучать непривычно.</div>
+            </div>
+            <div class="domain-info">
+                <span>hembo.com -- проверить</span>
+                <span>hembo.ru -- проверить</span>
+                <span>@hembo -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #4 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">4. VRÅ</span>
+                    <div class="card-subtitle">швед. "vrå" = уголок, уютный закуток</div>
+                </div>
+                <span class="badge badge-good">STRONG</span>
+            </div>
+            <p>Минималистично до предела -- 3 буквы. Уголок, где сворачивается кот. Очень IKEA-style нейминг. Скандинавский диакритик (å) создаёт визуальную уникальность.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>3 буквы -- ультра-короткое. IKEA-стиль. Точная метафора (уголок питомца). Визуально запоминается (å).</div>
+                <div class="cons"><strong>-</strong><br>Сложно произнести для русскоязычных. Диакритик создаёт проблемы в URL. Не googl'ится без контекста.</div>
+            </div>
+            <div class="domain-info">
+                <span>vra.com -- вероятно занят</span>
+                <span>vra.ru -- проверить</span>
+                <span>@vra.pets -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #5 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">5. ANNKI PETS</span>
+                    <div class="card-subtitle">прямое суб-брендирование</div>
+                </div>
+                <span class="badge badge-good">STRONG</span>
+            </div>
+            <p>Самый безопасный вариант. Наследует узнаваемость annki studio. Понятный формат суб-бренда (как Pottery Barn Kids). Не требует отдельного brand-building.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>Мгновенно понятная связь с основным брендом. Нулевые затраты на объяснение. SEO-friendly. Доверие переносится.</div>
+                <div class="cons"><strong>-</strong><br>Скучновато. Нет самостоятельной идентичности. Ограничивает, если pet-линейка перерастёт annki. "Pets" -- банально.</div>
+            </div>
+            <div class="domain-info">
+                <span>annkipets.com -- проверить</span>
+                <span>annkipets.ru -- проверить</span>
+                <span>@annki.pets -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #6 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">6. KOJA</span>
+                    <div class="card-subtitle">швед. "koja" = хижина, шалаш, домик</div>
+                </div>
+                <span class="badge badge-good">STRONG</span>
+            </div>
+            <p>Маленький домик -- идеальная метафора для лежанки или домика питомца. Звучит тепло и по-домашнему. На русском не имеет негативных ассоциаций.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>4 буквы. Тёплая семантика. Международное звучание. Легко произнести.</div>
+                <div class="cons"><strong>-</strong><br>В русском "кожа" -- нежелательная ассоциация (может звучать как "Кожа"). Нужна проверка товарного знака.</div>
+            </div>
+            <div class="domain-info">
+                <span>koja.com -- вероятно занят</span>
+                <span>koja.ru -- проверить</span>
+                <span>@koja.home -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #7 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">7. STUGA</span>
+                    <div class="card-subtitle">швед. "stuga" = дача, домик, хижина</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Шведская stuga -- это место, где отдыхают, замедляются, наслаждаются тишиной. Идеальная метафора для pet-мебели. Узнаваемый скандинавский код.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>5 букв. Сильная скандинавская ассоциация. Уютная семантика. Красивое звучание.</div>
+                <div class="cons"><strong>-</strong><br>Может быть сложно для русскоязычных. Нет связи с животными. Менее запоминаемо, чем MYSA или TASS.</div>
+            </div>
+            <div class="domain-info">
+                <span>stuga.com -- проверить</span>
+                <span>stuga.ru -- проверить</span>
+                <span>@stuga.pets -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #8 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">8. TASSBO</span>
+                    <div class="card-subtitle">швед. "tass" (лапа) + "bo" (жилище)</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Портманто: "дом лапки". Буквально -- жилище для лапки. Милое, конкретное, скандинавское.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>6 букв. Прямая связь с животными (лапа) и домом. Уникальное слово. Легко произносится.</div>
+                <div class="cons"><strong>-</strong><br>Для международного рынка длинновато. На русском может звучать грубовато. Менее элегантно, чем MYSA.</div>
+            </div>
+            <div class="domain-info">
+                <span>tassbo.com -- проверить</span>
+                <span>tassbo.ru -- проверить</span>
+                <span>@tassbo -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #9 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">9. ANNKI BO</span>
+                    <div class="card-subtitle">"annki" + швед. "bo" (жилище)</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Жилище от annki. Сохраняет связь с материнским брендом, добавляя скандинавский элемент. Формат "бренд + слово" (как CB2 от Crate & Barrel).</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>Связь с annki studio. Скандинавский код. Понятно, что суб-бренд. Элегантно.</div>
+                <div class="cons"><strong>-</strong><br>Два слова. "Бо" на русском -- ничего. Менее самостоятельно, чем отдельный бренд.</div>
+            </div>
+            <div class="domain-info">
+                <span>annkibo.com -- проверить</span>
+                <span>annkibo.ru -- проверить</span>
+                <span>@annki.bo -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #10 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">10. MIAU</span>
+                    <div class="card-subtitle">звукоподражание "мяу", международное</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Универсальное слово -- "мяу" звучит одинаково на всех языках. Игривое, мгновенно узнаваемое. Но: сужает до кошек. Есть бренд Mau (США).</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>4 буквы. Мгновенная узнаваемость. Игривость. Международность.</div>
+                <div class="cons"><strong>-</strong><br>Конфликт с Mau (США). Сужает до кошек. Слишком очевидно для премиум-бренда.</div>
+            </div>
+            <div class="domain-info">
+                <span>miau.com -- вероятно занят</span>
+                <span>miau.ru -- проверить</span>
+                <span>@miau.studio -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #11 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">11. NØKK</span>
+                    <div class="card-subtitle">сканд. "nøkk/nykk" = уют + намёк на "knock" (стучать, входить)</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Визуально яркое скандинавское название. Ø создаёт визуальную уникальность. Ассоциация: "постучи и входи" -- гостеприимство.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>4 буквы. Визуально запоминается. Скандинавский код. Уникально.</div>
+                <div class="cons"><strong>-</strong><br>Nøkk -- водяной дух в скандинавской мифологии (негативная ассоциация). Диакритик в URL. Сложно произнести.</div>
+            </div>
+            <div class="domain-info">
+                <span>nokk.com -- проверить</span>
+                <span>nokk.ru -- проверить</span>
+                <span>@nokk.pets -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #12 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">12. LABB</span>
+                    <div class="card-subtitle">швед. "labb" = лапа (разг.)</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Ещё одно шведское слово для "лапа", более разговорное. Звучит мягко. Визуальная симметрия (bb). Ассоциация с лабрадором (самая популярная порода).</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>4 буквы. Скандинавский. Мягкое звучание. Ассоциация с лабрадором.</div>
+                <div class="cons"><strong>-</strong><br>"Лабб" на русском -- ничего. Ассоциация с "лаборатория". Нет теплоты.</div>
+            </div>
+            <div class="domain-info">
+                <span>labb.com -- проверить</span>
+                <span>labb.ru -- проверить</span>
+                <span>@labb.pets -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #13 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">13. FABEL</span>
+                    <div class="card-subtitle">сканд. "fabel" = сказка, басня</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Скандинавская версия "fable" (сказка). В баснях животные -- главные герои. Красивая метафора: каждый питомец -- персонаж своей истории.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>5 букв. Глубокая метафора. Международное звучание. Storytelling-потенциал.</div>
+                <div class="cons"><strong>-</strong><br>Есть Fable Pets (США) -- прямой конфликт. "Фабель" на русском -- непривычно.</div>
+            </div>
+            <div class="domain-info">
+                <span>fabel.com -- вероятно занят</span>
+                <span>fabel.ru -- проверить</span>
+                <span>@fabel.pets -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #14 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">14. MYSHEM</span>
+                    <div class="card-subtitle">швед. "mys" (уют) + "hem" (дом)</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Портманто: "уютный дом". Полностью скандинавское слово. Передаёт обе ключевые ценности -- уют и дом.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>6 букв. Два скандинавских корня. Полностью передаёт суть.</div>
+                <div class="cons"><strong>-</strong><br>"Мышем" на русском -- нежелательная ассоциация с мышами. Длинновато. Сложно произнести.</div>
+            </div>
+            <div class="domain-info">
+                <span>myshem.com -- проверить</span>
+                <span>myshem.ru -- проверить</span>
+                <span>@myshem -- проверить</span>
+            </div>
+        </div>
+
+        <!-- #15 -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="card-title">15. KOSI</span>
+                    <div class="card-subtitle">от норв. "koselig" (уют, тепло) -- сокращение</div>
+                </div>
+                <span class="badge badge-ok">SOLID</span>
+            </div>
+            <p>Укороченное "koselig". Звучит ласково на русском ("коси" -- подмигни, скоси глаза -- игривое). На международном -- тепло, скандинавский код.</p>
+            <div class="pros-cons">
+                <div class="pros"><strong>+</strong><br>4 буквы. Мягкое звучание. Скандинавский код. Легко запомнить.</div>
+                <div class="cons"><strong>-</strong><br>Ассоциация с "косить" на русском. Не очевидная связь с животными. Может быть спутано с Cozy.</div>
+            </div>
+            <div class="domain-info">
+                <span>kosi.com -- проверить</span>
+                <span>kosi.ru -- проверить</span>
+                <span>@kosi.pets -- проверить</span>
+            </div>
+        </div>
+
+        <!-- NAMING SUMMARY -->
+        <div class="highlight-box">
+            <h3>Сводная таблица</h3>
+            <table>
+                <tr>
+                    <th>Название</th>
+                    <th>Буквы</th>
+                    <th>Скандинавский код</th>
+                    <th>Связь с животными</th>
+                    <th>Звучание на русском</th>
+                    <th>Рекомендация</th>
+                </tr>
+                <tr><td><b>MYSA</b></td><td>4</td><td>+++++</td><td>++++</td><td>+++</td><td>TOP</td></tr>
+                <tr><td><b>TASS</b></td><td>4</td><td>++++</td><td>+++++</td><td>+++</td><td>TOP</td></tr>
+                <tr><td><b>HEMBO</b></td><td>5</td><td>+++++</td><td>++</td><td>+++</td><td>TOP</td></tr>
+                <tr><td>VRA</td><td>3</td><td>+++++</td><td>+++</td><td>++</td><td>STRONG</td></tr>
+                <tr><td>ANNKI PETS</td><td>9</td><td>++</td><td>+++++</td><td>+++++</td><td>STRONG (safe)</td></tr>
+                <tr><td>KOJA</td><td>4</td><td>++++</td><td>++</td><td>++</td><td>STRONG</td></tr>
+                <tr><td>STUGA</td><td>5</td><td>+++++</td><td>++</td><td>+++</td><td>SOLID</td></tr>
+                <tr><td>TASSBO</td><td>6</td><td>+++++</td><td>+++++</td><td>++</td><td>SOLID</td></tr>
+                <tr><td>ANNKI BO</td><td>7</td><td>++++</td><td>++</td><td>+++</td><td>SOLID</td></tr>
+            </table>
+            <p style="margin-top:16px"><b>Рекомендация:</b> MYSA -- лучший баланс между скандинавским кодом, связью с животными (сворачиваться клубком), звучанием на русском ("мыся") и запоминаемостью. TASS -- второй выбор (прямая связь с лапой). HEMBO -- если нужна максимальная уникальность.</p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 2: BRAND PLATFORMS -->
+        <!-- ============================================ -->
+        <h2 id="platforms">2. Бренд-платформы (топ-3)</h2>
+
+        <!-- MYSA -->
+        <div class="brand-platform">
+            <h3>MYSA</h3>
+            <p class="card-subtitle">швед. "уют, нежиться, свернуться клубком"</p>
+
+            <h4>Миссия</h4>
+            <p>Создавать пространства, где комфорт питомца и эстетика интерьера -- одно целое.</p>
+
+            <h4>Видение</h4>
+            <p>Мир, в котором мебель для животных не прячут от гостей, а показывают как часть интерьера. MYSA задаёт стандарт: любая вещь для питомца может быть красивой.</p>
+
+            <h4>Ценности</h4>
+            <div class="values-grid">
+                <div class="value-item">
+                    <strong>Тактильность</strong>
+                    Натуральные материалы, к которым приятно прикоснуться -- и человеку, и питомцу
+                </div>
+                <div class="value-item">
+                    <strong>Тихая красота</strong>
+                    Дизайн, который не кричит. Скандинавская сдержанность вместо декоративности
+                </div>
+                <div class="value-item">
+                    <strong>Равноправие</strong>
+                    Питомец -- полноценный житель дома. Его мебель заслуживает такого же внимания, как ваша
+                </div>
+                <div class="value-item">
+                    <strong>Долговечность</strong>
+                    Вещи, которые служат годами. Качество, а не одноразовость
+                </div>
+            </div>
+
+            <h4>Tone of Voice</h4>
+            <p>Тёплый, но не сюсюкающий. Уверенный, но не холодный. Как разговор с подругой, которая разбирается в интерьерах и любит своего кота. Без "мимими", без пафоса. Лаконичные фразы. Много визуала, мало слов.</p>
+
+            <h4>Слоганы</h4>
+            <div class="slogans">
+                <div class="slogan">Уют для каждого жителя дома</div>
+                <div class="slogan">Мебель, которую не нужно прятать</div>
+                <div class="slogan">Свернись клубком. Красиво.</div>
+                <div class="slogan">Там, где сворачиваются клубком</div>
+                <div class="slogan">Designed to curl up in</div>
+            </div>
+
+            <h4>Визуальный стиль</h4>
+            <div class="color-palette">
+                <div class="color-swatch" style="background:#d4c5a9">#D4C5A9<br>Sand</div>
+                <div class="color-swatch" style="background:#8b7355">#8B7355<br>Warm Oak</div>
+                <div class="color-swatch" style="background:#f5f0e8">#F5F0E8<br>Cream</div>
+                <div class="color-swatch" style="background:#3d3d3d">#3D3D3D<br>Charcoal</div>
+                <div class="color-swatch" style="background:#b8a88a">#B8A88A<br>Linen</div>
+                <div class="color-swatch" style="background:#e8d5c4">#E8D5C4<br>Blush</div>
+            </div>
+            <p><b>Типографика:</b> гротеск с мягкими формами (Neue Haas Grotesk, Cera Pro, или аналоги). Заголовки -- тонкий вес (Light/Thin). Текст -- Regular. Без засечек. Минимум caps.</p>
+            <p><b>Настроение:</b> утренний свет через лён. Кот на подоконнике. Тёплое дерево. Мягкий текстиль. Чистота линий. Тишина.</p>
+
+            <h4>Отстройка от конкурентов</h4>
+            <table>
+                <tr><th>Конкурент</th><th>Их позиция</th><th>MYSA отличается тем, что...</th></tr>
+                <tr><td>KotoMoto, Kotspit</td><td>Функциональная мебель, средний ценник</td><td>Дизайнерский уровень annki studio, скандинавская эстетика, тактильные материалы</td></tr>
+                <tr><td>MiaCara</td><td>Немецкий минимализм, ультра-премиум</td><td>Скандинавская теплота вместо немецкой холодности. Российское производство. Доступнее по цене</td></tr>
+                <tr><td>Teddy Room</td><td>Лофт, хэндмейд</td><td>Системный дизайн вместо единичных изделий. Скандинавский код вместо лофта</td></tr>
+                <tr><td>PetSpaces</td><td>Экологичность, дерево</td><td>Авторский дизайн от Анны Долгих. Бренд с историей. AI-first контент</td></tr>
+            </table>
+        </div>
+
+        <!-- TASS -->
+        <div class="brand-platform">
+            <h3>TASS</h3>
+            <p class="card-subtitle">швед. "лапа, лапка"</p>
+
+            <h4>Миссия</h4>
+            <p>Делать мебель, к которой тянутся лапы -- и руки.</p>
+
+            <h4>Видение</h4>
+            <p>Pet-мебель как полноценная категория интерьерного дизайна. Не аксессуар, не компромисс -- отдельный предмет, достойный каталога.</p>
+
+            <h4>Ценности</h4>
+            <div class="values-grid">
+                <div class="value-item">
+                    <strong>Прикосновение</strong>
+                    Лапа на поверхности -- главный тест качества. Если приятно лапе, приятно и руке
+                </div>
+                <div class="value-item">
+                    <strong>Честные материалы</strong>
+                    Дерево, шерсть, лён, хлопок. То, что можно потрогать и понять
+                </div>
+                <div class="value-item">
+                    <strong>Лаконичность</strong>
+                    Одна форма, одна функция, одна эмоция. Ничего лишнего
+                </div>
+                <div class="value-item">
+                    <strong>Уважение</strong>
+                    К питомцу -- как к со-жителю. К интерьеру -- как к пространству жизни
+                </div>
+            </div>
+
+            <h4>Tone of Voice</h4>
+            <p>Сдержанный и тактильный. Короткие предложения. Описания через ощущения (текстура, тепло, вес), а не через характеристики. Минимум восклицательных знаков. Максимум пауз.</p>
+
+            <h4>Слоганы</h4>
+            <div class="slogans">
+                <div class="slogan">Лапой проверено</div>
+                <div class="slogan">Мебель для лап и рук</div>
+                <div class="slogan">Прикоснись. Почувствуй.</div>
+                <div class="slogan">Каждая лапа заслуживает хорошего дизайна</div>
+                <div class="slogan">Touch-tested by paws</div>
+            </div>
+
+            <h4>Визуальный стиль</h4>
+            <div class="color-palette">
+                <div class="color-swatch" style="background:#c4a882">#C4A882<br>Paw</div>
+                <div class="color-swatch" style="background:#f0ece4">#F0ECE4<br>Wool</div>
+                <div class="color-swatch" style="background:#5c4a3a">#5C4A3A<br>Bark</div>
+                <div class="color-swatch" style="background:#2d2d2d">#2D2D2D<br>Night</div>
+                <div class="color-swatch" style="background:#d9cec0">#D9CEC0<br>Stone</div>
+                <div class="color-swatch" style="background:#a39080">#A39080<br>Clay</div>
+            </div>
+            <p><b>Типографика:</b> геометричный гротеск (Futura, Gilroy, Montserrat). Заголовки -- Bold, uppercase, разреженный трекинг. Текст -- Regular. Контраст между заголовками и текстом.</p>
+            <p><b>Настроение:</b> крупные текстуры. Макро-фото лапы на ткани. Дерево вблизи. Тактильность в каждом кадре. Нейтральные тона с тёплым подтоном.</p>
+
+            <h4>Отстройка от конкурентов</h4>
+            <p>TASS строит коммуникацию вокруг тактильности и прикосновения -- это территория, которую не занял никто. Конкуренты говорят о дизайне, экологичности, функциональности. TASS говорит об ощущениях.</p>
+        </div>
+
+        <!-- HEMBO -->
+        <div class="brand-platform">
+            <h3>HEMBO</h3>
+            <p class="card-subtitle">швед. "hem" (дом) + "bo" (жить)</p>
+
+            <h4>Миссия</h4>
+            <p>Дать каждому питомцу свой настоящий дом внутри вашего дома.</p>
+
+            <h4>Видение</h4>
+            <p>Дом -- это не стены, а чувство. HEMBO создаёт это чувство для тех, кто не может попросить о нём словами.</p>
+
+            <h4>Ценности</h4>
+            <div class="values-grid">
+                <div class="value-item">
+                    <strong>Дом для всех</strong>
+                    Каждый житель дома заслуживает своего пространства -- продуманного и красивого
+                </div>
+                <div class="value-item">
+                    <strong>Гармония</strong>
+                    Мебель питомца -- часть интерьера, не инородное тело. Один стиль, одна экосистема
+                </div>
+                <div class="value-item">
+                    <strong>Скандинавская простота</strong>
+                    Чистые линии, натуральные материалы, функция без декорации
+                </div>
+                <div class="value-item">
+                    <strong>Забота без слов</strong>
+                    Лучший способ показать любовь к питомцу -- создать ему комфортное место
+                </div>
+                <div class="value-item">
+                    <strong>Осознанность</strong>
+                    Меньше вещей, но лучше. Одна хорошая лежанка вместо пяти дешёвых
+                </div>
+            </div>
+
+            <h4>Tone of Voice</h4>
+            <p>Домашний, негромкий, искренний. Как разговор за утренним кофе. Без агрессивных продаж. Много "мы" и "дом". Тексты как подписи к интерьерным фотографиям -- короткие, атмосферные.</p>
+
+            <h4>Слоганы</h4>
+            <div class="slogans">
+                <div class="slogan">Их дом внутри вашего</div>
+                <div class="slogan">Жить красиво. Вместе.</div>
+                <div class="slogan">Дом начинается с каждого</div>
+                <div class="slogan">Мебель для тех, кто живёт рядом</div>
+                <div class="slogan">Home within home</div>
+            </div>
+
+            <h4>Визуальный стиль</h4>
+            <div class="color-palette">
+                <div class="color-swatch" style="background:#b5c4b1">#B5C4B1<br>Sage</div>
+                <div class="color-swatch" style="background:#e8e0d0">#E8E0D0<br>Oat</div>
+                <div class="color-swatch" style="background:#8b7355">#8B7355<br>Walnut</div>
+                <div class="color-swatch" style="background:#f7f4ef">#F7F4EF<br>Snow</div>
+                <div class="color-swatch" style="background:#3a3a3a">#3A3A3A<br>Ink</div>
+                <div class="color-swatch" style="background:#c9b99a">#C9B99A<br>Honey</div>
+            </div>
+            <p><b>Типографика:</b> тёплый гротеск с гуманистическими пропорциями (DM Sans, Source Sans, Noto Sans). Заголовки -- Medium. Текст -- Regular. Мягкие формы букв. Тёплая контрастность.</p>
+            <p><b>Настроение:</b> сцены совместной жизни. Собака на своей лежанке рядом с диваном хозяина. Один стиль, одна палитра, один дом. Ощущение: "здесь живут вместе".</p>
+
+            <h4>Отстройка от конкурентов</h4>
+            <p>HEMBO -- единственный бренд, который строит позиционирование вокруг идеи "дом внутри дома". Не про мебель, не про дизайн -- про со-жительство. Эмоциональная территория "совместной жизни" свободна.</p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 3: POSITIONING -->
+        <!-- ============================================ -->
+        <h2 id="positioning">3. Позиционирование</h2>
+
+        <h3>Формулы позиционирования</h3>
+
+        <h4>MYSA</h4>
+        <div class="positioning-formula">
+            Для <em>владелиц кошек и собак, которые ценят эстетику своего интерьера</em>,<br>
+            MYSA -- это <em>линейка дизайнерской мебели для питомцев</em>,<br>
+            которая <em>вписывается в интерьер так же естественно, как ваш диван</em>,<br>
+            в отличие от <em>типовых pet-товаров, которые портят интерьер, и европейских премиум-брендов, недоступных в России</em>.
+        </div>
+
+        <h4>TASS</h4>
+        <div class="positioning-formula">
+            Для <em>тех, кто выбирает вещи наощупь -- по тактильности, по материалу, по ощущению</em>,<br>
+            TASS -- это <em>мебель для питомцев из натуральных материалов</em>,<br>
+            которая <em>приятна и лапе, и руке</em>,<br>
+            в отличие от <em>pet-мебели из синтетики и пластика, где функция важнее ощущений</em>.
+        </div>
+
+        <h4>HEMBO</h4>
+        <div class="positioning-formula">
+            Для <em>семей, где питомец -- полноценный член семьи, а не аксессуар</em>,<br>
+            HEMBO -- это <em>мебель, которая создаёт питомцу свой дом внутри вашего</em>,<br>
+            которая <em>выглядит как часть интерьера, а не как компромисс</em>,<br>
+            в отличие от <em>pet-мебели, которую покупают "на время" и прячут, когда приходят гости</em>.
+        </div>
+
+        <h3>Уникальное торговое предложение (для каждого варианта)</h3>
+        <table>
+            <tr><th>Бренд</th><th>УТП (рациональное)</th><th>УТП (эмоциональное)</th></tr>
+            <tr>
+                <td><b>MYSA</b></td>
+                <td>Дизайнерская мебель для питомцев от авторского интерьерного бренда annki studio. Скандинавский минимализм, натуральные материалы, российское производство.</td>
+                <td>Момент, когда кот сворачивается на новой лежанке -- и ты понимаешь, что это идеально вписалось в комнату.</td>
+            </tr>
+            <tr>
+                <td><b>TASS</b></td>
+                <td>Pet-мебель, где каждая поверхность проверена на тактильность. Дерево, лён, шерсть -- материалы, которые выбирают лапы.</td>
+                <td>Провести рукой по лежанке и почувствовать то же, что чувствует твой питомец. Честные материалы для честной заботы.</td>
+            </tr>
+            <tr>
+                <td><b>HEMBO</b></td>
+                <td>Мебель для питомцев, спроектированная как часть интерьерной системы: один стиль, одна палитра, одни материалы для всего дома.</td>
+                <td>Дом, где каждый житель -- включая того, кто на четырёх лапах -- чувствует себя на своём месте.</td>
+            </tr>
+        </table>
+
+        <h3>Эмоциональная территория</h3>
+        <div class="highlight-box">
+            <table>
+                <tr><th>Бренд</th><th>Территория</th><th>Ключевая эмоция</th><th>Визуальный код</th></tr>
+                <tr>
+                    <td><b>MYSA</b></td>
+                    <td>Скандинавский уют (mys)</td>
+                    <td>Тёплое спокойствие. "Всё на своих местах"</td>
+                    <td>Клубок. Мягкий свет. Лён. Дерево</td>
+                </tr>
+                <tr>
+                    <td><b>TASS</b></td>
+                    <td>Тактильность. Прикосновение</td>
+                    <td>Чувственность. "Приятно дотронуться"</td>
+                    <td>Макро-текстуры. Лапа на ткани. Близость</td>
+                </tr>
+                <tr>
+                    <td><b>HEMBO</b></td>
+                    <td>Со-жительство. Общий дом</td>
+                    <td>Принадлежность. "Мы живём вместе"</td>
+                    <td>Параллельные сцены: хозяин на диване, кот на лежанке</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 4: NEXT STEPS -->
+        <!-- ============================================ -->
+        <h2 id="next">4. Следующие шаги</h2>
+
+        <div class="card">
+            <h4>Немедленно</h4>
+            <ol>
+                <li>Проверить доступность доменов (mysa.ru, mysa.studio, tass.pets, hembo.com, hembo.ru) через reg.ru / namecheap</li>
+                <li>Проверить Instagram-хендлы (@mysa.home, @mysa.pets, @tass.pets, @hembo)</li>
+                <li>Проверить товарные знаки через ФИПС (Роспатент) по классам 20 (мебель) и 35 (розничная торговля)</li>
+                <li>Выбрать 1 финалиста из топ-3</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h4>В течение 2 недель</h4>
+            <ol>
+                <li>Разработка логотипа и визуальной системы (AI-генерация вариантов)</li>
+                <li>Создание мудборда и визуальных референсов</li>
+                <li>Тестирование названия на ЦА (опрос в Stories annki studio)</li>
+                <li>Регистрация доменов и соцсетей</li>
+                <li>Подача заявки на товарный знак</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h4>В течение месяца</h4>
+            <ol>
+                <li>Дизайн первой коллекции (3-5 SKU: лежанка кот, лежанка собака, домик, когтеточка, миска на подставке)</li>
+                <li>Расчёт себестоимости и ценообразование</li>
+                <li>Запуск Instagram и начало прогрева аудитории</li>
+                <li>Подготовка фото/видео контента (AI-first)</li>
+            </ol>
+        </div>
+
+        <p style="margin-top:48px; color:var(--muted); font-size:0.85rem; text-align:center; border-top:1px solid var(--border); padding-top:24px;">
+            annki studio / Pet Brand Platform / Март 2026<br>
+            Подготовлено с использованием AI-анализа рынка
+        </p>
+    </div>
+</body>
+</html>
